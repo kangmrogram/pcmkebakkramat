@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0f766e">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -24,55 +24,87 @@
     body { 
       font-family: 'Poppins', sans-serif; 
       background-color: var(--bg-light); 
-      margin: 0; padding: 0; /* Reset agar full screen */
+      margin: 0; padding: 0;
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Container Utama di Tengah (untuk tampilan Desktop tetap rapi) */
     .app-container {
       max-width: 480px;
       margin: 0 auto;
       background: #ffffff;
       min-height: 100vh;
-      position: relative;
-      box-shadow: 0 0 20px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
+      position: relative;
     }
 
-    /* DEKORASI HEADER (HIJAU DI ATAS) */
+    /* --- HEADER AREA --- */
     .header-decoration {
-      background: linear-gradient(135deg, var(--primary), #14b8a6);
-      height: 220px;
+      background: linear-gradient(135deg, var(--primary), #0d9488);
+      height: 280px; /* Dipertinggi untuk jam */
       border-bottom-left-radius: 40px;
       border-bottom-right-radius: 40px;
-      padding: 30px 20px 60px 20px;
+      padding: 25px 20px 80px 20px;
       color: white;
       text-align: center;
       position: relative;
       z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .logo-img {
-      width: 70px; height: auto;
-      background: rgba(255,255,255,0.2);
+    .logo-container {
+      background: rgba(255,255,255,0.15);
       border-radius: 50%;
-      padding: 5px;
+      padding: 8px;
+      backdrop-filter: blur(4px);
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .logo-img { width: 60px; height: auto; display: block; }
+
+    /* --- WIDGET JAM DIGITAL --- */
+    .digital-clock {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(5px);
-      margin-bottom: 10px;
+      border-radius: 16px;
+      padding: 10px 20px;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .clock-time {
+      font-family: 'JetBrains Mono', monospace; /* Font Monospace agar angka stabil */
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .clock-date {
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0.95;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* KARTU KONTEN UTAMA (NAIK KE ATAS) */
+    /* --- KARTU KONTEN UTAMA --- */
     .main-content {
       background: white;
-      margin: -60px 20px 20px 20px; /* Efek Overlap ke atas */
+      margin: -70px 20px 20px 20px; /* Overlap ke atas */
       border-radius: 24px;
       padding: 25px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
       position: relative;
       z-index: 2;
-      flex-grow: 1; /* Agar mengisi ruang kosong ke bawah */
+      flex-grow: 1;
     }
 
     /* Camera Area */
@@ -82,7 +114,7 @@
       overflow: hidden;
       margin-bottom: 20px;
       background: #000;
-      aspect-ratio: 4/4; /* Kotak agar pas di layar HP */
+      aspect-ratio: 4/4;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -94,13 +126,8 @@
     /* Inputs Modern */
     .form-label { font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 5px; margin-left: 5px; }
     .input-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 5px 15px;
-      display: flex; align-items: center;
-      transition: 0.3s;
-      margin-bottom: 15px;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 5px 15px;
+      display: flex; align-items: center; transition: 0.3s; margin-bottom: 15px;
     }
     .input-box:focus-within { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1); }
     .input-box i { color: #94a3b8; margin-right: 10px; font-size: 1.1rem; }
@@ -113,13 +140,13 @@
 
     /* Tombol Utama */
     #btnAbsen {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white; border: none; width: 100%; padding: 18px;
       border-radius: 18px; font-weight: 600; font-size: 1rem;
       box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4);
       margin-top: 10px; transition: 0.2s;
     }
-    #btnAbsen:disabled { background: #cbd5e1; box-shadow: none; }
+    #btnAbsen:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
     #btnAbsen:active { transform: scale(0.98); }
 
     /* Status Pills */
@@ -130,14 +157,11 @@
     .status-ok { background: #d1fae5; color: #047857; }
     .status-err { background: #fee2e2; color: #b91c1c; }
 
-    /* Helper Classes */
     .hidden { display: none !important; }
     #canvas { display: none; }
-    
-    /* Loading Overlay */
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-    /* Modal Report */
+    /* Modal Styles */
     .foto-rekap { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 4px solid var(--bg-light); margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
   </style>
 </head>
@@ -151,9 +175,15 @@
 <div class="app-container">
   
   <div class="header-decoration">
-    <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img">
-    <h5 class="fw-bold mb-1" style="font-size: 1.1rem; line-height: 1.4;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
-    <div id="tglKegiatan" style="font-size: 0.8rem; opacity: 0.9;">Memuat Tanggal...</div>
+    <div class="logo-container">
+       <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img">
+    </div>
+    <h5 class="fw-bold mb-0" style="font-size: 1.1rem; line-height: 1.3;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
+    
+    <div class="digital-clock">
+       <div id="clockDate" class="clock-date">Memuat...</div>
+       <div id="clockTime" class="clock-time">00:00:00</div>
+    </div>
   </div>
 
   <div class="main-content">
@@ -171,11 +201,9 @@
       <div class="input-box">
         <i class="bi bi-person"></i>
         <select id="nama" class="form-control-plain">
-          <option disabled selected>-- Memuat... --</option>
+          <option disabled selected>-- Memuat Data... --</option>
         </select>
-        <button class="btn-riwayat" onclick="bukaModalReport()">
-            <i class="bi bi-clock-history"></i>
-        </button>
+        <button class="btn-riwayat" onclick="bukaModalReport()"><i class="bi bi-clock-history"></i></button>
       </div>
     </div>
 
@@ -202,15 +230,10 @@
       <span>Mencari GPS...</span>
     </div>
 
-    <button id="btnAbsen" onclick="kirimAbsen()" disabled>
-      KIRIM PRESENSI
-    </button>
+    <button id="btnAbsen" onclick="kirimAbsen()" disabled>KIRIM PRESENSI</button>
   </div>
   
-  <div class="text-center pb-4 text-muted" style="font-size: 0.7rem;">
-    &copy; PCM Kebakkramat - Majelis Pustaka & Informasi
-  </div>
-
+  <div class="text-center pb-4 text-muted" style="font-size: 0.7rem;">&copy; MPI PCM Kebakkramat</div>
 </div>
 
 <div class="modal fade" id="modalReport">
@@ -231,36 +254,20 @@
         <div id="loadingReport" class="hidden py-3"><div class="spinner-border text-success"></div></div>
 
         <div id="contentReport" class="hidden">
-           <div id="boxFoto" class="hidden">
-             <img id="imgFotoTerbaru" src="" class="foto-rekap">
-           </div>
-           
+           <div id="boxFoto" class="hidden"><img id="imgFotoTerbaru" src="" class="foto-rekap"></div>
            <h5 class="fw-bold mb-0 text-dark" id="repNama">User</h5>
            <small class="text-muted d-block mb-3" id="repAum">AUM</small>
 
            <div class="row g-2 mb-4">
-             <div class="col-6">
-                <div class="p-3 bg-light rounded-4">
-                    <small class="text-uppercase text-muted" style="font-size:0.65rem; letter-spacing:1px;">Total Hadir</small>
-                    <div class="fs-4 fw-bold text-success" id="repTotal">0</div>
-                </div>
-             </div>
-             <div class="col-6">
-                <div class="p-3 bg-light rounded-4">
-                    <small class="text-uppercase text-muted" style="font-size:0.65rem; letter-spacing:1px;">Persentase</small>
-                    <div class="fs-4 fw-bold text-primary" id="repPercent">0%</div>
-                </div>
-             </div>
+             <div class="col-6"><div class="p-3 bg-light rounded-4"><small class="text-uppercase text-muted" style="font-size:0.65rem;">Total Hadir</small><div class="fs-4 fw-bold text-success" id="repTotal">0</div></div></div>
+             <div class="col-6"><div class="p-3 bg-light rounded-4"><small class="text-uppercase text-muted" style="font-size:0.65rem;">Persentase</small><div class="fs-4 fw-bold text-primary" id="repPercent">0%</div></div></div>
            </div>
 
            <div class="text-start">
              <h6 class="fw-bold small mb-3">Daftar Kehadiran</h6>
-             <table class="table table-borderless align-middle" style="font-size: 0.85rem;">
-                <tbody id="tabelHistory"></tbody>
-             </table>
+             <table class="table table-borderless align-middle" style="font-size: 0.85rem;"><tbody id="tabelHistory"></tbody></table>
            </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -268,7 +275,7 @@
 
 <script>
   // ================= KONFIGURASI =================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM8mW49NxxBlH5YzWZMrODsJL4yofK2Kq6ZZJbz7LMrCE79IBhRF7T6PgtRT6OmcedtQ/exec"; // <--- PASTE DISINI
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM8mW49NxxBlH5YzWZMrODsJL4yofK2Kq6ZZJbz7LMrCE79IBhRF7T6PgtRT6OmcedtQ/exec"; // <--- PASTE LINK BARU DI SINI
   const PUSAT_LAT = -7.520630;
   const PUSAT_LNG = 110.906286;
   const MAX_RADIUS = 500; 
@@ -280,12 +287,11 @@
   window.onload = function() {
     try {
       myModal = new bootstrap.Modal(document.getElementById('modalReport'));
-      setupTanggal();
+      initClock(); // Jalankan Jam
       cekWaktuBuka();
 
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-        .then(s => video.srcObject = s)
-        .catch(e => alert("Kamera Error: " + e));
+        .then(s => video.srcObject = s).catch(e => alert("Kamera Error: " + e));
 
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(updatePosisi, e => {
@@ -297,10 +303,30 @@
     } catch (e) { console.error(e); }
   };
 
-  function setupTanggal() {
+  // --- LOGIKA JAM DIGITAL & TANGGAL (AHAD) ---
+  function initClock() {
+    updateClock(); // Jalankan sekali di awal
+    setInterval(updateClock, 1000); // Update tiap detik
+  }
+
+  function updateClock() {
     var now = new Date();
-    namaKegiatan = "Pengajian Ahad Pagi - " + now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('tglKegiatan').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    
+    // 1. Update Jam (WIB)
+    var timeStr = now.toLocaleTimeString('id-ID', { hour12: false }) + " WIB";
+    document.getElementById('clockTime').innerText = timeStr;
+
+    // 2. Update Tanggal (Format: Ahad, 25 Desember 2025)
+    var dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    var dateStr = now.toLocaleDateString('id-ID', dateOptions);
+    
+    // GANTI MINGGU JADI AHAD
+    dateStr = dateStr.replace("Minggu", "Ahad");
+    
+    document.getElementById('clockDate').innerText = dateStr;
+    
+    // Update nama kegiatan untuk dikirim ke database
+    namaKegiatan = "Pengajian Ahad Pagi - " + dateStr;
   }
 
   async function loadOptions() {
@@ -318,9 +344,7 @@
     var nama = document.getElementById('nama').value;
     var aum = document.getElementById('aum').value;
     var kesimpulan = document.getElementById('kesimpulan').value;
-    
-    if (!nama || !aum || !kesimpulan) { alert("Mohon lengkapi semua formulir."); return; }
-
+    if (!nama || !aum || !kesimpulan) { alert("Harap lengkapi semua data!"); return; }
     document.getElementById('loading').classList.remove('hidden');
 
     var cvs = document.getElementById('canvas');
@@ -332,21 +356,19 @@
     ctx.fillStyle = "rgba(0,0,0,0.4)";
     ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    ctx.fillText(new Date().toLocaleString('id-ID'), 20, cvs.height - 50);
-    ctx.fillText("Loc: " + latUser.toFixed(4) + "," + lngUser.toFixed(4), 20, cvs.height - 25);
+    ctx.fillText(document.getElementById('clockDate').innerText + " " + document.getElementById('clockTime').innerText, 20, cvs.height - 50);
+    ctx.fillText("Loc: " + latUser.toFixed(4) + "," + lngUser.toFixed(4) + " ("+jarakUser+"m)", 20, cvs.height - 25);
 
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
 
     try {
       let req = await fetch(SCRIPT_URL, { 
-        method: 'POST', 
-        body: JSON.stringify({ 
+        method: 'POST', body: JSON.stringify({ 
           action: 'savePresensi', 
           data: { nama: nama, aum: aum, kegiatan: namaKegiatan, kesimpulan: kesimpulan, lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64 } 
         }) 
       });
       let res = await req.json();
-      
       document.getElementById('loading').classList.add('hidden');
       alert(res.message);
       if(res.status === 'success') location.reload();
@@ -359,7 +381,6 @@
   async function loadReportData() {
     var nama = document.getElementById('nama').value;
     if(!nama) return alert("Pilih Nama Dulu");
-
     document.getElementById('loadingReport').classList.remove('hidden');
     document.getElementById('contentReport').classList.add('hidden');
 
@@ -369,30 +390,24 @@
         body: JSON.stringify({ action: 'getReport', nama: nama, start: document.getElementById('filterStart').value, end: document.getElementById('filterEnd').value }) 
       });
       let res = await req.json();
-      
       document.getElementById('loadingReport').classList.add('hidden');
       document.getElementById('contentReport').classList.remove('hidden');
 
       document.getElementById('repNama').innerText = nama;
       document.getElementById('repAum').innerText = res.aum || "-";
-      document.getElementById('repTotal').innerText = res.count;
+      document.getElementById('repTotal').innerText = res.count + " / " + res.totalEvents;
       document.getElementById('repPercent').innerText = res.percent + "%";
       
-      var img = document.getElementById('imgFotoTerbaru');
-      var box = document.getElementById('boxFoto');
+      var img = document.getElementById('imgFotoTerbaru'), box = document.getElementById('boxFoto');
       if(res.fotoTerbaru) { img.src = "data:image/png;base64," + res.fotoTerbaru; box.classList.remove('hidden'); } else { box.classList.add('hidden'); }
 
       var tbody = document.getElementById('tabelHistory'); tbody.innerHTML = "";
-      if(res.history.length === 0) tbody.innerHTML = "<tr><td colspan='2' class='text-center text-muted'>Tidak ada data</td></tr>";
+      if(res.history.length === 0) tbody.innerHTML = "<tr><td colspan='2' class='text-center text-muted py-3'>Belum ada data</td></tr>";
       else res.history.forEach(i => tbody.innerHTML += `
         <tr>
-            <td class='text-start'>
-                <div class='fw-bold text-dark' style='font-size:0.8rem'>${i.tanggal.split('-')[0]}</div>
-                <div class='text-muted' style='font-size:0.7rem'>${i.tanggal.split('-')[1] || ''}</div>
-            </td>
+            <td class='text-start'><div class='fw-bold text-dark' style='font-size:0.8rem'>${i.tanggal.split('-')[0]}</div><div class='text-muted' style='font-size:0.7rem'>${i.tanggal.split('-')[1] || ''}</div></td>
             <td class='text-end'><i class="bi bi-check-circle-fill text-success"></i></td>
         </tr>`);
-
     } catch (e) { alert("Error Report: " + e); }
   }
 
@@ -407,20 +422,15 @@
   function updatePosisi(pos) {
     latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
     lokasiString = latUser + "," + lngUser;
-    
     var R = 6371000, dLat = (PUSAT_LAT-latUser)*Math.PI/180, dLon = (PUSAT_LNG-lngUser)*Math.PI/180;
     var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(latUser*Math.PI/180)*Math.cos(PUSAT_LAT*Math.PI/180) * Math.sin(dLon/2)*Math.sin(dLon/2);
     jarakUser = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 
     var el = document.getElementById('statusLokasiBox');
     if (jarakUser <= MAX_RADIUS) { 
-        isLocationOk = true; 
-        el.className = 'status-pill status-ok'; 
-        el.innerHTML = `<i class="bi bi-geo-alt-fill text-success"></i> Lokasi Aman (${jarakUser}m)`; 
+        isLocationOk = true; el.className = 'status-pill status-ok'; el.innerHTML = `<i class="bi bi-geo-alt-fill text-success"></i> Lokasi Aman (${jarakUser}m)`; 
     } else { 
-        isLocationOk = false; 
-        el.className = 'status-pill status-err'; 
-        el.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-danger"></i> Kejauhan (${jarakUser}m)`; 
+        isLocationOk = false; el.className = 'status-pill status-err'; el.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-danger"></i> Kejauhan (${jarakUser}m)`; 
     }
     cekTombol();
   }
@@ -428,18 +438,10 @@
   function cekWaktuBuka() {
     var now = new Date(), day = now.getDay(), h = now.getHours(), m = now.getMinutes();
     var isOpen = (day === 0 && ((h === 6) || (h === 7 && m <= 30)));
-    
-    // UNTUK TESTING (HAPUS JIKA LIVE)
-    // isOpen = true; 
-
+    // isOpen = true; // UNCOMMENT UNTUK TESTING
     var el = document.getElementById('statusWaktu');
     if(isOpen) { isTimeOpen = true; el.classList.add('hidden'); }
-    else { 
-        isTimeOpen = false; 
-        el.classList.remove('hidden'); 
-        el.className = 'status-pill status-err'; 
-        el.innerHTML = "⛔ Presensi Ditutup"; 
-    }
+    else { isTimeOpen = false; el.classList.remove('hidden'); el.className = 'status-pill status-err'; el.innerHTML = "⛔ Presensi Ditutup"; }
     cekTombol();
   }
 
