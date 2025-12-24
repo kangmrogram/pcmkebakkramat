@@ -16,345 +16,249 @@
   
   <style>
     :root {
-      --primary: #0f766e; /* Hijau Teal Modern */
+      --primary: #0f766e;
       --primary-dark: #115e59;
-      --accent: #14b8a6;
-      --bg-color: #f0fdfa; /* Background mint sangat muda */
-      --card-bg: #ffffff;
-      --text-main: #334155;
-      --radius: 24px;
+      --bg-light: #f1f5f9;
     }
 
     body { 
       font-family: 'Poppins', sans-serif; 
-      background-color: var(--bg-color); 
-      color: var(--text-main);
+      background-color: var(--bg-light); 
+      margin: 0; padding: 0; /* Reset agar full screen */
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 20px 15px;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Card Utama */
-    .card-custom { 
-      border-radius: var(--radius); 
-      border: none;
-      background: var(--card-bg);
-      box-shadow: 0 20px 40px -10px rgba(15, 118, 110, 0.15); 
-      padding: 30px 25px;
-      width: 100%;
+    /* Container Utama di Tengah (untuk tampilan Desktop tetap rapi) */
+    .app-container {
       max-width: 480px;
+      margin: 0 auto;
+      background: #ffffff;
+      min-height: 100vh;
       position: relative;
-      overflow: hidden;
-      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    /* Hiasan Header */
-    .card-custom::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Header Logo */
-    .header-section {
+    /* DEKORASI HEADER (HIJAU DI ATAS) */
+    .header-decoration {
+      background: linear-gradient(135deg, var(--primary), #14b8a6);
+      height: 220px;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      padding: 30px 20px 60px 20px;
+      color: white;
       text-align: center;
-      margin-bottom: 25px;
-    }
-    .logo-img {
-      width: 70px;
-      height: auto;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-    }
-    .app-title {
-      font-weight: 700;
-      color: var(--primary-dark);
-      font-size: 1.25rem;
-      line-height: 1.3;
-      margin-bottom: 2px;
-    }
-    .app-date {
-      font-size: 0.8rem;
-      color: #64748b;
-      font-weight: 500;
-      background: #f1f5f9;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-top: 5px;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Camera Viewfinder */
+    .logo-img {
+      width: 70px; height: auto;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      padding: 5px;
+      backdrop-filter: blur(5px);
+      margin-bottom: 10px;
+    }
+
+    /* KARTU KONTEN UTAMA (NAIK KE ATAS) */
+    .main-content {
+      background: white;
+      margin: -60px 20px 20px 20px; /* Efek Overlap ke atas */
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+      position: relative;
+      z-index: 2;
+      flex-grow: 1; /* Agar mengisi ruang kosong ke bawah */
+    }
+
+    /* Camera Area */
     .camera-wrapper {
       position: relative;
       border-radius: 20px;
       overflow: hidden;
       margin-bottom: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       background: #000;
-      aspect-ratio: 4/3;
+      aspect-ratio: 4/4; /* Kotak agar pas di layar HP */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    #camera { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover; 
-      transform: scaleX(-1); 
-    }
+    #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .scan-overlay {
-      position: absolute;
-      top: 20px; left: 20px; right: 20px; bottom: 20px;
-      border: 2px dashed rgba(255,255,255,0.6);
-      border-radius: 12px;
-      pointer-events: none;
+      position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
+      border: 2px dashed rgba(255,255,255,0.7); border-radius: 15px; pointer-events: none;
     }
-    .scan-text {
-      position: absolute;
-      bottom: 10px; left: 0; right: 0;
-      text-align: center;
-      color: white;
-      font-size: 0.75rem;
-      background: rgba(0,0,0,0.5);
-      padding: 5px;
-      backdrop-filter: blur(4px);
-    }
-    #canvas, .hidden { display: none; }
 
-    /* Inputs */
-    .form-group { margin-bottom: 18px; }
-    .form-label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
-    .input-group-custom {
-      position: relative;
-      display: flex;
-      align-items: center;
+    /* Inputs Modern */
+    .form-label { font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 5px; margin-left: 5px; }
+    .input-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
-    .input-group-custom:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
-      background: #fff;
-    }
-    .input-icon {
-      padding: 0 15px;
-      color: #94a3b8;
-      font-size: 1.1rem;
-    }
-    .form-control-custom {
-      border: none;
-      background: transparent;
-      padding: 12px 15px 12px 0;
-      width: 100%;
-      font-size: 0.95rem;
-      color: var(--text-main);
-      outline: none;
-    }
-    .btn-riwayat {
-      background: #e0f2fe;
-      color: #0284c7;
-      border: none;
-      font-weight: 600;
-      font-size: 0.8rem;
-      padding: 8px 16px;
-      border-radius: 8px;
-      margin-right: 8px;
-      transition: 0.2s;
-      cursor: pointer;
-    }
-    .btn-riwayat:active { transform: scale(0.95); }
-
-    /* Button Utama */
-    #btnAbsen {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border: none;
       border-radius: 16px;
-      padding: 16px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      font-size: 1rem;
-      box-shadow: 0 10px 20px -5px rgba(15, 118, 110, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-      width: 100%;
-      color: white;
-      margin-top: 10px;
-    }
-    #btnAbsen:active { transform: scale(0.98); box-shadow: 0 5px 10px -5px rgba(15, 118, 110, 0.4); }
-    #btnAbsen:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
-
-    /* Status Boxes */
-    .status-pill {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 5px 15px;
+      display: flex; align-items: center;
+      transition: 0.3s;
       margin-bottom: 15px;
-      transition: all 0.3s;
     }
-    .status-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .input-box:focus-within { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1); }
+    .input-box i { color: #94a3b8; margin-right: 10px; font-size: 1.1rem; }
+    .form-control-plain { border: none; background: transparent; width: 100%; padding: 10px 0; outline: none; font-size: 0.9rem; color: #334155; }
     
-    /* Modal Styling */
-    .modal-content { border-radius: 20px; border: none; overflow: hidden; }
-    .modal-header { border-bottom: 1px solid #f1f5f9; background: #fff; padding: 15px 20px; }
-    .foto-rekap { 
-      width: 100px; height: 100px; 
-      object-fit: cover; 
-      border-radius: 20px; 
-      border: 4px solid #fff; 
-      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-      margin-bottom: 10px;
-    }
-    .stat-card {
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 15px;
-      text-align: center;
-      border: 1px solid #f1f5f9;
+    .btn-riwayat {
+        background: rgba(15, 118, 110, 0.1); color: var(--primary);
+        border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
     }
 
-    /* Animation */
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Tombol Utama */
+    #btnAbsen {
+      background: var(--primary);
+      color: white; border: none; width: 100%; padding: 18px;
+      border-radius: 18px; font-weight: 600; font-size: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4);
+      margin-top: 10px; transition: 0.2s;
     }
+    #btnAbsen:disabled { background: #cbd5e1; box-shadow: none; }
+    #btnAbsen:active { transform: scale(0.98); }
+
+    /* Status Pills */
+    .status-pill {
+      padding: 10px 15px; border-radius: 12px; font-size: 0.8rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
+    }
+    .status-ok { background: #d1fae5; color: #047857; }
+    .status-err { background: #fee2e2; color: #b91c1c; }
+
+    /* Helper Classes */
+    .hidden { display: none !important; }
+    #canvas { display: none; }
     
     /* Loading Overlay */
-    #loading-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(5px);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    /* Modal Report */
+    .foto-rekap { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 4px solid var(--bg-light); margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
 
 <div id="loading" class="hidden">
-  <div id="loading-overlay">
-    <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;"></div>
-    <p class="mt-3 fw-bold text-success">Mengirim Data...</p>
-  </div>
+  <div class="spinner-border text-success" role="status"></div>
+  <p class="mt-3 fw-bold text-success small">Memproses Data...</p>
 </div>
 
-<div class="card-custom">
-  <div class="header-section">
-    <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img" alt="Logo">
-    <h1 class="app-title">Presensi Kajian AUM<br>PCM Kebakkramat</h1>
-    <span id="tglKegiatan" class="app-date">Memuat Tanggal...</span>
+<div class="app-container">
+  
+  <div class="header-decoration">
+    <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img">
+    <h5 class="fw-bold mb-1" style="font-size: 1.1rem; line-height: 1.4;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
+    <div id="tglKegiatan" style="font-size: 0.8rem; opacity: 0.9;">Memuat Tanggal...</div>
   </div>
 
-  <div id="statusWaktu" class="hidden"></div>
+  <div class="main-content">
+    
+    <div id="statusWaktu" class="hidden"></div>
 
-  <div class="camera-wrapper">
-    <video id="camera" autoplay playsinline></video>
-    <div class="scan-overlay"></div>
-    <div class="scan-text"><i class="bi bi-camera-video-fill me-1"></i> Pastikan wajah terlihat jelas</div>
-  </div>
-  <canvas id="canvas"></canvas>
-
-  <div class="form-group">
-    <label class="form-label">Nama Lengkap</label>
-    <div class="input-group-custom">
-      <i class="bi bi-person input-icon"></i>
-      <select id="nama" class="form-control-custom">
-        <option disabled selected>-- Memuat Data... --</option>
-      </select>
-      <button class="btn-riwayat" onclick="bukaModalReport()">
-        <i class="bi bi-clock-history"></i>
-      </button>
+    <div class="camera-wrapper">
+      <video id="camera" autoplay playsinline></video>
+      <div class="scan-overlay"></div>
     </div>
-  </div>
+    <canvas id="canvas"></canvas>
 
-  <div class="form-group">
-    <label class="form-label">Asal AUM</label>
-    <div class="input-group-custom">
-      <i class="bi bi-building input-icon"></i>
-      <select id="aum" class="form-control-custom">
-        <option disabled selected>-- Pilih AUM --</option>
-      </select>
+    <div class="mb-3">
+      <label class="form-label">Nama Lengkap</label>
+      <div class="input-box">
+        <i class="bi bi-person"></i>
+        <select id="nama" class="form-control-plain">
+          <option disabled selected>-- Memuat... --</option>
+        </select>
+        <button class="btn-riwayat" onclick="bukaModalReport()">
+            <i class="bi bi-clock-history"></i>
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label class="form-label">Kesimpulan Kajian</label>
-    <div class="input-group-custom">
-      <i class="bi bi-journal-text input-icon" style="align-self: flex-start; margin-top: 12px;"></i>
-      <textarea id="kesimpulan" class="form-control-custom" rows="2" placeholder="Catatan penting..."></textarea>
+    <div class="mb-3">
+      <label class="form-label">Asal AUM</label>
+      <div class="input-box">
+        <i class="bi bi-building"></i>
+        <select id="aum" class="form-control-plain">
+          <option disabled selected>-- Pilih AUM --</option>
+        </select>
+      </div>
     </div>
+
+    <div class="mb-3">
+      <label class="form-label">Kesimpulan</label>
+      <div class="input-box" style="align-items: flex-start; padding-top: 10px;">
+        <i class="bi bi-journal-text" style="margin-top: 3px;"></i>
+        <textarea id="kesimpulan" class="form-control-plain" rows="2" placeholder="Catatan kajian..."></textarea>
+      </div>
+    </div>
+
+    <div id="statusLokasiBox" class="status-pill status-err">
+      <div class="spinner-border spinner-border-sm" role="status"></div>
+      <span>Mencari GPS...</span>
+    </div>
+
+    <button id="btnAbsen" onclick="kirimAbsen()" disabled>
+      KIRIM PRESENSI
+    </button>
+  </div>
+  
+  <div class="text-center pb-4 text-muted" style="font-size: 0.7rem;">
+    &copy; PCM Kebakkramat - Majelis Pustaka & Informasi
   </div>
 
-  <div id="statusLokasiBox" class="status-pill status-err">
-    <div class="spinner-border spinner-border-sm" role="status"></div>
-    <span>Mencari Lokasi...</span>
-  </div>
-
-  <button id="btnAbsen" onclick="kirimAbsen()" disabled>
-    <i class="bi bi-send-fill me-2"></i> KIRIM PRESENSI
-  </button>
 </div>
 
 <div class="modal fade" id="modalReport">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-bar-chart-fill text-success me-2"></i>Laporan Kehadiran</h5>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content" style="border-radius: 24px; border:none;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold fs-6">Riwayat Kehadiran</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body p-4">
+      <div class="modal-body text-center p-4">
         
-        <div class="d-flex gap-2 mb-4">
-          <input type="date" id="filterStart" class="form-control form-control-sm">
-          <input type="date" id="filterEnd" class="form-control form-control-sm">
-          <button class="btn btn-sm btn-success" onclick="loadReportData()"><i class="bi bi-search"></i></button>
+        <div class="d-flex gap-2 mb-4 bg-light p-2 rounded-3">
+          <input type="date" id="filterStart" class="form-control form-control-sm border-0 bg-white">
+          <input type="date" id="filterEnd" class="form-control form-control-sm border-0 bg-white">
+          <button class="btn btn-sm btn-success rounded-3" onclick="loadReportData()"><i class="bi bi-search"></i></button>
         </div>
 
-        <div id="loadingReport" class="text-center hidden py-4">
-          <div class="spinner-border text-success"></div>
-        </div>
+        <div id="loadingReport" class="hidden py-3"><div class="spinner-border text-success"></div></div>
 
-        <div id="contentReport" class="text-center hidden">
-          <div id="boxFoto" class="hidden">
-            <img id="imgFotoTerbaru" src="" class="foto-rekap">
-          </div>
-          
-          <h4 class="fw-bold text-dark mb-0" id="repNama">User</h4>
-          <span class="badge bg-light text-dark border mb-3" id="repAum">AUM</span>
-          
-          <div class="row g-3 mb-4">
-            <div class="col-6">
-              <div class="stat-card">
-                <small class="text-muted d-block text-uppercase" style="font-size:0.7rem; letter-spacing:1px;">Kehadiran</small>
-                <span id="repTotal" class="fs-4 fw-bold text-success">0</span>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="stat-card">
-                <small class="text-muted d-block text-uppercase" style="font-size:0.7rem; letter-spacing:1px;">Persentase</small>
-                <span id="repPercent" class="fs-4 fw-bold text-primary">0%</span>
-              </div>
-            </div>
-          </div>
+        <div id="contentReport" class="hidden">
+           <div id="boxFoto" class="hidden">
+             <img id="imgFotoTerbaru" src="" class="foto-rekap">
+           </div>
+           
+           <h5 class="fw-bold mb-0 text-dark" id="repNama">User</h5>
+           <small class="text-muted d-block mb-3" id="repAum">AUM</small>
 
-          <h6 class="text-start fw-bold mb-3 border-bottom pb-2">Riwayat Detail</h6>
-          <div style="max-height: 200px; overflow-y: auto;">
-            <table class="table table-borderless table-sm text-start align-middle">
-              <tbody id="tabelHistory"></tbody>
-            </table>
-          </div>
+           <div class="row g-2 mb-4">
+             <div class="col-6">
+                <div class="p-3 bg-light rounded-4">
+                    <small class="text-uppercase text-muted" style="font-size:0.65rem; letter-spacing:1px;">Total Hadir</small>
+                    <div class="fs-4 fw-bold text-success" id="repTotal">0</div>
+                </div>
+             </div>
+             <div class="col-6">
+                <div class="p-3 bg-light rounded-4">
+                    <small class="text-uppercase text-muted" style="font-size:0.65rem; letter-spacing:1px;">Persentase</small>
+                    <div class="fs-4 fw-bold text-primary" id="repPercent">0%</div>
+                </div>
+             </div>
+           </div>
+
+           <div class="text-start">
+             <h6 class="fw-bold small mb-3">Daftar Kehadiran</h6>
+             <table class="table table-borderless align-middle" style="font-size: 0.85rem;">
+                <tbody id="tabelHistory"></tbody>
+             </table>
+           </div>
         </div>
 
       </div>
@@ -364,7 +268,7 @@
 
 <script>
   // ================= KONFIGURASI =================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM8mW49NxxBlH5YzWZMrODsJL4yofK2Kq6ZZJbz7LMrCE79IBhRF7T6PgtRT6OmcedtQ/exec"; // <--- JANGAN LUPA PASTE URL API DISINI
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM8mW49NxxBlH5YzWZMrODsJL4yofK2Kq6ZZJbz7LMrCE79IBhRF7T6PgtRT6OmcedtQ/exec"; // <--- PASTE DISINI
   const PUSAT_LAT = -7.520630;
   const PUSAT_LNG = 110.906286;
   const MAX_RADIUS = 500; 
@@ -373,37 +277,32 @@
   var latUser = 0, lngUser = 0, lokasiString = "", jarakUser = 0;
   var namaKegiatan = "", isTimeOpen = false, isLocationOk = false, myModal;
 
-  // ================= INIT =================
   window.onload = function() {
     try {
       myModal = new bootstrap.Modal(document.getElementById('modalReport'));
       setupTanggal();
       cekWaktuBuka();
 
-      // Kamera
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
         .then(s => video.srcObject = s)
         .catch(e => alert("Kamera Error: " + e));
 
-      // GPS
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition(updatePosisi, e => {
-           document.getElementById('statusLokasiBox').innerHTML = `<i class="bi bi-geo-alt-fill"></i> GPS Error: ${e.message}`;
+           document.getElementById('statusLokasiBox').innerHTML = `<i class="bi bi-geo-alt"></i> GPS Error`;
         }, { enableHighAccuracy: true });
       }
 
-      loadOptions(); // Tarik Data
+      loadOptions(); 
     } catch (e) { console.error(e); }
   };
 
   function setupTanggal() {
     var now = new Date();
-    var options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     namaKegiatan = "Pengajian Ahad Pagi - " + now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('tglKegiatan').innerText = now.toLocaleDateString('id-ID', options);
+    document.getElementById('tglKegiatan').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  // ================= API CALLS =================
   async function loadOptions() {
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
@@ -420,7 +319,7 @@
     var aum = document.getElementById('aum').value;
     var kesimpulan = document.getElementById('kesimpulan').value;
     
-    if (!nama || !aum || !kesimpulan) { alert("Harap lengkapi semua data!"); return; }
+    if (!nama || !aum || !kesimpulan) { alert("Mohon lengkapi semua formulir."); return; }
 
     document.getElementById('loading').classList.remove('hidden');
 
@@ -429,13 +328,12 @@
     var ctx = cvs.getContext('2d');
     ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
-    // Watermark Modern
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(0, cvs.height - 100, cvs.width, 100);
-    
+    // Watermark
+    ctx.fillStyle = "rgba(0,0,0,0.4)";
+    ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    var txt = ["Jarak: " + jarakUser + "m", "Loc: " + latUser.toFixed(4) + "," + lngUser.toFixed(4), new Date().toLocaleString('id-ID')];
-    txt.forEach((t, i) => { ctx.fillText(t, 20, cvs.height - 20 - (i*25)); });
+    ctx.fillText(new Date().toLocaleString('id-ID'), 20, cvs.height - 50);
+    ctx.fillText("Loc: " + latUser.toFixed(4) + "," + lngUser.toFixed(4), 20, cvs.height - 25);
 
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
 
@@ -460,7 +358,7 @@
 
   async function loadReportData() {
     var nama = document.getElementById('nama').value;
-    if(!nama) return alert("Pilih Nama Terlebih Dahulu");
+    if(!nama) return alert("Pilih Nama Dulu");
 
     document.getElementById('loadingReport').classList.remove('hidden');
     document.getElementById('contentReport').classList.add('hidden');
@@ -477,7 +375,7 @@
 
       document.getElementById('repNama').innerText = nama;
       document.getElementById('repAum').innerText = res.aum || "-";
-      document.getElementById('repTotal').innerText = res.count + " / " + res.totalEvents;
+      document.getElementById('repTotal').innerText = res.count;
       document.getElementById('repPercent').innerText = res.percent + "%";
       
       var img = document.getElementById('imgFotoTerbaru');
@@ -485,20 +383,19 @@
       if(res.fotoTerbaru) { img.src = "data:image/png;base64," + res.fotoTerbaru; box.classList.remove('hidden'); } else { box.classList.add('hidden'); }
 
       var tbody = document.getElementById('tabelHistory'); tbody.innerHTML = "";
-      if(res.history.length === 0) tbody.innerHTML = "<tr><td colspan='2' class='text-center text-muted py-3'>Belum ada data</td></tr>";
+      if(res.history.length === 0) tbody.innerHTML = "<tr><td colspan='2' class='text-center text-muted'>Tidak ada data</td></tr>";
       else res.history.forEach(i => tbody.innerHTML += `
         <tr>
-            <td class='ps-0'>
-                <div class='fw-bold text-dark' style='font-size:0.85rem'>${i.tanggal.split('-')[0]}</div>
-                <div class='text-muted' style='font-size:0.75rem'><i class="bi bi-clock"></i> ${i.tanggal.split('-')[1] || ''}</div>
+            <td class='text-start'>
+                <div class='fw-bold text-dark' style='font-size:0.8rem'>${i.tanggal.split('-')[0]}</div>
+                <div class='text-muted' style='font-size:0.7rem'>${i.tanggal.split('-')[1] || ''}</div>
             </td>
-            <td class='text-end pe-0'><span class="badge bg-success bg-opacity-10 text-success">Hadir</span></td>
+            <td class='text-end'><i class="bi bi-check-circle-fill text-success"></i></td>
         </tr>`);
 
     } catch (e) { alert("Error Report: " + e); }
   }
 
-  // ================= HELPERS =================
   function isiDropdown(id, list) {
     var sel = document.getElementById(id);
     sel.innerHTML = `<option disabled selected>-- Pilih ${id === 'nama' ? 'Nama' : 'AUM'} --</option>`;
@@ -519,11 +416,11 @@
     if (jarakUser <= MAX_RADIUS) { 
         isLocationOk = true; 
         el.className = 'status-pill status-ok'; 
-        el.innerHTML = `<i class="bi bi-geo-alt-fill"></i> Lokasi Aman (${jarakUser}m)`; 
+        el.innerHTML = `<i class="bi bi-geo-alt-fill text-success"></i> Lokasi Aman (${jarakUser}m)`; 
     } else { 
         isLocationOk = false; 
         el.className = 'status-pill status-err'; 
-        el.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> Kejauhan (${jarakUser}m)`; 
+        el.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-danger"></i> Kejauhan (${jarakUser}m)`; 
     }
     cekTombol();
   }
@@ -532,7 +429,7 @@
     var now = new Date(), day = now.getDay(), h = now.getHours(), m = now.getMinutes();
     var isOpen = (day === 0 && ((h === 6) || (h === 7 && m <= 30)));
     
-    // UNTUK TESTING HARI INI (Hapus baris bawah ini saat Live)
+    // UNTUK TESTING (HAPUS JIKA LIVE)
     // isOpen = true; 
 
     var el = document.getElementById('statusWaktu');
@@ -541,7 +438,7 @@
         isTimeOpen = false; 
         el.classList.remove('hidden'); 
         el.className = 'status-pill status-err'; 
-        el.innerHTML = "⛔ Maaf, Presensi Ditutup"; 
+        el.innerHTML = "⛔ Presensi Ditutup"; 
     }
     cekTombol();
   }
