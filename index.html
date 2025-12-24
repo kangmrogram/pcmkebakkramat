@@ -39,13 +39,13 @@
       position: relative;
     }
 
-    /* --- HEADER AREA --- */
+    /* HEADER */
     .header-decoration {
       background: linear-gradient(135deg, var(--primary), #0d9488);
-      height: 280px; /* Dipertinggi untuk jam */
-      border-bottom-left-radius: 40px;
-      border-bottom-right-radius: 40px;
-      padding: 25px 20px 80px 20px;
+      height: 260px;
+      border-bottom-left-radius: 35px;
+      border-bottom-right-radius: 35px;
+      padding: 20px;
       color: white;
       text-align: center;
       position: relative;
@@ -55,50 +55,71 @@
       align-items: center;
     }
 
-    .logo-container {
-      background: rgba(255,255,255,0.15);
+    .logo-img { 
+      width: 55px; height: auto; 
+      background: rgba(255,255,255,0.2);
       border-radius: 50%;
-      padding: 8px;
-      backdrop-filter: blur(4px);
-      margin-bottom: 8px;
-      display: inline-block;
+      padding: 5px;
+      margin-bottom: 5px;
+      backdrop-filter: blur(5px);
     }
-    .logo-img { width: 60px; height: auto; display: block; }
 
-    /* --- WIDGET JAM DIGITAL --- */
+    /* WIDGET JAM BARU (Rapi Kiri-Kanan) */
     .digital-clock {
       background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
       border-radius: 16px;
-      padding: 10px 20px;
-      margin-top: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 10px 15px;
+      margin-top: 15px;
       width: 100%;
-      max-width: 300px;
+      max-width: 340px;
+      display: flex;           /* Flexbox aktif */
+      align-items: center;     /* Vertikal tengah */
+      justify-content: center; /* Horizontal tengah */
+      gap: 15px;               /* Jarak antar elemen */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
     .clock-time {
-      font-family: 'JetBrains Mono', monospace; /* Font Monospace agar angka stabil */
-      font-size: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem; /* Ukuran pas */
       font-weight: 700;
       line-height: 1;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      letter-spacing: -1px;
     }
     
-    .clock-date {
-      font-size: 0.85rem;
-      font-weight: 500;
-      opacity: 0.95;
-      margin-bottom: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .clock-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.4);
     }
 
-    /* --- KARTU KONTEN UTAMA --- */
+    .clock-date-wrapper {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .clock-day {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .clock-date {
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.9;
+      line-height: 1.2;
+    }
+
+    /* KONTEN UTAMA */
     .main-content {
       background: white;
-      margin: -70px 20px 20px 20px; /* Overlap ke atas */
+      margin: -60px 20px 20px 20px;
       border-radius: 24px;
       padding: 25px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.08);
@@ -110,7 +131,7 @@
     /* Camera Area */
     .camera-wrapper {
       position: relative;
-      border-radius: 20px;
+      border-radius: 16px;
       overflow: hidden;
       margin-bottom: 20px;
       background: #000;
@@ -120,38 +141,38 @@
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .scan-overlay {
       position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px;
-      border: 2px dashed rgba(255,255,255,0.7); border-radius: 15px; pointer-events: none;
+      border: 2px dashed rgba(255,255,255,0.7); border-radius: 12px; pointer-events: none;
     }
 
-    /* Inputs Modern */
-    .form-label { font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 5px; margin-left: 5px; }
+    /* Inputs */
+    .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; margin-left: 5px; }
     .input-box {
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 5px 15px;
-      display: flex; align-items: center; transition: 0.3s; margin-bottom: 15px;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 4px 12px;
+      display: flex; align-items: center; transition: 0.3s; margin-bottom: 12px;
     }
-    .input-box:focus-within { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1); }
-    .input-box i { color: #94a3b8; margin-right: 10px; font-size: 1.1rem; }
-    .form-control-plain { border: none; background: transparent; width: 100%; padding: 10px 0; outline: none; font-size: 0.9rem; color: #334155; }
+    .input-box:focus-within { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1); }
+    .input-box i { color: #94a3b8; margin-right: 10px; font-size: 1rem; }
+    .form-control-plain { border: none; background: transparent; width: 100%; padding: 10px 0; outline: none; font-size: 0.85rem; color: #334155; }
     
     .btn-riwayat {
         background: rgba(15, 118, 110, 0.1); color: var(--primary);
-        border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+        border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;
     }
 
     /* Tombol Utama */
     #btnAbsen {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white; border: none; width: 100%; padding: 18px;
-      border-radius: 18px; font-weight: 600; font-size: 1rem;
-      box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4);
-      margin-top: 10px; transition: 0.2s;
+      color: white; border: none; width: 100%; padding: 16px;
+      border-radius: 16px; font-weight: 600; font-size: 0.95rem;
+      box-shadow: 0 10px 20px -5px rgba(15, 118, 110, 0.4);
+      margin-top: 8px; transition: 0.2s;
     }
     #btnAbsen:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
     #btnAbsen:active { transform: scale(0.98); }
 
     /* Status Pills */
     .status-pill {
-      padding: 10px 15px; border-radius: 12px; font-size: 0.8rem; font-weight: 600;
+      padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
       display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
     }
     .status-ok { background: #d1fae5; color: #047857; }
@@ -161,7 +182,7 @@
     #canvas { display: none; }
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-    /* Modal Styles */
+    /* Modal */
     .foto-rekap { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 4px solid var(--bg-light); margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
   </style>
 </head>
@@ -175,14 +196,18 @@
 <div class="app-container">
   
   <div class="header-decoration">
-    <div class="logo-container">
-       <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img">
-    </div>
-    <h5 class="fw-bold mb-0" style="font-size: 1.1rem; line-height: 1.3;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
+    <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="logo-img">
+    <h5 class="fw-bold mb-0" style="font-size: 1rem; line-height: 1.3;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
     
     <div class="digital-clock">
-       <div id="clockDate" class="clock-date">Memuat...</div>
-       <div id="clockTime" class="clock-time">00:00:00</div>
+       <div id="clockTime" class="clock-time">00:00</div>
+       
+       <div class="clock-divider"></div>
+       
+       <div class="clock-date-wrapper">
+          <div id="clockDay" class="clock-day">Ahad</div>
+          <div id="clockDate" class="clock-date">1 Januari 2025</div>
+       </div>
     </div>
   </div>
 
@@ -219,7 +244,7 @@
 
     <div class="mb-3">
       <label class="form-label">Kesimpulan</label>
-      <div class="input-box" style="align-items: flex-start; padding-top: 10px;">
+      <div class="input-box" style="align-items: flex-start; padding-top: 8px;">
         <i class="bi bi-journal-text" style="margin-top: 3px;"></i>
         <textarea id="kesimpulan" class="form-control-plain" rows="2" placeholder="Catatan kajian..."></textarea>
       </div>
@@ -287,7 +312,7 @@
   window.onload = function() {
     try {
       myModal = new bootstrap.Modal(document.getElementById('modalReport'));
-      initClock(); // Jalankan Jam
+      initClock(); 
       cekWaktuBuka();
 
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
@@ -303,30 +328,39 @@
     } catch (e) { console.error(e); }
   };
 
-  // --- LOGIKA JAM DIGITAL & TANGGAL (AHAD) ---
+  // --- LOGIKA JAM DIGITAL BARU ---
   function initClock() {
-    updateClock(); // Jalankan sekali di awal
-    setInterval(updateClock, 1000); // Update tiap detik
+    updateClock(); 
+    setInterval(updateClock, 1000); 
   }
 
   function updateClock() {
     var now = new Date();
     
-    // 1. Update Jam (WIB)
-    var timeStr = now.toLocaleTimeString('id-ID', { hour12: false }) + " WIB";
-    document.getElementById('clockTime').innerText = timeStr;
+    // 1. JAM (Kiri) - Tanpa WIB
+    var timeStr = now.toLocaleTimeString('id-ID', { hour12: false });
+    // Ganti titik dua (:) dengan titik (.) jika preferensi style Indonesia, 
+    // atau biarkan default. Di sini saya pakai default browser.
+    document.getElementById('clockTime').innerText = timeStr.replace(/\./g, ":");
 
-    // 2. Update Tanggal (Format: Ahad, 25 Desember 2025)
-    var dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    var dateStr = now.toLocaleDateString('id-ID', dateOptions);
+    // 2. TANGGAL (Kanan)
+    // Ambil Nama Hari
+    var dayName = now.toLocaleDateString('id-ID', { weekday: 'long' });
+    if(dayName === 'Minggu') dayName = 'Ahad';
+    document.getElementById('clockDay').innerText = dayName;
+
+    // Ambil Tanggal & Bulan
+    var dateFull = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     
-    // GANTI MINGGU JADI AHAD
-    dateStr = dateStr.replace("Minggu", "Ahad");
+    // Pastikan Bulan Title Case (Biasanya default ID sudah Title Case, tapi kita paksa cek)
+    // Contoh: "25 desember 2025" -> "25 Desember 2025"
+    // Kode ini memisahkan perkata dan mengkapitalkan huruf pertama
+    dateFull = dateFull.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+
+    document.getElementById('clockDate').innerText = dateFull;
     
-    document.getElementById('clockDate').innerText = dateStr;
-    
-    // Update nama kegiatan untuk dikirim ke database
-    namaKegiatan = "Pengajian Ahad Pagi - " + dateStr;
+    // Update nama kegiatan untuk database
+    namaKegiatan = "Pengajian Ahad Pagi - " + dayName + ", " + dateFull;
   }
 
   async function loadOptions() {
@@ -356,7 +390,10 @@
     ctx.fillStyle = "rgba(0,0,0,0.4)";
     ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    ctx.fillText(document.getElementById('clockDate').innerText + " " + document.getElementById('clockTime').innerText, 20, cvs.height - 50);
+    
+    // Gabung tanggal jam untuk watermark
+    var fullDateTime = document.getElementById('clockDay').innerText + ", " + document.getElementById('clockDate').innerText + " " + document.getElementById('clockTime').innerText + " WIB";
+    ctx.fillText(fullDateTime, 20, cvs.height - 50);
     ctx.fillText("Loc: " + latUser.toFixed(4) + "," + lngUser.toFixed(4) + " ("+jarakUser+"m)", 20, cvs.height - 25);
 
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
