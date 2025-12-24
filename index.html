@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <title>Presensi PCM Kebakkramat</title>
@@ -13,110 +13,324 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <style>
-    /* ... (Copy CSS dari versi sebelumnya di sini) ... */
     body { padding: 15px; background-color: #f0f2f5; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
     .card-custom { border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; background: white; border-top: 5px solid #198754; }
-    .hidden { display: none; }
-    #camera { width: 100%; border-radius: 10px; background: #000; transform: scaleX(-1); }
+    .logo-header { width: 70px; height: auto; }
+    #camera { width: 100%; border-radius: 10px; background: #000; transform: scaleX(-1); margin-bottom: 15px; }
     #canvas { display: none; }
+    .btn-submit { width: 100%; padding: 12px; font-weight: bold; border-radius: 8px; margin-top: 10px; }
+    .hidden { display: none; }
+    
+    .alert-status { font-size: 0.85rem; font-weight: bold; padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; text-align: center;}
+    .status-ok { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+    .status-err { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+    
+    .foto-rekap { width: 120px; height: 120px; object-fit: cover; border-radius: 15px; border: 3px solid #198754; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
 
-  <div class="container" style="max-width: 500px;">
-    <div class="card-custom">
-        <h5 class="text-center">Loading Sistem...</h5>
-        </div>
+<div class="container" style="max-width: 500px;">
+  <div class="card-custom">
+    
+    <div class="d-flex align-items-center justify-content-center mb-4">
+      <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" alt="Logo" class="logo-header me-3">
+      <div class="text-start">
+          <h5 class="fw-bold text-success mb-0" style="line-height: 1.2;">Presensi Kajian AUM<br>PCM Kebakkramat</h5>
+          <small class="text-muted fw-bold" id="tglKegiatan" style="font-size: 0.8rem;">Memuat sistem...</small>
+      </div>
+    </div>
+
+    <div id="statusWaktu" class="hidden"></div>
+    
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <div class="mb-3">
+      <label class="form-label small fw-bold">Nama Lengkap</label>
+      <div class="input-group">
+        <select id="nama" class="form-select">
+          <option value="" disabled selected>-- Sedang Memuat Data... --</option>
+        </select>
+        <button class="btn btn-outline-info" type="button" onclick="bukaModalReport()">📋 Riwayat</button>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label small fw-bold">Asal AUM</label>
+      <select id="aum" class="form-select">
+        <option value="" disabled selected>-- Pilih AUM --</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label small fw-bold">Kesimpulan Kajian</label>
+      <textarea id="kesimpulan" class="form-control" rows="3" placeholder="Tulis poin penting kajian hari ini..."></textarea>
+    </div>
+
+    <div id="statusLokasiBox" class="alert-status status-err">
+      <span>⏳ Menunggu GPS...</span>
+    </div>
+
+    <button id="btnAbsen" class="btn btn-success btn-submit" onclick="kirimAbsen()" disabled>
+      KIRIM PRESENSI
+    </button>
+    
+    <div id="loading" class="text-center mt-3 hidden">
+      <div class="spinner-border text-success" role="status"></div>
+      <p class="small text-muted mt-2">Sedang mengirim data ke server...</p>
+    </div>
   </div>
+</div>
+
+<div class="modal fade" id="modalReport" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fs-6 fw-bold">Laporan Kehadiran</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="small text-muted">Dari</label>
+            <input type="date" id="filterStart" class="form-control form-control-sm">
+          </div>
+          <div class="col-6">
+            <label class="small text-muted">Sampai</label>
+            <input type="date" id="filterEnd" class="form-control form-control-sm">
+          </div>
+          <div class="col-12 d-grid">
+             <button class="btn btn-sm btn-primary mt-1" onclick="loadReportData()">Terapkan Filter</button>
+          </div>
+        </div>
+        <hr>
+
+        <div id="loadingReport" class="text-center py-3 hidden">
+          <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+          <span class="ms-2">Memuat data...</span>
+        </div>
+        
+        <div id="contentReport" class="text-center hidden">
+          <div id="boxFoto" class="hidden">
+            <img id="imgFotoTerbaru" src="" class="foto-rekap" alt="Foto Terbaru">
+            <p class="small text-muted mb-1" style="font-size: 0.7rem;">Presensi Terakhir</p>
+          </div>
+
+          <h5 class="text-success fw-bold mb-0" id="repNama">User</h5>
+          <p class="text-muted small mb-3" id="repAum">AUM</p>
+          
+          <div class="row mb-3">
+             <div class="col-6">
+               <div class="border rounded p-2 bg-light">
+                 <small class="d-block text-muted">Kehadiran</small>
+                 <strong id="repTotal" class="fs-5">0</strong>
+               </div>
+             </div>
+             <div class="col-6">
+               <div class="border rounded p-2 bg-light">
+                 <small class="d-block text-muted">Persentase</small>
+                 <strong id="repPercent" class="fs-5 text-primary">0%</strong>
+               </div>
+             </div>
+          </div>
+
+          <p class="small fw-bold mb-1 text-start">Rincian:</p>
+          <div style="max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 5px;">
+            <table class="table table-striped table-sm mb-0 text-start">
+              <tbody id="tabelHistory"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer py-1">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  // --- KONFIGURASI PWA ---
-  // GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLuAq_odFMxcRYBoKaW1QRvLtSFDwKXFS1r1idmOKgcuNQ9v1M3nuAT4F8shM6z5dV0Q/exec"; 
+  // ==========================================================
+  // KONFIGURASI PWA & SERVER
+  // ==========================================================
+  
+  // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT WEB APP ANDA YANG BARU
+  // Pastikan Deploy sebagai "Anyone"
+  const SCRIPT_URL = "Phttps://script.google.com/macros/s/AKfycbyLuAq_odFMxcRYBoKaW1QRvLtSFDwKXFS1r1idmOKgcuNQ9v1M3nuAT4F8shM6z5dV0Q/exec"; 
 
-  // Register Service Worker (WAJIB UNTUK PWA)
+  // Konfigurasi Lokasi
+  const PUSAT_LAT = -7.520630163588739;
+  const PUSAT_LNG = 110.9062861747211;
+  const MAX_RADIUS = 500; // Meter
+
+  // Register Service Worker untuk PWA
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js');
+    navigator.serviceWorker.register('./service-worker.js')
+    .then(reg => console.log('SW Registered!', reg))
+    .catch(err => console.log('SW Error', err));
   }
 
-  // --- FUNGSI KOMUNIKASI API (PENGGANTI google.script.run) ---
+  // Variabel Global
+  var video = document.getElementById('camera');
+  var latUser = 0; var lngUser = 0; var lokasiString = ""; var jarakUser = 0;
+  var namaKegiatanOtomatis = "";
+  var isTimeOpen = false; var isLocationOk = false;
+  var myModal;
+
+  // ==========================================================
+  // FUNGSI UTAMA (INIT)
+  // ==========================================================
   
-  // 1. Ambil Data Awal (Options)
+  window.onload = function() {
+    setupTanggal();
+    cekWaktuBuka();
+    
+    // Inisialisasi Modal Bootstrap
+    myModal = new bootstrap.Modal(document.getElementById('modalReport'));
+
+    // Aktifkan Kamera
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => { alert("Kamera error: " + err); });
+
+    // Aktifkan GPS
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(updatePosisi, errorPosisi, { enableHighAccuracy: true });
+    } else {
+      document.getElementById('statusLokasiBox').innerHTML = "Browser tidak support GPS.";
+    }
+
+    // Panggil Data Nama dari Server Apps Script
+    loadOptions();
+  };
+
+  function setupTanggal() {
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    var today = new Date();
+    namaKegiatanOtomatis = "Pengajian Ahad Pagi - " + today.toLocaleDateString('id-ID', options);
+    document.getElementById('tglKegiatan').innerText = namaKegiatanOtomatis;
+  }
+
+  // ==========================================================
+  // KOMUNIKASI KE SERVER (FETCH API)
+  // ==========================================================
+
+  // 1. Ambil Opsi Nama & AUM
   async function loadOptions() {
     try {
+      // Fetch tanpa header untuk menghindari preflight CORS error
       let response = await fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'getOptions' })
       });
+      
       let data = await response.json();
+      
       if(data.status === 'success') {
-         populateDropdown('nama', data.nama);
+         populateDropdown('nama', data.nama); // INI FUNGSI YG TADINYA HILANG
          populateDropdown('aum', data.aum);
-         // Hapus loading, tampilkan form
-         document.querySelector('h5').innerText = "Presensi Kajian AUM";
+      } else {
+         alert("Gagal memuat data: " + data.message);
       }
-    } catch (e) { alert("Gagal koneksi: " + e); }
+    } catch (e) {
+      console.error(e);
+      alert("Gagal koneksi ke server. Pastikan URL Apps Script benar dan Deploy as 'Anyone'. Error: " + e);
+    }
   }
 
-  // 2. Kirim Absen
+  // 2. Kirim Presensi
   async function kirimAbsen() {
-     // ... (Ambil nilai nama, aum, base64 image seperti sebelumnya) ...
-     
-     let payload = {
-        action: 'savePresensi',
-        data: {
-           nama: namaVal, 
-           aum: aumVal,
-           image: base64Val,
-           lat: latUser,
-           lng: lngUser,
-           // ... data lain
-        }
-     };
+    var nama = document.getElementById('nama').value;
+    var aum = document.getElementById('aum').value;
+    var kesimpulan = document.getElementById('kesimpulan').value;
+    
+    if (!nama || !aum) { alert("Lengkapi data!"); return; }
+    if (!kesimpulan) { alert("Isi kesimpulan!"); return; }
 
-     document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('btnAbsen').classList.add('hidden');
+    document.getElementById('loading').classList.remove('hidden');
 
-     try {
-       let response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-       });
-       let result = await response.json();
-       
-       alert(result.message);
-       if(result.status === 'success') location.reload();
-       
-     } catch (e) {
-       alert("Error Kirim: " + e);
-     }
+    // Ambil Gambar dari Canvas + Watermark
+    var canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    var ctx = canvas.getContext('2d');
+    
+    // Mirror & Draw Video
+    ctx.save(); ctx.translate(canvas.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
+
+    // Tambah Watermark
+    addWatermark(ctx, canvas.height);
+
+    // Convert ke Base64
+    var base64Image = canvas.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
+
+    // Susun Payload Data
+    var payload = {
+       action: 'savePresensi',
+       data: {
+          nama: nama, aum: aum, kegiatan: namaKegiatanOtomatis, kesimpulan: kesimpulan,
+          lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64Image
+       }
+    };
+
+    try {
+      let response = await fetch(SCRIPT_URL, {
+         method: 'POST',
+         body: JSON.stringify(payload)
+      });
+      let result = await response.json();
+      
+      alert(result.message);
+      if(result.status === 'success') location.reload();
+      else {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('btnAbsen').classList.remove('hidden');
+      }
+
+    } catch (e) {
+      alert("Error Kirim: " + e);
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('btnAbsen').classList.remove('hidden');
+    }
   }
 
   // 3. Load Report
   async function loadReportData() {
-     // ... ambil value filter ...
-     let payload = {
-       action: 'getReport',
-       nama: namaVal,
-       start: startVal,
-       end: endVal
-     };
-     
-     let response = await fetch(SCRIPT_URL, {
+    var nama = document.getElementById('nama').value;
+    var start = document.getElementById('filterStart').value;
+    var end = document.getElementById('filterEnd').value;
+
+    document.getElementById('loadingReport').classList.remove('hidden');
+    document.getElementById('contentReport').classList.add('hidden');
+    
+    try {
+      let response = await fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(payload)
-     });
-     let result = await response.json();
-     
-     // ... Render tabel seperti sebelumnya ...
-  }
+        body: JSON.stringify({ 
+           action: 'getReport', 
+           nama: nama, start: start, end: end 
+        })
+      });
+      let result = await response.json();
 
-  window.onload = function() {
-    loadOptions(); // Panggil data saat load
-    // ... setup kamera & gps ...
-  };
+      // Render Hasil
+      document.getElementById('loadingReport').classList.add('hidden');
+      document.getElementById('contentReport').classList.remove('hidden');
+      
+      document.getElementById('repNama').innerText = nama;
+      document.getElementById('repAum').innerText = result.aum || "-";
+      document.getElementById('repTotal').innerText = result.count + " / " + result.totalEvents;
+      document.getElementById('repPercent').innerText = result.percent + "%";
+      
+      if (result.fotoTerbaru) {
+         document.getElementById('imgFotoTerbaru').src = "data:image/png;base64," + result.fotoTerbaru;
+         document.getElementById('boxFoto').classList.remove('hidden');
+      } else {
+         document.getElementById('boxFoto').classList.add('hidden');
+      }
 
-  // ... (Sisa fungsi helper seperti populateDropdown, GPS, dll copy dari versi lama) ...
-
-</script>
-</body>
-</html>
+      var tbody = document.getElementById('tabelHistory');
+      tbody.innerHTML = "";
+      if (result.history
