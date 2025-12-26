@@ -16,36 +16,70 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* MODALS & FULLSCREEN OVERLAY */
+    /* UTILITIES */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
     .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
     .overlay-body { padding: 20px; flex-grow: 1; }
     .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
+    .hidden { display: none !important; }
 
     /* AUTH */
-    #authScreen { z-index: 300; justify-content: center; } /* Auth paling atas */
+    #authScreen { z-index: 300; justify-content: center; } 
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* FORMS */
+    /* INPUTS & BUTTONS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 2px; }
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
-    button.btn-outline { background: white; border: 1px solid var(--primary); color: var(--primary); width: 100%; padding: 12px; border-radius: 15px; font-weight: 600; margin-top: 10px; }
-    
-    /* DASHBOARD */
-    .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 25px 20px 80px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; color: white; position: relative; }
-    .app-title-header { font-size: 0.9rem; font-weight: 600; opacity: 0.9; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;}
-    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.3rem; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-    .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
-    .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
+    button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
+    /* DASHBOARD HEADER (REDESIGNED) */
+    .dashboard-header { 
+      background: linear-gradient(135deg, var(--primary), #0d9488); 
+      padding: 20px 20px 80px; /* Extra padding bottom for overlap */
+      border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; 
+      color: white; position: relative; 
+    }
+    
+    /* Header Top Row: Logo & Title */
+    .header-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding-right: 70px; /* Space for buttons */ }
+    .header-logo-img { width: 45px; height: 45px; border-radius: 10px; background: rgba(255,255,255,0.2); padding: 5px; backdrop-filter: blur(5px); }
+    .header-title h1 { font-size: 1.1rem; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: 0.5px; }
+    .header-title p { font-size: 0.75rem; margin: 0; opacity: 0.85; font-weight: 400; }
+
+    /* Header Actions (Top Right) */
+    .header-actions { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+    .btn-action-glass {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 32px; height: 32px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px); font-size: 0.9rem; transition: 0.2s;
+    }
+    .btn-action-glass:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+
+    /* User Info Row */
+    .user-info-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 16px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+    .u-text h5 { margin: 0; font-size: 0.95rem; font-weight: 600; } /* Nama lebih kecil, tanpa garis bawah */
+    .u-text p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
+    .btn-detail-profile { 
+      background: white; color: var(--primary); border: none; 
+      width: 30px; height: 30px; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* MAIN CARD & STATS */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
     
+    .last-date-info { text-align: center; margin-bottom: 15px; }
+    .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
+    .last-date-info strong { color: var(--primary); font-size: 0.9rem; }
+
     .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
     .stat-item { flex: 1; background: #f8fafc; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
     .stat-value { font-weight: 700; font-size: 1.1rem; color: #334155; }
@@ -64,7 +98,6 @@
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -100,12 +133,34 @@
 
   <div id="homeScreen" class="hidden">
     <div class="dashboard-header">
-      <div class="app-title-header">Presensi Kajian AUM<br>PCM Kebakkramat, Karanganyar</div>
-      <div class="user-info">
-        <h5 id="dashNama" onclick="openProfile()" title="Klik untuk edit profil">Nama User <i class="bi bi-pencil-square" style="font-size: 0.8em"></i></h5>
-        <p id="dashAum">Asal AUM</p>
+      
+      <div class="header-top">
+        <img src="icon-512.png" class="header-logo-img" alt="Logo">
+        <div class="header-title">
+          <h1>Presensi Kajian AUM</h1>
+          <p>PCM Kebakkramat, Karanganyar</p>
+        </div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Keluar</button>
+
+      <div class="header-actions">
+        <button class="btn-action-glass" onclick="openChangePassword()" title="Ganti Password">
+          <i class="bi bi-key-fill"></i>
+        </button>
+        <button class="btn-action-glass" onclick="doLogout()" title="Keluar">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="user-info-row">
+        <div class="u-text">
+          <h5 id="dashNama">Nama User</h5>
+          <p id="dashAum">Asal AUM</p>
+        </div>
+        <button class="btn-detail-profile" onclick="openProfile()" title="Lihat Detail Profil">
+          <i class="bi bi-person-lines-fill"></i>
+        </button>
+      </div>
+
     </div>
 
     <div class="main-card">
@@ -161,45 +216,32 @@
       <button class="btn-close-custom" onclick="closeProfile()"><i class="bi bi-arrow-left"></i></button>
     </div>
     <div class="overlay-body">
-        <div class="alert alert-light border small mb-3">Silakan lengkapi data diri Anda. Data akan tersimpan di database.</div>
+        <div class="alert alert-light border small mb-3">Lengkapi data diri Anda.</div>
         
         <label class="form-label">Nama Lengkap</label>
         <div class="input-box"><input type="text" id="profNama" class="form-control-plain"></div>
-        
         <label class="form-label">Asal AUM</label>
         <div class="input-box"><select id="profAum" class="form-control-plain"></select></div>
-
         <label class="form-label">Jenis Kelamin</label>
         <div class="input-box">
             <select id="profJk" class="form-control-plain">
-                <option value="">- Pilih -</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
+                <option value="">- Pilih -</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option>
             </select>
         </div>
-
-        <label class="form-label">NBM (Nomor Baku Muhammadiyah)</label>
-        <div class="input-box"><input type="text" id="profNbm" class="form-control-plain" placeholder="Contoh: 1234567"></div>
-
+        <label class="form-label">NBM</label>
+        <div class="input-box"><input type="text" id="profNbm" class="form-control-plain"></div>
         <label class="form-label">Tempat Lahir</label>
         <div class="input-box"><input type="text" id="profTempat" class="form-control-plain"></div>
-
         <label class="form-label">Tanggal Lahir</label>
         <div class="input-box"><input type="date" id="profTgl" class="form-control-plain"></div>
-
-        <label class="form-label">Alamat Lengkap</label>
+        <label class="form-label">Alamat</label>
         <div class="input-box"><textarea id="profAlamat" class="form-control-plain" rows="2"></textarea></div>
-
         <label class="form-label">Email</label>
         <div class="input-box"><input type="email" id="profEmail" class="form-control-plain"></div>
-
-        <label class="form-label">Nomor Telpon / HP</label>
+        <label class="form-label">No HP</label>
         <div class="input-box"><input type="text" id="profHp" class="form-control-plain"></div>
 
         <button class="btn-primary" onclick="saveProfile()">SIMPAN PERUBAHAN</button>
-        
-        <hr class="my-4">
-        <button class="btn-outline" onclick="openChangePassword()"><i class="bi bi-key"></i> Ganti Password</button>
     </div>
   </div>
 
@@ -222,13 +264,13 @@
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
-    { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768 },
-    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423 },
-    { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
-    { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
-    { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
-    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 }
-  ];  
+  { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768 },
+  { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423 },
+  { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
+  { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
+  { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
+  { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 }
+  ];
 
   var CURRENT_USER = null; 
   var LIST_AUM_CACHE = [];
@@ -242,7 +284,7 @@
     setInterval(validateButtonState, 1000);
   };
 
-  // --- PROFILE LOGIC ---
+  // --- PROFILE & PASSWORD ---
   async function openProfile() {
     loading(true);
     try {
@@ -253,8 +295,6 @@
       if(res.status === 'success') {
         var d = res.data;
         document.getElementById('profNama').value = d.nama;
-        
-        // Isi dropdown AUM
         var selAum = document.getElementById('profAum');
         selAum.innerHTML = "";
         LIST_AUM_CACHE.forEach(a => {
@@ -262,7 +302,6 @@
             if(a == d.aum) opt.selected = true;
             selAum.add(opt);
         });
-
         document.getElementById('profJk').value = d.jk;
         document.getElementById('profNbm').value = d.nbm;
         document.getElementById('profAlamat').value = d.alamat;
@@ -274,7 +313,7 @@
         document.getElementById('homeScreen').classList.add('hidden');
         document.getElementById('profileScreen').classList.remove('hidden');
       } else { alert(res.message); }
-    } catch(e) { loading(false); alert("Gagal memuat profil: " + e); }
+    } catch(e) { loading(false); alert("Gagal: " + e); }
   }
 
   function closeProfile() {
@@ -302,7 +341,6 @@
       loading(false);
       alert(res.message);
       if(res.status === 'success') {
-         // Update info lokal
          CURRENT_USER.nama = data.nama;
          CURRENT_USER.aum = data.aum;
          localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
@@ -314,12 +352,12 @@
   }
 
   function openChangePassword() {
-    document.getElementById('profileScreen').classList.add('hidden');
+    document.getElementById('homeScreen').classList.add('hidden'); // Close Home
     document.getElementById('passwordScreen').classList.remove('hidden');
   }
   function closeChangePassword() {
     document.getElementById('passwordScreen').classList.add('hidden');
-    document.getElementById('profileScreen').classList.remove('hidden');
+    document.getElementById('homeScreen').classList.remove('hidden'); // Back to Home
   }
   async function savePassword() {
     var p1 = document.getElementById('passNew').value;
@@ -328,12 +366,8 @@
     loading(true);
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'changePassword', data: { username: CURRENT_USER.username, newPass: p1 } }) });
-      let res = await req.json();
-      loading(false);
-      alert(res.message);
-      if(res.status === 'success') {
-         closeChangePassword(); closeProfile(); doLogout();
-      }
+      let res = await req.json(); loading(false); alert(res.message);
+      if(res.status === 'success') { closeChangePassword(); doLogout(); }
     } catch(e) { loading(false); alert(e); }
   }
 
@@ -344,12 +378,11 @@
     var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes();
     var timeVal = h * 100 + m;
     
-    // VALIDASI WAKTU: AHAD 06:00 - 07:30
+    // AHAD 06:00 - 07:30 (600 - 730)
     if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true;
     else isTimeValid = false;
     
-    // Uncomment untuk testing di hari selain Ahad
-    // isTimeValid = true;
+    // isTimeValid = true; // TESTING
 
     var btn = document.getElementById('btnStartAbsen');
     var msg = document.getElementById('dashboardMsg');
@@ -361,10 +394,10 @@
         btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary');
     } else if (!isTimeValid) {
         btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary');
-        msg.innerHTML = "<b>Jadwal Kajian:</b><br>Ahad Pukul 06:00 - 07:30 WIB."; msg.style.display = 'block';
+        msg.innerHTML = "<b>Jadwal:</b> Ahad 06:00 - 07:30 WIB."; msg.style.display = 'block';
     } else if (!isLocationValid) {
         btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary');
-        msg.innerHTML = "<b>Anda jauh dari lokasi.</b><br>Silakan mendekat ke lokasi kajian."; msg.style.display = 'block';
+        msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b>"; msg.style.display = 'block';
     } else {
         btn.disabled = false; btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; btn.classList.add('btn-primary');
     }
