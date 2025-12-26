@@ -16,7 +16,6 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LOGIN SCREEN */
     #authScreen { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 200; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
@@ -27,32 +26,14 @@
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-    /* DASHBOARD */
-    .dashboard-header {
-      background: linear-gradient(135deg, var(--primary), #0d9488);
-      padding: 25px 20px 80px;
-      border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-      color: white; position: relative;
-    }
+    .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 25px 20px 80px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; color: white; position: relative; }
     .user-info h5 { font-weight: 700; margin: 0; font-size: 1.1rem; line-height: 1.4; }
     .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
     .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
 
-    /* CARD FOTO & STATS */
-    .main-card {
-      background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10;
-    }
-    .photo-display { 
-      width: 100%; aspect-ratio: 4/3; object-fit: cover; 
-      border-radius: 16px; background: #f1f5f9; margin-bottom: 15px;
-      display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    /* Placeholder Loading Style */
-    .photo-loading {
-      display: flex; align-items: center; justify-content: center;
-      background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500;
-    }
+    .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
+    .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
     
     .last-date-info { text-align: center; margin-bottom: 15px; }
     .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
@@ -74,7 +55,6 @@
     .hist-time { font-size: 0.75rem; color: #64748b; }
     .hist-loc { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
 
-    /* PRESENSI OVERLAY */
     #presensiScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 150; display: flex; flex-direction: column; }
     .presensi-header { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #eee; }
     .btn-back { background: none; border: none; font-size: 1.5rem; color: #334155; margin-right: 15px; }
@@ -123,8 +103,8 @@
     </div>
 
     <div class="main-card">
-      <div id="photoContainer" class="photo-display photo-loading">
-         <div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...
+      <div id="photoContainer" class="photo-loading">
+         <span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span>
       </div>
       <img id="dashFoto" class="photo-display hidden">
       
@@ -192,7 +172,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUIpJ4Kv_-aDa8sBrIU6EIXEcDkJUW-ilgCF1c1K9gc7zRIWhXhsqG_SkyKS3Idh8vtg/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcsIX-RfkdkvCqWCjwHlil_Vf0gUn8sAViY2kWitNKsuVGcNkeuFbQC-Ux4TApLZdHVg/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -213,7 +193,15 @@
     loadDbOptions(); 
   };
 
-  // === AUTH & NAV ===
+  // --- HELPER FORMAT TANGGAL JS (AHAD & INDO) ---
+  function formatTanggalIndoJS(dateObj) {
+    var hariArr = ["Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    var bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    var d = new Date(dateObj);
+    return hariArr[d.getDay()] + ", " + d.getDate() + " " + bulanArr[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  // --- AUTH & NAV ---
   function checkSession() {
     var stored = localStorage.getItem("PCM_USER");
     if (stored) {
@@ -241,11 +229,8 @@
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('presensiScreen').classList.add('hidden');
     document.getElementById('homeScreen').classList.remove('hidden');
-    
-    // UPDATE 1: Tampilkan Nama Lengkap
-    document.getElementById('dashNama').innerText = CURRENT_USER.nama;
+    document.getElementById('dashNama').innerText = CURRENT_USER.nama; // Nama Lengkap
     document.getElementById('dashAum').innerText = CURRENT_USER.aum;
-    
     loadDashboardData();
   }
 
@@ -270,13 +255,12 @@
     showLogin();
   }
 
-  // === DATA LOADING ===
   async function loadDashboardData() {
     var limit = document.getElementById('limitSelect').value;
     
-    // UPDATE 2: Reset Foto ke Status Loading
+    // Reset State
     document.getElementById('photoContainer').classList.remove('hidden');
-    document.getElementById('photoContainer').innerHTML = '<div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...';
+    document.getElementById('photoContainer').innerHTML = '<span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span>';
     document.getElementById('dashFoto').classList.add('hidden');
 
     try {
@@ -287,7 +271,6 @@
       })});
       let res = await req.json();
       
-      // Handle Foto
       if(res.fotoTerbaru) {
          document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru;
          document.getElementById('dashFoto').classList.remove('hidden');
@@ -296,10 +279,8 @@
          document.getElementById('photoContainer').innerHTML = "Belum Ada Foto";
       }
 
-      // Handle Tanggal
       document.getElementById('dashLastDate').innerText = res.lastPresensi;
 
-      // Handle Stats
       if(res.stats) {
          document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal;
          document.getElementById('statPercent').innerText = res.stats.percent + "%";
@@ -314,7 +295,6 @@
   function checkTodayStatus(history) {
     var today = new Date();
     var isPresent = false;
-    
     if(history.length > 0) {
       var lastRaw = new Date(history[0].tanggalRaw);
       if(lastRaw.getDate() === today.getDate() && 
@@ -323,10 +303,8 @@
          isPresent = true;
       }
     }
-
     var btn = document.getElementById('btnStartAbsen');
     var status = document.getElementById('todayStatus');
-
     if(isPresent) {
       btn.disabled = true;
       btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI";
@@ -343,14 +321,11 @@
   function renderHistory(list) {
     var container = document.getElementById('historyList');
     container.innerHTML = "";
-    
     if(list.length === 0) {
        container.innerHTML = "<div class='text-center text-muted small py-3'>Belum ada riwayat.</div>";
        return;
     }
-
     list.forEach(item => {
-       // UPDATE 3: TANGGAL SUDAH DI FORMAT DI SERVER
        var html = `
        <div class="history-item">
           <div>
@@ -363,7 +338,6 @@
     });
   }
 
-  // === CORE ===
   async function doLogin() {
     var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
     if(!u||!p) return alert("Isi data");
@@ -395,17 +369,14 @@
     var kes = document.getElementById('kesimpulan').value;
     if(!kes) return alert("Isi kesimpulan");
     loading(true);
-    
     var cvs = document.getElementById('canvas');
     cvs.width = video.videoWidth; cvs.height = video.videoHeight;
     var ctx = cvs.getContext('2d');
     ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
-    // Watermark (UPDATE: Hari Indonesia)
-    var now = new Date();
-    var options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    var dateStr = now.toLocaleDateString('id-ID', options).replace("Minggu", "Ahad");
-    var timeStr = now.toLocaleTimeString('id-ID', {hour12:false}) + " WIB";
+    // WATERMARK INDONESIA
+    var dateStr = formatTanggalIndoJS(new Date());
+    var timeStr = new Date().toLocaleTimeString('id-ID', {hour12:false}) + " WIB";
     
     ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
@@ -425,14 +396,10 @@
       })});
       let res = await req.json(); loading(false);
       alert(res.message);
-      if(res.status==='success') {
-         closePresensiMode();
-         loadDashboardData(); 
-      }
+      if(res.status==='success') { closePresensiMode(); loadDashboardData(); }
     } catch(e) { loading(false); alert(e); }
   }
 
-  // === HELPERS ===
   function startCamera() {
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(s=>video.srcObject=s);
@@ -458,17 +425,12 @@
     var closest=Infinity, name="";
     DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
     jarakUser=Math.round(closest); namaLokasiTerdekat=name;
-    
     var btn = document.getElementById('btnKirim');
     var stat = document.getElementById('statusLokasiBox');
     if(jarakUser<=MAX_RADIUS){ 
-       btn.disabled=false; 
-       stat.className = "alert alert-success py-2 small mb-2";
-       stat.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`;
+       btn.disabled=false; stat.className = "alert alert-success py-2 small mb-2"; stat.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`;
     } else { 
-       btn.disabled=true; 
-       stat.className = "alert alert-danger py-2 small mb-2";
-       stat.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`;
+       btn.disabled=true; stat.className = "alert alert-danger py-2 small mb-2"; stat.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`;
     }
   }
   
