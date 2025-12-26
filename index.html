@@ -16,7 +16,7 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LOGIN SCREEN */
+    /* LOGIN & GENERAL STYLES */
     #authScreen { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 200; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
@@ -24,33 +24,47 @@
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
+    button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-    /* DASHBOARD (HOME) */
+    /* DASHBOARD */
     .dashboard-header {
       background: linear-gradient(135deg, var(--primary), #0d9488);
-      padding: 25px 20px 60px;
+      padding: 25px 20px 80px; /* Padding bawah lebih besar untuk overlap */
       border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
       color: white; position: relative;
     }
-    .user-info h5 { font-weight: 700; margin: 0; }
+    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.2rem; }
     .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
     .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
 
-    .last-presence-card {
-      background: white; margin: -40px 20px 20px; border-radius: 20px; padding: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center; position: relative; z-index: 10;
+    /* CARD FOTO & STATS */
+    .main-card {
+      background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10;
     }
-    .photo-circle { 
-      width: 80px; height: 80px; border-radius: 50%; object-fit: cover; 
-      border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.15); margin-top: -45px; background: #eee;
+    
+    /* Foto Besar Rounded */
+    .photo-display { 
+      width: 100%; aspect-ratio: 4/3; object-fit: cover; 
+      border-radius: 16px; background: #f1f5f9; margin-bottom: 15px;
+      display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
-    .status-text { font-size: 0.8rem; color: #64748b; margin-top: 5px; }
-    .status-date { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+    
+    .last-date-info { text-align: center; margin-bottom: 15px; }
+    .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
+    .last-date-info strong { color: var(--primary); font-size: 0.9rem; }
+
+    /* Stats Grid */
+    .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
+    .stat-item { flex: 1; background: #f8fafc; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
+    .stat-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;}
+    .stat-value { font-weight: 700; font-size: 1.1rem; color: #334155; }
+    .stat-value.highlight { color: var(--primary); }
 
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
-    #btnStartAbsen:disabled { background: #cbd5e1; color: #64748b; box-shadow: none; cursor: not-allowed; }
-
+    
+    /* HISTORY */
     .history-section { padding: 0 20px 80px; }
     .section-title { font-weight: 700; font-size: 1rem; color: #334155; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
@@ -58,14 +72,10 @@
     .hist-time { font-size: 0.75rem; color: #64748b; }
     .hist-loc { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
 
-    /* PRESENSI SCREEN (FULL OVERLAY) */
-    #presensiScreen { 
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background: white; z-index: 150; display: flex; flex-direction: column;
-    }
+    /* PRESENSI OVERLAY */
+    #presensiScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 150; display: flex; flex-direction: column; }
     .presensi-header { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #eee; }
     .btn-back { background: none; border: none; font-size: 1.5rem; color: #334155; margin-right: 15px; }
-    
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .presensi-form { padding: 20px; flex-grow: 1; overflow-y: auto; }
@@ -83,14 +93,12 @@
   <div id="authScreen">
     <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
     <h4 class="auth-title">Presensi PCM</h4>
-    
     <div id="formLogin">
       <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email"></div>
       <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
       <button class="btn-primary" onclick="doLogin()">MASUK</button>
       <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
     </div>
-
     <div id="formRegister" class="hidden">
       <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
       <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
@@ -111,11 +119,23 @@
       <button class="btn-logout" onclick="doLogout()">Keluar</button>
     </div>
 
-    <div class="last-presence-card">
-      <img id="dashFoto" src="https://via.placeholder.com/150?text=..." class="photo-circle">
-      <div class="mt-2">
-        <div class="status-text">Presensi Terakhir:</div>
-        <div id="dashLastDate" class="status-date">-</div>
+    <div class="main-card">
+      <img id="dashFoto" src="https://placehold.co/400x300?text=Belum+Ada+Foto" class="photo-display">
+      
+      <div class="last-date-info">
+         <small>Terakhir Hadir:</small>
+         <strong id="dashLastDate">-</strong>
+      </div>
+
+      <div class="stats-grid">
+         <div class="stat-item">
+            <span class="stat-label">Kehadiran</span>
+            <span id="statCount" class="stat-value">0 / 0</span>
+         </div>
+         <div class="stat-item">
+            <span class="stat-label">Persentase</span>
+            <span id="statPercent" class="stat-value highlight">0%</span>
+         </div>
       </div>
     </div>
 
@@ -149,12 +169,10 @@
       <button class="btn-back" onclick="closePresensiMode()"><i class="bi bi-arrow-left"></i></button>
       <h6 class="m-0 fw-bold">Form Presensi</h6>
     </div>
-    
     <div class="camera-container">
        <video id="camera" autoplay playsinline></video>
     </div>
     <canvas id="canvas" class="hidden"></canvas>
-
     <div class="presensi-form">
       <div class="mb-3">
          <div id="statusLokasiBox" class="alert alert-warning py-2 small mb-2"><i class="bi bi-geo"></i> Mencari Lokasi...</div>
@@ -168,7 +186,8 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSk00MUgZUd_UadJ5pEbe67nTmCr8T5Yoj74sgxy1E91e-zd03V22H_LN7P-cg9vEofQ/exec"; 
+  // === KONFIGURASI ===
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDp4AccdbvaEQ7qrvAcbNCNURiLHmdMoWTbTgZYJB1mT9sYyoUPU9ZGnAkSUFGj-QnYw/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -186,10 +205,9 @@
 
   window.onload = function() {
     checkSession(); 
-    loadDbOptions(); // Load dropdown register
+    loadDbOptions(); 
   };
 
-  // === NAVIGATION & AUTH ===
   function checkSession() {
     var stored = localStorage.getItem("PCM_USER");
     if (stored) {
@@ -218,19 +236,15 @@
     document.getElementById('presensiScreen').classList.add('hidden');
     document.getElementById('homeScreen').classList.remove('hidden');
     
-    // Set Info Header
     document.getElementById('dashNama').innerText = CURRENT_USER.nama.split(' ')[0];
     document.getElementById('dashAum').innerText = CURRENT_USER.aum;
     
-    // Load Data
     loadDashboardData();
   }
 
   function openPresensiMode() {
     document.getElementById('homeScreen').classList.add('hidden');
     document.getElementById('presensiScreen').classList.remove('hidden');
-    
-    // Nyalakan Kamera & GPS
     startCamera();
     if (navigator.geolocation) {
        navigator.geolocation.watchPosition(updatePosisi, e => {}, { enableHighAccuracy: true });
@@ -249,11 +263,9 @@
     showLogin();
   }
 
-  // === DATA LOADING ===
+  // === DATA LOADING & STATS ===
   async function loadDashboardData() {
-    // loading(true); // Optional: Loading overlay di dashboard
     var limit = document.getElementById('limitSelect').value;
-
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
          action: 'getReport', 
@@ -262,21 +274,28 @@
       })});
       let res = await req.json();
       
-      // Update Foto & Tanggal Terakhir
+      // 1. Update Foto
       if(res.fotoTerbaru) {
          document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru;
       }
+
+      // 2. Update Tanggal Terakhir (Bahasa Indo & Ahad)
       var lastDateText = res.lastPresensi.replace("Minggu", "Ahad");
       document.getElementById('dashLastDate').innerText = lastDateText;
 
-      // Cek Apakah Sudah Absen Hari Ini?
+      // 3. Update Statistik
+      if(res.stats) {
+         document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal;
+         document.getElementById('statPercent').innerText = res.stats.percent + "%";
+      }
+
+      // 4. Cek Tombol Absen
       checkTodayStatus(res.history);
 
-      // Render History
+      // 5. Render History
       renderHistory(res.history);
       
     } catch(e) { console.log(e); }
-    // loading(false);
   }
 
   function checkTodayStatus(history) {
@@ -284,7 +303,7 @@
     var isPresent = false;
     
     if(history.length > 0) {
-      // History pertama adalah yang terbaru
+      // History index 0 adalah yang terbaru
       var lastRaw = new Date(history[0].tanggalRaw);
       if(lastRaw.getDate() === today.getDate() && 
          lastRaw.getMonth() === today.getMonth() && 
@@ -298,11 +317,14 @@
 
     if(isPresent) {
       btn.disabled = true;
-      btn.innerHTML = "SUDAH PRESENSI";
+      btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI";
+      btn.classList.replace('btn-primary', 'btn-secondary'); // Ubah warna jadi abu
+      btn.style.background = "#cbd5e1"; // Paksa warna
       status.classList.remove('hidden');
     } else {
       btn.disabled = false;
       btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG';
+      btn.style.background = "var(--primary)";
       status.classList.add('hidden');
     }
   }
@@ -317,9 +339,7 @@
     }
 
     list.forEach(item => {
-       // Format Tanggal: Minggu -> Ahad
        var tglIndo = item.tanggal.replace("Minggu", "Ahad");
-       
        var html = `
        <div class="history-item">
           <div>
@@ -332,7 +352,7 @@
     });
   }
 
-  // === CORE FUNCTIONS (Login, Reg, Absen) ===
+  // === CORE & AUTH ===
   async function doLogin() {
     var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
     if(!u||!p) return alert("Isi data");
@@ -365,20 +385,18 @@
     if(!kes) return alert("Isi kesimpulan");
     loading(true);
     
-    // Capture Photo
     var cvs = document.getElementById('canvas');
     cvs.width = video.videoWidth; cvs.height = video.videoHeight;
     var ctx = cvs.getContext('2d');
     ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
-    // Watermark
     var now = new Date();
     var dateStr = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).replace("Minggu","Ahad");
-    var timeStr = now.toLocaleTimeString('id-ID', {hour12:false});
+    var timeStr = now.toLocaleTimeString('id-ID', {hour12:false}) + " WIB";
     
     ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    ctx.fillText(dateStr + " " + timeStr + " WIB", 20, cvs.height - 50);
+    ctx.fillText(dateStr + " " + timeStr, 20, cvs.height - 50);
     ctx.fillText(namaLokasiTerdekat + " ("+jarakUser+"m)", 20, cvs.height - 25);
     
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
@@ -392,17 +410,16 @@
              kesimpulan: kes, lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64 
           } 
       })});
-      let res = await req.json();
-      loading(false);
+      let res = await req.json(); loading(false);
       alert(res.message);
       if(res.status==='success') {
          closePresensiMode();
-         loadDashboardData(); // Refresh Home
+         loadDashboardData(); 
       }
     } catch(e) { loading(false); alert(e); }
   }
 
-  // === HELPERS & GPS ===
+  // === HELPERS ===
   function startCamera() {
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(s=>video.srcObject=s);
@@ -431,7 +448,6 @@
     
     var btn = document.getElementById('btnKirim');
     var stat = document.getElementById('statusLokasiBox');
-    
     if(jarakUser<=MAX_RADIUS){ 
        btn.disabled=false; 
        stat.className = "alert alert-success py-2 small mb-2";
@@ -448,7 +464,6 @@
     var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
     return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
-  
   function loading(show) { document.getElementById('loading').classList.toggle('hidden', !show); }
 </script>
 </body>
