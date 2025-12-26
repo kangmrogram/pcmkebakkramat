@@ -35,12 +35,16 @@
 
     /* MAIN CONTENT */
     .main-content { background: white; margin: -50px 20px 20px; border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); position: relative; flex-grow: 1; }
-    .camera-wrapper { background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 20px; aspect-ratio: 1; position: relative; }
+    
+    .camera-placeholder { background: #000; border-radius: 16px; margin-bottom: 20px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: white; flex-direction: column;}
+    .camera-wrapper { width: 100%; height: 100%; position: relative; overflow: hidden; border-radius: 16px;}
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    
     .input-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 5px; display: block;}
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
-    
+    .info-text { font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px; margin-left: 5px; display: block;}
+
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #ccc; }
     
@@ -67,17 +71,25 @@
       <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email"></div>
       <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
       <button class="btn-primary" onclick="doLogin()">MASUK</button>
-      <div class="toggle-link" onclick="showRegister()">Belum punya akun? Daftar dulu</div>
+      <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
     </div>
 
     <div id="formRegister" class="hidden">
-      <div class="alert alert-info py-2 small">Cari nama Anda dari database untuk membuat akun.</div>
+      <div class="alert alert-info py-2 small">Pilih Nama & AUM Anda untuk membuat akun presensi.</div>
+      
       <div class="input-box">
-         <select id="regNama" class="form-control-plain" onchange="autoFillAum()"><option disabled selected>-- Pilih Nama Anda --</option></select>
+         <select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama Anda --</option></select>
       </div>
-      <div class="input-box"><input type="text" id="regAum" class="form-control-plain" placeholder="AUM (Otomatis)" readonly></div>
+      
+      <div class="input-box">
+         <select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih Asal AUM --</option></select>
+      </div>
+
       <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username Baru"></div>
+      <small class="info-text">* Username bisa berupa Email atau Nomor HP</small>
+      
       <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"></div>
+      
       <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
       <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
     </div>
@@ -102,8 +114,10 @@
     <div class="main-content">
       <div id="statusWaktu" class="hidden"></div>
       
-      <div class="camera-wrapper">
-        <video id="camera" autoplay playsinline></video>
+      <div class="camera-placeholder">
+          <div class="camera-wrapper">
+             <video id="camera" autoplay playsinline></video>
+          </div>
       </div>
       <canvas id="canvas" class="hidden"></canvas>
 
@@ -157,7 +171,7 @@
 
 <script>
   // === KONFIGURASI ===
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvfoDn7J-L-jn6UbQFFuUJPDpa4XParlUHUo1JAv0ojoAfkeL-cnkwBvxmKp_zNY7lgw/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJmlfIJSXmxjdxTjebN4OIqecqmX9dCS7ht1tpZvuIVfOKXFtfSNPzq8PacJeP7V63mw/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -169,28 +183,38 @@
     { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 }
   ];
 
-  // Global State
-  var CURRENT_USER = null; // { nama: "...", aum: "..." }
-  var LIST_NAMA_DB = []; 
-  var LIST_AUM_DB = [];
-
+  var CURRENT_USER = null; 
   var video = document.getElementById('camera');
   var latUser = 0, lngUser = 0, lokasiString = "", jarakUser = 0, namaLokasiTerdekat = "", namaKegiatan = "";
   var isTimeOpen = false, isLocationOk = false, myModal;
 
   window.onload = function() {
     myModal = new bootstrap.Modal(document.getElementById('modalReport'));
-    checkSession(); // Cek apakah sudah login
+    checkSession(); 
     initClock();
-    
-    // Load Data untuk Register (Dropdown)
     loadDbOptions();
-
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(s => video.srcObject = s);
+    
+    // GPS hanya dinyalakan saat perlu
     if (navigator.geolocation) {
        navigator.geolocation.watchPosition(updatePosisi, e => document.getElementById('statusLokasiBox').innerText="GPS Error", { enableHighAccuracy: true });
     }
   };
+
+  // === FUNGSI KAMERA (BARU: HANYA NYALA SETELAH LOGIN) ===
+  function startCamera() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+      .then(s => { video.srcObject = s; })
+      .catch(e => console.log("Camera error/denied", e));
+    }
+  }
+
+  function stopCamera() {
+    if(video.srcObject) {
+      video.srcObject.getTracks().forEach(track => track.stop());
+      video.srcObject = null;
+    }
+  }
 
   // === AUTHENTICATION LOGIC ===
   function checkSession() {
@@ -204,6 +228,7 @@
   }
 
   function showLogin() {
+    stopCamera(); // Matikan kamera saat logout
     document.getElementById('authScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.add('hidden');
     document.getElementById('formLogin').classList.remove('hidden');
@@ -219,12 +244,12 @@
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
     
-    // Set Tampilan Identitas
-    document.getElementById('displayNama').innerText = CURRENT_USER.nama.split(' ')[0]; // Nama Panggilan
+    document.getElementById('displayNama').innerText = CURRENT_USER.nama.split(' ')[0];
     document.getElementById('formNama').innerText = CURRENT_USER.nama;
     document.getElementById('formAum').innerText = CURRENT_USER.aum;
     
-    cekWaktuBuka(); // Cek waktu setelah login
+    cekWaktuBuka();
+    startCamera(); // Nyalakan kamera hanya di sini
   }
 
   async function doLogin() {
@@ -250,7 +275,7 @@
 
   async function doRegister() {
     var nama = document.getElementById('regNama').value;
-    var aum = document.getElementById('regAum').value;
+    var aum = document.getElementById('regAum').value; // Ambil manual dari dropdown
     var u = document.getElementById('regUser').value;
     var p = document.getElementById('regPass').value;
     
@@ -272,35 +297,29 @@
     showLogin();
   }
 
+  // Load Data Nama dan AUM untuk Dropdown Register
   async function loadDbOptions() {
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
       let res = await req.json();
       if(res.status === 'success') {
-        LIST_NAMA_DB = res.nama; 
-        LIST_AUM_DB = res.aum; // (array ini mungkin tidak urut dengan nama, perlu logika mapping jika sheet terpisah, tapi asumsi 1 baris)
-        
-        // Isi Dropdown Register
-        var sel = document.getElementById('regNama');
-        sel.innerHTML = '<option disabled selected>-- Pilih Nama Anda --</option>';
-        LIST_NAMA_DB.forEach((n, idx) => {
+        // Isi Dropdown Nama
+        var selNama = document.getElementById('regNama');
+        selNama.innerHTML = '<option disabled selected>-- Pilih Nama Anda --</option>';
+        res.nama.forEach(n => {
            var opt = document.createElement('option');
-           opt.value = n; 
-           opt.text = n;
-           // Simpan index AUM di atribut data (Trick sederhana)
-           opt.dataset.aum = LIST_AUM_DB[idx] || "-"; 
-           sel.add(opt);
+           opt.value = n; opt.text = n; selNama.add(opt);
+        });
+
+        // Isi Dropdown AUM (Baru)
+        var selAum = document.getElementById('regAum');
+        selAum.innerHTML = '<option disabled selected>-- Pilih Asal AUM --</option>';
+        res.aum.forEach(a => {
+           var opt = document.createElement('option');
+           opt.value = a; opt.text = a; selAum.add(opt);
         });
       }
     } catch(e) {}
-  }
-
-  function autoFillAum() {
-    var sel = document.getElementById('regNama');
-    var selectedOpt = sel.options[sel.selectedIndex];
-    if(selectedOpt) {
-       document.getElementById('regAum').value = selectedOpt.dataset.aum;
-    }
   }
 
   // === CORE PRESENSI ===
@@ -326,7 +345,7 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
           action: 'savePresensi', 
           data: { 
-             nama: CURRENT_USER.nama, // Ambil dari sesi login
+             nama: CURRENT_USER.nama, 
              aum: CURRENT_USER.aum, 
              kegiatan: namaKegiatan, 
              kesimpulan: kesimpulan, 
@@ -346,7 +365,7 @@
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
          action: 'getReport', 
-         nama: CURRENT_USER.nama, // Ambil dari sesi login
+         nama: CURRENT_USER.nama, 
          start: document.getElementById('filterStart').value, 
          end: document.getElementById('filterEnd').value 
       })});
