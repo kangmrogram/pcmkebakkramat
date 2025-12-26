@@ -16,62 +16,53 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* AUTH SCREEN */
-    #authScreen { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 200; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+    /* MODALS & FULLSCREEN OVERLAY */
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
+    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
+    .overlay-body { padding: 20px; flex-grow: 1; }
+    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
+
+    /* AUTH */
+    #authScreen { z-index: 300; justify-content: center; } /* Auth paling atas */
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
+    
+    /* FORMS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
-    .info-text { font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px; margin-left: 5px; display: block;}
+    .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 2px; }
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
-    button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
-
+    button.btn-outline { background: white; border: 1px solid var(--primary); color: var(--primary); width: 100%; padding: 12px; border-radius: 15px; font-weight: 600; margin-top: 10px; }
+    
     /* DASHBOARD */
     .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 25px 20px 80px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; color: white; position: relative; }
-    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.1rem; line-height: 1.4; }
+    .app-title-header { font-size: 0.9rem; font-weight: 600; opacity: 0.9; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;}
+    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.3rem; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
     .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
     .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
 
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
-    .last-date-info { text-align: center; margin-bottom: 15px; }
-    .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
-    .last-date-info strong { color: var(--primary); font-size: 0.9rem; }
-
+    
     .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
     .stat-item { flex: 1; background: #f8fafc; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
-    .stat-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;}
     .stat-value { font-weight: 700; font-size: 1.1rem; color: #334155; }
     .stat-value.highlight { color: var(--primary); }
 
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
     
-    /* AREA PESAN ERROR DI DASHBOARD */
-    #dashboardMsg { 
-        text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; 
-        border-radius: 10px; background: #fff3cd; color: #856404; display: none;
-        border: 1px solid #ffeeba;
-    }
-    #dashboardMsg i { margin-right: 5px; font-size: 1rem; }
+    #dashboardMsg { text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; display: none; border: 1px solid #ffeeba; }
 
     .history-section { padding: 0 20px 80px; }
-    .section-title { font-weight: 700; font-size: 1rem; color: #334155; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
     .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; }
-    .hist-time { font-size: 0.75rem; color: #64748b; }
-    .hist-loc { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
-
-    /* PRESENSI SCREEN */
-    #presensiScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 150; display: flex; flex-direction: column; }
-    .presensi-header { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #eee; }
-    .btn-back { background: none; border: none; font-size: 1.5rem; color: #334155; margin-right: 15px; }
-    .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; }
-    #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    .presensi-form { padding: 20px; flex-grow: 1; overflow-y: auto; }
     
+    .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
+    #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     .hidden { display: none !important; }
   </style>
@@ -82,31 +73,36 @@
 
 <div class="app-container">
 
-  <div id="authScreen">
-    <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
-    <h4 class="auth-title">Presensi PCM</h4>
-    <div id="formLogin">
-      <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP"></div>
-      <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
-      <button class="btn-primary" onclick="doLogin()">MASUK</button>
-      <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
-    </div>
-    <div id="formRegister" class="hidden">
-      <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
-      <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
-      <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
-      <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Username Baru"></div>
-      <small class="info-text">* Username bisa berupa Email atau Nomor HP</small>
-      <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Password Baru"></div>
-      <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
-      <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
+  <div id="authScreen" class="fullscreen-overlay">
+    <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+        <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
+        <h4 class="auth-title">Presensi PCM</h4>
+        
+        <div id="formLogin">
+          <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP"></div>
+          <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
+          <button class="btn-primary" onclick="doLogin()">MASUK</button>
+          <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
+        </div>
+
+        <div id="formRegister" class="hidden">
+          <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
+          <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
+          <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
+          <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Username Baru"></div>
+          <small class="text-muted" style="font-size:0.7rem; display:block; margin-top:-10px; margin-bottom:10px;">* Bisa No.HP atau Email</small>
+          <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Password Baru"></div>
+          <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
+          <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
+        </div>
     </div>
   </div>
 
   <div id="homeScreen" class="hidden">
     <div class="dashboard-header">
+      <div class="app-title-header">Presensi Kajian AUM<br>PCM Kebakkramat, Karanganyar</div>
       <div class="user-info">
-        <h5 id="dashNama">Nama User</h5>
+        <h5 id="dashNama" onclick="openProfile()" title="Klik untuk edit profil">Nama User <i class="bi bi-pencil-square" style="font-size: 0.8em"></i></h5>
         <p id="dashAum">Asal AUM</p>
       </div>
       <button class="btn-logout" onclick="doLogout()">Keluar</button>
@@ -118,336 +114,304 @@
       </div>
       <img id="dashFoto" class="photo-display hidden">
       
-      <div class="last-date-info">
-         <small>Terakhir Hadir:</small>
-         <strong id="dashLastDate">-</strong>
+      <div class="text-center mb-3">
+         <small class="text-muted">Terakhir Hadir:</small><br>
+         <strong id="dashLastDate" class="text-primary">-</strong>
       </div>
 
       <div class="stats-grid">
-         <div class="stat-item">
-            <span class="stat-label">Kehadiran</span>
-            <span id="statCount" class="stat-value">0 / 0</span>
-         </div>
-         <div class="stat-item">
-            <span class="stat-label">Persentase</span>
-            <span id="statPercent" class="stat-value highlight">0%</span>
-         </div>
+         <div class="stat-item"><small class="text-muted">KEHADIRAN</small><div id="statCount" class="stat-value">0 / 0</div></div>
+         <div class="stat-item"><small class="text-muted">PERSENTASE</small><div id="statPercent" class="stat-value highlight">0%</div></div>
       </div>
     </div>
 
     <div class="action-area">
-      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled>
-         <div class="spinner-border spinner-border-sm"></div> Memuat...
-      </button>
-      
+      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled><div class="spinner-border spinner-border-sm"></div> Memuat...</button>
       <div id="dashboardMsg"></div>
     </div>
 
     <div class="history-section">
-      <div class="section-title">
-        <span>Riwayat Presensi</span>
-        <select id="limitSelect" class="form-select form-select-sm" style="width: auto;" onchange="loadDashboardData()">
-           <option value="10">10</option>
-           <option value="25">25</option>
-           <option value="50">50</option>
-           <option value="100">100</option>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="fw-bold">Riwayat</span>
+        <select id="limitSelect" class="form-select form-select-sm w-auto" onchange="loadDashboardData()">
+           <option value="10">10</option><option value="25">25</option><option value="50">50</option>
         </select>
       </div>
-      <div id="historyList">
-         <div class="text-center text-muted small py-3">Memuat data...</div>
-      </div>
+      <div id="historyList"><div class="text-center small text-muted">Memuat...</div></div>
     </div>
   </div>
 
-  <div id="presensiScreen" class="hidden">
-    <div class="presensi-header">
-      <button class="btn-back" onclick="closePresensiMode()"><i class="bi bi-arrow-left"></i></button>
+  <div id="presensiScreen" class="fullscreen-overlay hidden">
+    <div class="overlay-header">
       <h6 class="m-0 fw-bold">Form Presensi</h6>
+      <button class="btn-close-custom" onclick="closePresensiMode()"><i class="bi bi-x"></i></button>
     </div>
-    <div class="camera-container">
-       <video id="camera" autoplay playsinline></video>
+    <div class="overlay-body">
+        <div class="camera-container mb-3"><video id="camera" autoplay playsinline></video></div>
+        <canvas id="canvas" class="hidden"></canvas>
+        <div id="statusLokasiBox" class="alert alert-warning py-2 small mb-3">Mencari Lokasi...</div>
+        <div class="input-box"><textarea id="kesimpulan" class="form-control-plain" rows="3" placeholder="Tulis kesimpulan kajian..."></textarea></div>
+        <button id="btnKirim" class="btn-primary" onclick="kirimAbsen()" disabled>KIRIM DATA</button>
     </div>
-    <canvas id="canvas" class="hidden"></canvas>
-    <div class="presensi-form">
-      <div class="mb-3">
-         <div id="statusLokasiBox" class="alert alert-warning py-2 small mb-2"><i class="bi bi-geo"></i> Mencari Lokasi...</div>
-         <label class="form-label small fw-bold text-muted">Kesimpulan Kajian</label>
-         <textarea id="kesimpulan" class="form-control" rows="3" placeholder="Tulis catatan..."></textarea>
-      </div>
-      <button id="btnKirim" class="btn-primary" onclick="kirimAbsen()" disabled>KIRIM DATA</button>
+  </div>
+
+  <div id="profileScreen" class="fullscreen-overlay hidden">
+    <div class="overlay-header">
+      <h6 class="m-0 fw-bold">Profil Anggota</h6>
+      <button class="btn-close-custom" onclick="closeProfile()"><i class="bi bi-arrow-left"></i></button>
+    </div>
+    <div class="overlay-body">
+        <div class="alert alert-light border small mb-3">Silakan lengkapi data diri Anda. Data akan tersimpan di database.</div>
+        
+        <label class="form-label">Nama Lengkap</label>
+        <div class="input-box"><input type="text" id="profNama" class="form-control-plain"></div>
+        
+        <label class="form-label">Asal AUM</label>
+        <div class="input-box"><select id="profAum" class="form-control-plain"></select></div>
+
+        <label class="form-label">Jenis Kelamin</label>
+        <div class="input-box">
+            <select id="profJk" class="form-control-plain">
+                <option value="">- Pilih -</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
+        </div>
+
+        <label class="form-label">NBM (Nomor Baku Muhammadiyah)</label>
+        <div class="input-box"><input type="text" id="profNbm" class="form-control-plain" placeholder="Contoh: 1234567"></div>
+
+        <label class="form-label">Tempat Lahir</label>
+        <div class="input-box"><input type="text" id="profTempat" class="form-control-plain"></div>
+
+        <label class="form-label">Tanggal Lahir</label>
+        <div class="input-box"><input type="date" id="profTgl" class="form-control-plain"></div>
+
+        <label class="form-label">Alamat Lengkap</label>
+        <div class="input-box"><textarea id="profAlamat" class="form-control-plain" rows="2"></textarea></div>
+
+        <label class="form-label">Email</label>
+        <div class="input-box"><input type="email" id="profEmail" class="form-control-plain"></div>
+
+        <label class="form-label">Nomor Telpon / HP</label>
+        <div class="input-box"><input type="text" id="profHp" class="form-control-plain"></div>
+
+        <button class="btn-primary" onclick="saveProfile()">SIMPAN PERUBAHAN</button>
+        
+        <hr class="my-4">
+        <button class="btn-outline" onclick="openChangePassword()"><i class="bi bi-key"></i> Ganti Password</button>
+    </div>
+  </div>
+
+  <div id="passwordScreen" class="fullscreen-overlay hidden">
+    <div class="overlay-header">
+      <h6 class="m-0 fw-bold">Ganti Password</h6>
+      <button class="btn-close-custom" onclick="closeChangePassword()"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="overlay-body">
+        <div class="input-box"><input type="password" id="passNew" class="form-control-plain" placeholder="Password Baru"></div>
+        <div class="input-box"><input type="password" id="passConfirm" class="form-control-plain" placeholder="Ulangi Password Baru"></div>
+        <button class="btn-primary" onclick="savePassword()">UBAH PASSWORD</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  // === KONFIGURASI ===
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcsIX-RfkdkvCqWCjwHlil_Vf0gUn8sAViY2kWitNKsuVGcNkeuFbQC-Ux4TApLZdHVg/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhguWqTSNaj04RRTi_5FjRd5mi6hKn4Sx1XuTdClIo5buq6-vkjHrIvXB6e5nfTdG13g/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
-    { nama: "Masjid Abdul Aziz (SMP Muh 8 Karanganyar)", lat: -7.520470615403366, lng: 110.9065007512984 },
+    { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
     { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768 },
     { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423 },
     { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
     { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
     { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
     { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 }
-  ];
+  ];  
 
   var CURRENT_USER = null; 
+  var LIST_AUM_CACHE = [];
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
-  
-  // STATE VALIDASI TOMBOL
-  var isAlreadyPresent = false; 
-  var isTimeValid = false;
-  var isLocationValid = false;
-  var locationMessage = "Mencari GPS...";
+  var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
 
   window.onload = function() {
     checkSession(); 
     loadDbOptions(); 
-    
-    // Timer Cek Waktu setiap 1 detik
     setInterval(validateButtonState, 1000);
   };
 
-  function formatTanggalIndoJS(dateObj) {
-    var hariArr = ["Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    var bulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    var d = new Date(dateObj);
-    return hariArr[d.getDay()] + ", " + d.getDate() + " " + bulanArr[d.getMonth()] + " " + d.getFullYear();
+  // --- PROFILE LOGIC ---
+  async function openProfile() {
+    loading(true);
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getProfile', username: CURRENT_USER.username }) });
+      let res = await req.json();
+      loading(false);
+      
+      if(res.status === 'success') {
+        var d = res.data;
+        document.getElementById('profNama').value = d.nama;
+        
+        // Isi dropdown AUM
+        var selAum = document.getElementById('profAum');
+        selAum.innerHTML = "";
+        LIST_AUM_CACHE.forEach(a => {
+            var opt = document.createElement('option'); opt.value = a; opt.text = a;
+            if(a == d.aum) opt.selected = true;
+            selAum.add(opt);
+        });
+
+        document.getElementById('profJk').value = d.jk;
+        document.getElementById('profNbm').value = d.nbm;
+        document.getElementById('profAlamat').value = d.alamat;
+        document.getElementById('profTempat').value = d.tempat_lahir;
+        document.getElementById('profTgl').value = d.tgl_lahir;
+        document.getElementById('profEmail').value = d.email;
+        document.getElementById('profHp').value = d.hp;
+
+        document.getElementById('homeScreen').classList.add('hidden');
+        document.getElementById('profileScreen').classList.remove('hidden');
+      } else { alert(res.message); }
+    } catch(e) { loading(false); alert("Gagal memuat profil: " + e); }
   }
 
-  // === VALIDASI UTAMA TOMBOL (Updated Logic) ===
+  function closeProfile() {
+    document.getElementById('profileScreen').classList.add('hidden');
+    document.getElementById('homeScreen').classList.remove('hidden');
+  }
+
+  async function saveProfile() {
+    var data = {
+        username: CURRENT_USER.username,
+        nama: document.getElementById('profNama').value,
+        aum: document.getElementById('profAum').value,
+        jk: document.getElementById('profJk').value,
+        nbm: document.getElementById('profNbm').value,
+        alamat: document.getElementById('profAlamat').value,
+        tempat_lahir: document.getElementById('profTempat').value,
+        tgl_lahir: document.getElementById('profTgl').value,
+        email: document.getElementById('profEmail').value,
+        hp: document.getElementById('profHp').value
+    };
+    loading(true);
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', data: data }) });
+      let res = await req.json();
+      loading(false);
+      alert(res.message);
+      if(res.status === 'success') {
+         // Update info lokal
+         CURRENT_USER.nama = data.nama;
+         CURRENT_USER.aum = data.aum;
+         localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
+         document.getElementById('dashNama').innerText = data.nama;
+         document.getElementById('dashAum').innerText = data.aum;
+         closeProfile();
+      }
+    } catch(e) { loading(false); alert(e); }
+  }
+
+  function openChangePassword() {
+    document.getElementById('profileScreen').classList.add('hidden');
+    document.getElementById('passwordScreen').classList.remove('hidden');
+  }
+  function closeChangePassword() {
+    document.getElementById('passwordScreen').classList.add('hidden');
+    document.getElementById('profileScreen').classList.remove('hidden');
+  }
+  async function savePassword() {
+    var p1 = document.getElementById('passNew').value;
+    var p2 = document.getElementById('passConfirm').value;
+    if(!p1 || p1 !== p2) return alert("Password tidak cocok / kosong");
+    loading(true);
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'changePassword', data: { username: CURRENT_USER.username, newPass: p1 } }) });
+      let res = await req.json();
+      loading(false);
+      alert(res.message);
+      if(res.status === 'success') {
+         closeChangePassword(); closeProfile(); doLogout();
+      }
+    } catch(e) { loading(false); alert(e); }
+  }
+
+  // --- CORE SYSTEM ---
   function validateButtonState() {
-    if(!CURRENT_USER) return; // Jika belum login, skip
-
+    if(!CURRENT_USER) return;
     var now = new Date();
-    var day = now.getDay(); // 0 = Minggu/Ahad
-    var h = now.getHours();
-    var m = now.getMinutes();
-    var currentTimeVal = h * 100 + m; // Contoh: 06:30 -> 630
-
-    // 1. CEK WAKTU (Minggu 06:00 - 07:30)
-    // 07:30 artinya jam 7 dan menit <= 30
-    // Jadi range: >= 600 dan <= 730
-    if (day === 0 && currentTimeVal >= 600 && currentTimeVal <= 730) {
-       isTimeValid = true;
-    } else {
-       isTimeValid = false;
-    }
+    var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes();
+    var timeVal = h * 100 + m;
     
-    // UNTUK TESTING HARI INI (Uncomment baris bawah ini jika ingin coba selain hari Minggu)
-    // isTimeValid = true; 
-
-    // 2. CEK SUDAH ABSEN? (Sudah di-set saat load data)
+    // VALIDASI WAKTU: AHAD 06:00 - 07:30
+    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true;
+    else isTimeValid = false;
     
-    // 3. CEK LOKASI (Sudah di-set oleh updatePosisi)
+    // Uncomment untuk testing di hari selain Ahad
+    // isTimeValid = true;
 
-    // --- UPDATE UI TOMBOL DI BERANDA ---
     var btn = document.getElementById('btnStartAbsen');
-    var msgBox = document.getElementById('dashboardMsg');
+    var msg = document.getElementById('dashboardMsg');
     
-    // Reset Style
-    btn.classList.remove('btn-primary', 'btn-secondary', 'btn-danger');
-    msgBox.style.display = 'none';
+    btn.classList.remove('btn-primary', 'btn-secondary');
+    msg.style.display = 'none';
 
     if (isAlreadyPresent) {
-        // KONDISI 1: SUDAH ABSEN
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI";
-        btn.classList.add('btn-secondary'); // Abu-abu
-        
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary');
     } else if (!isTimeValid) {
-        // KONDISI 2: WAKTU SALAH
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP";
-        btn.classList.add('btn-secondary');
-        
-        msgBox.innerHTML = "<i class='bi bi-info-circle'></i> <b>Maaf, Presensi belum dibuka.</b><br>Jadwal: Ahad Pukul 06:00 - 07:30 WIB.";
-        msgBox.style.display = 'block';
-
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary');
+        msg.innerHTML = "<b>Jadwal Kajian:</b><br>Ahad Pukul 06:00 - 07:30 WIB."; msg.style.display = 'block';
     } else if (!isLocationValid) {
-        // KONDISI 3: WAKTU BENAR TAPI LOKASI SALAH
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI";
-        btn.classList.add('btn-secondary');
-        
-        msgBox.innerHTML = "<i class='bi bi-exclamation-triangle'></i> <b>Anda berada di luar lokasi kajian.</b><br>Saran: Silakan mendekat ke area Masjid/Lokasi Kajian.";
-        msgBox.style.display = 'block';
-
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary');
+        msg.innerHTML = "<b>Anda jauh dari lokasi.</b><br>Silakan mendekat ke lokasi kajian."; msg.style.display = 'block';
     } else {
-        // KONDISI 4: SEMUA OK (Waktu Pas, Lokasi Pas, Belum Absen)
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG';
-        btn.classList.add('btn-primary'); // Hijau
+        btn.disabled = false; btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; btn.classList.add('btn-primary');
     }
-  }
-
-  // === AUTH & NAV ===
-  function checkSession() {
-    var stored = localStorage.getItem("PCM_USER");
-    if (stored) {
-      CURRENT_USER = JSON.parse(stored);
-      showDashboard();
-      
-      // Mulai Tracking GPS jika sudah login
-      if (navigator.geolocation) {
-         navigator.geolocation.watchPosition(updatePosisi, e => {
-            isLocationValid = false;
-            validateButtonState();
-         }, { enableHighAccuracy: true });
-      }
-    } else {
-      showLogin();
-    }
-  }
-
-  function showLogin() {
-    document.getElementById('authScreen').classList.remove('hidden');
-    document.getElementById('homeScreen').classList.add('hidden');
-    document.getElementById('presensiScreen').classList.add('hidden');
-    document.getElementById('formLogin').classList.remove('hidden');
-    document.getElementById('formRegister').classList.add('hidden');
-  }
-
-  function showRegister() {
-    document.getElementById('formLogin').classList.add('hidden');
-    document.getElementById('formRegister').classList.remove('hidden');
-  }
-
-  function showDashboard() {
-    document.getElementById('authScreen').classList.add('hidden');
-    document.getElementById('presensiScreen').classList.add('hidden');
-    document.getElementById('homeScreen').classList.remove('hidden');
-    document.getElementById('dashNama').innerText = CURRENT_USER.nama;
-    document.getElementById('dashAum').innerText = CURRENT_USER.aum;
-    loadDashboardData();
-  }
-
-  function openPresensiMode() {
-    document.getElementById('homeScreen').classList.add('hidden');
-    document.getElementById('presensiScreen').classList.remove('hidden');
-    startCamera();
-  }
-
-  function closePresensiMode() {
-    stopCamera();
-    document.getElementById('presensiScreen').classList.add('hidden');
-    document.getElementById('homeScreen').classList.remove('hidden');
-  }
-
-  function doLogout() {
-    localStorage.removeItem("PCM_USER");
-    CURRENT_USER = null;
-    showLogin();
   }
 
   async function loadDashboardData() {
     var limit = document.getElementById('limitSelect').value;
-    document.getElementById('photoContainer').classList.remove('hidden');
-    document.getElementById('photoContainer').innerHTML = '<span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span>';
-    document.getElementById('dashFoto').classList.add('hidden');
-
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getReport', nama: CURRENT_USER.nama, limit: limit })});
       let res = await req.json();
       
       if(res.fotoTerbaru) {
          document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru;
-         document.getElementById('dashFoto').classList.remove('hidden');
-         document.getElementById('photoContainer').classList.add('hidden');
-      } else {
-         document.getElementById('photoContainer').innerHTML = "Belum Ada Foto";
-      }
+         document.getElementById('dashFoto').classList.remove('hidden'); document.getElementById('photoContainer').classList.add('hidden');
+      } else { document.getElementById('photoContainer').innerHTML = "Belum Ada Foto"; }
 
       document.getElementById('dashLastDate').innerText = res.lastPresensi;
-
       if(res.stats) {
          document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal;
          document.getElementById('statPercent').innerText = res.stats.percent + "%";
       }
-
-      checkTodayStatus(res.history);
-      renderHistory(res.history);
-      
-    } catch(e) { console.log(e); }
+      checkTodayStatus(res.history); renderHistory(res.history);
+    } catch(e) {}
   }
 
   function checkTodayStatus(history) {
-    var today = new Date();
-    isAlreadyPresent = false; // Reset dulu
-    
+    var today = new Date(); isAlreadyPresent = false;
     if(history.length > 0) {
       var lastRaw = new Date(history[0].tanggalRaw);
-      if(lastRaw.getDate() === today.getDate() && 
-         lastRaw.getMonth() === today.getMonth() && 
-         lastRaw.getFullYear() === today.getFullYear()) {
-         isAlreadyPresent = true;
-      }
+      if(lastRaw.getDate() === today.getDate() && lastRaw.getMonth() === today.getMonth() && lastRaw.getFullYear() === today.getFullYear()) isAlreadyPresent = true;
     }
-    // Jalankan validasi ulang tombol setelah status update
     validateButtonState();
   }
 
   function renderHistory(list) {
-    var container = document.getElementById('historyList');
-    container.innerHTML = "";
-    if(list.length === 0) {
-       container.innerHTML = "<div class='text-center text-muted small py-3'>Belum ada riwayat.</div>";
-       return;
-    }
-    list.forEach(item => {
-       var html = `
-       <div class="history-item">
-          <div>
-            <div class="hist-date">${item.tanggal}</div>
-            <div class="hist-loc"><i class="bi bi-geo-alt"></i> ${item.lokasi.split('(')[0].substring(0, 25)}...</div>
-          </div>
-          <div class="hist-time badge bg-light text-dark border">${item.jam}</div>
-       </div>`;
-       container.innerHTML += html;
+    var c = document.getElementById('historyList'); c.innerHTML = "";
+    if(list.length === 0) { c.innerHTML = "<div class='text-center small text-muted'>Belum ada riwayat.</div>"; return; }
+    list.forEach(i => {
+       c.innerHTML += `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt"></i> ${i.lokasi.split('(')[0].substring(0,25)}...</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`;
     });
   }
 
-  // === GPS LOGIC (Diperbaiki untuk Global Validasi) ===
-  function updatePosisi(pos) {
-    latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
-    var closest=Infinity, name="";
-    DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
-    jarakUser=Math.round(closest); namaLokasiTerdekat=name;
-    
-    // Set Status Lokasi Global
-    if(jarakUser <= MAX_RADIUS) {
-        isLocationValid = true;
-    } else {
-        isLocationValid = false;
-    }
-    
-    // Update UI di Halaman Kamera
-    var btnKirim = document.getElementById('btnKirim');
-    var statBox = document.getElementById('statusLokasiBox');
-    
-    if(isLocationValid){ 
-       btnKirim.disabled=false; 
-       statBox.className = "alert alert-success py-2 small mb-2"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`;
-    } else { 
-       btnKirim.disabled=true; 
-       statBox.className = "alert alert-danger py-2 small mb-2"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`;
-    }
-
-    // Jalankan Validasi Tombol Dashboard
-    validateButtonState();
-  }
-  
-  function calcDist(lat1,lon1,lat2,lon2) {
-    var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
-    var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  function formatTanggalIndoJS(d) {
+    var h=["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]; var b=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    return h[d.getDay()] + ", " + d.getDate() + " " + b[d.getMonth()] + " " + d.getFullYear();
   }
 
-  // === CORE ===
   async function doLogin() {
     var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
     if(!u||!p) return alert("Isi data");
@@ -456,79 +420,100 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
       let res = await req.json(); loading(false);
       if(res.status==='success') {
-        CURRENT_USER = { nama: res.nama, aum: res.aum };
-        localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
-        showDashboard();
-        // Trigger GPS again
+        CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum };
+        localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER)); showDashboard();
         if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, e=>{}, {enableHighAccuracy:true});
       } else alert(res.message);
     } catch(e) { loading(false); alert(e); }
   }
 
   async function doRegister() {
-    var n=document.getElementById('regNama').value; var a=document.getElementById('regAum').value;
-    var u=document.getElementById('regUser').value; var p=document.getElementById('regPass').value;
+    var n=document.getElementById('regNama').value; var a=document.getElementById('regAum').value; var u=document.getElementById('regUser').value; var p=document.getElementById('regPass').value;
     if(!n||!a||!u||!p) return alert("Lengkapi data");
     loading(true);
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'register', data: { username: u, password: p, nama: n, aum: a } }) });
-      let res = await req.json(); loading(false);
-      alert(res.message); if(res.status==='success') showLogin();
+      let res = await req.json(); loading(false); alert(res.message); if(res.status==='success') showLogin();
     } catch(e) { loading(false); alert(e); }
   }
 
   async function kirimAbsen() {
-    var kes = document.getElementById('kesimpulan').value;
-    if(!kes) return alert("Isi kesimpulan");
+    var kes = document.getElementById('kesimpulan').value; if(!kes) return alert("Isi kesimpulan");
     loading(true);
-    var cvs = document.getElementById('canvas');
-    cvs.width = video.videoWidth; cvs.height = video.videoHeight;
-    var ctx = cvs.getContext('2d');
-    ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
+    var cvs = document.getElementById('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
+    var ctx = cvs.getContext('2d'); ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
-    var dateStr = formatTanggalIndoJS(new Date());
-    var timeStr = new Date().toLocaleTimeString('id-ID', {hour12:false}) + " WIB";
-    
+    var d = new Date(); var dateStr = formatTanggalIndoJS(d); var timeStr = d.toLocaleTimeString('id-ID', {hour12:false})+" WIB";
     ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    ctx.fillText(dateStr + " " + timeStr, 20, cvs.height - 50);
-    ctx.fillText(namaLokasiTerdekat + " ("+jarakUser+"m)", 20, cvs.height - 25);
-    
+    ctx.fillText(dateStr + " " + timeStr, 20, cvs.height - 50); ctx.fillText(namaLokasiTerdekat + " ("+jarakUser+"m)", 20, cvs.height - 25);
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
     
     try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
-          action: 'savePresensi', 
-          data: { 
-             nama: CURRENT_USER.nama, aum: CURRENT_USER.aum, 
-             kegiatan: "Pengajian - " + dateStr, 
-             kesimpulan: kes, lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64 
-          } 
-      })});
-      let res = await req.json(); loading(false);
-      alert(res.message);
-      if(res.status==='success') { closePresensiMode(); loadDashboardData(); }
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'savePresensi', data: { nama: CURRENT_USER.nama, aum: CURRENT_USER.aum, kegiatan: "Pengajian - "+dateStr, kesimpulan: kes, lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64 } }) });
+      let res = await req.json(); loading(false); alert(res.message); if(res.status==='success') { closePresensiMode(); loadDashboardData(); }
     } catch(e) { loading(false); alert(e); }
   }
 
-  function startCamera() {
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(s=>video.srcObject=s);
-    }
+  function checkSession() {
+    var stored = localStorage.getItem("PCM_USER");
+    if (stored) { CURRENT_USER = JSON.parse(stored); showDashboard(); } else showLogin();
   }
-  function stopCamera() { if(video.srcObject) { video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; } }
+  function showLogin() { 
+    document.getElementById('authScreen').classList.remove('hidden'); document.getElementById('homeScreen').classList.add('hidden'); 
+    document.getElementById('formLogin').classList.remove('hidden'); document.getElementById('formRegister').classList.add('hidden');
+  }
+  function showRegister() { document.getElementById('formLogin').classList.add('hidden'); document.getElementById('formRegister').classList.remove('hidden'); }
+  function showDashboard() { 
+    document.getElementById('authScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden');
+    document.getElementById('dashNama').innerText = CURRENT_USER.nama; document.getElementById('dashAum').innerText = CURRENT_USER.aum;
+    loadDashboardData(); 
+  }
+  function doLogout() { localStorage.removeItem("PCM_USER"); CURRENT_USER = null; showLogin(); }
+  function openPresensiMode() { 
+    document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('presensiScreen').classList.remove('hidden');
+    if(navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s=>video.srcObject=s);
+    if(navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, e=>{}, {enableHighAccuracy:true});
+  }
+  function closePresensiMode() { 
+    if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop());
+    document.getElementById('presensiScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden'); 
+  }
   
   async function loadDbOptions() {
     try {
        let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
        let d = await r.json();
        if(d.status==='success') {
+          LIST_AUM_CACHE = d.aum; // Simpan ke cache untuk profil
           var s1 = document.getElementById('regNama'); s1.innerHTML='<option disabled selected>-- Pilih Nama --</option>';
           d.nama.forEach(n=>{ var o=document.createElement('option'); o.value=n; o.text=n; s1.add(o); });
           var s2 = document.getElementById('regAum'); s2.innerHTML='<option disabled selected>-- Pilih AUM --</option>';
           d.aum.forEach(a=>{ var o=document.createElement('option'); o.value=a; o.text=a; s2.add(o); });
        }
     } catch(e){}
+  }
+
+  function updatePosisi(pos) {
+    latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
+    var closest=Infinity, name="";
+    DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
+    jarakUser=Math.round(closest); namaLokasiTerdekat=name;
+    isLocationValid = (jarakUser <= MAX_RADIUS);
+    
+    var statBox = document.getElementById('statusLokasiBox');
+    var btnKirim = document.getElementById('btnKirim');
+    if(isLocationValid){ 
+       btnKirim.disabled=false; statBox.className = "alert alert-success py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`;
+    } else { 
+       btnKirim.disabled=true; statBox.className = "alert alert-danger py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`;
+    }
+    validateButtonState();
+  }
+  function calcDist(lat1,lon1,lat2,lon2) {
+    var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+    var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
   function loading(show) { document.getElementById('loading').classList.toggle('hidden', !show); }
 </script>
