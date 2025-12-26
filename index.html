@@ -16,24 +16,25 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LOGIN & GENERAL STYLES */
+    /* LOGIN SCREEN */
     #authScreen { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 200; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
+    .info-text { font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px; margin-left: 5px; display: block;}
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
     /* DASHBOARD */
     .dashboard-header {
       background: linear-gradient(135deg, var(--primary), #0d9488);
-      padding: 25px 20px 80px; /* Padding bawah lebih besar untuk overlap */
+      padding: 25px 20px 80px;
       border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
       color: white; position: relative;
     }
-    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.2rem; }
+    .user-info h5 { font-weight: 700; margin: 0; font-size: 1.1rem; line-height: 1.4; }
     .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
     .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
 
@@ -42,19 +43,21 @@
       background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px;
       box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10;
     }
-    
-    /* Foto Besar Rounded */
     .photo-display { 
       width: 100%; aspect-ratio: 4/3; object-fit: cover; 
       border-radius: 16px; background: #f1f5f9; margin-bottom: 15px;
       display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    /* Placeholder Loading Style */
+    .photo-loading {
+      display: flex; align-items: center; justify-content: center;
+      background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500;
     }
     
     .last-date-info { text-align: center; margin-bottom: 15px; }
     .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
     .last-date-info strong { color: var(--primary); font-size: 0.9rem; }
 
-    /* Stats Grid */
     .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
     .stat-item { flex: 1; background: #f8fafc; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
     .stat-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px;}
@@ -64,7 +67,6 @@
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
     
-    /* HISTORY */
     .history-section { padding: 0 20px 80px; }
     .section-title { font-weight: 700; font-size: 1rem; color: #334155; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
@@ -94,7 +96,7 @@
     <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
     <h4 class="auth-title">Presensi PCM</h4>
     <div id="formLogin">
-      <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email"></div>
+      <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP"></div>
       <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
       <button class="btn-primary" onclick="doLogin()">MASUK</button>
       <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
@@ -104,6 +106,7 @@
       <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
       <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
       <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Username Baru"></div>
+      <small class="info-text">* Username bisa berupa Email atau Nomor HP</small>
       <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Password Baru"></div>
       <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
       <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
@@ -120,7 +123,10 @@
     </div>
 
     <div class="main-card">
-      <img id="dashFoto" src="https://placehold.co/400x300?text=Belum+Ada+Foto" class="photo-display">
+      <div id="photoContainer" class="photo-display photo-loading">
+         <div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...
+      </div>
+      <img id="dashFoto" class="photo-display hidden">
       
       <div class="last-date-info">
          <small>Terakhir Hadir:</small>
@@ -186,8 +192,7 @@
 </div>
 
 <script>
-  // === KONFIGURASI ===
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAmv2PI0Wz724kwEY7yMz6LQ6XAobcHhYgFOX5nhNSr5gMCQyVLIaDeEICDYiLjk-lJA/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUIpJ4Kv_-aDa8sBrIU6EIXEcDkJUW-ilgCF1c1K9gc7zRIWhXhsqG_SkyKS3Idh8vtg/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -208,6 +213,7 @@
     loadDbOptions(); 
   };
 
+  // === AUTH & NAV ===
   function checkSession() {
     var stored = localStorage.getItem("PCM_USER");
     if (stored) {
@@ -236,7 +242,8 @@
     document.getElementById('presensiScreen').classList.add('hidden');
     document.getElementById('homeScreen').classList.remove('hidden');
     
-    document.getElementById('dashNama').innerText = CURRENT_USER.nama.split(' ')[0];
+    // UPDATE 1: Tampilkan Nama Lengkap
+    document.getElementById('dashNama').innerText = CURRENT_USER.nama;
     document.getElementById('dashAum').innerText = CURRENT_USER.aum;
     
     loadDashboardData();
@@ -263,9 +270,15 @@
     showLogin();
   }
 
-  // === DATA LOADING & STATS ===
+  // === DATA LOADING ===
   async function loadDashboardData() {
     var limit = document.getElementById('limitSelect').value;
+    
+    // UPDATE 2: Reset Foto ke Status Loading
+    document.getElementById('photoContainer').classList.remove('hidden');
+    document.getElementById('photoContainer').innerHTML = '<div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...';
+    document.getElementById('dashFoto').classList.add('hidden');
+
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
          action: 'getReport', 
@@ -274,25 +287,25 @@
       })});
       let res = await req.json();
       
-      // 1. Update Foto
+      // Handle Foto
       if(res.fotoTerbaru) {
          document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru;
+         document.getElementById('dashFoto').classList.remove('hidden');
+         document.getElementById('photoContainer').classList.add('hidden');
+      } else {
+         document.getElementById('photoContainer').innerHTML = "Belum Ada Foto";
       }
 
-      // 2. Update Tanggal Terakhir (Bahasa Indo & Ahad)
-      var lastDateText = res.lastPresensi.replace("Minggu", "Ahad");
-      document.getElementById('dashLastDate').innerText = lastDateText;
+      // Handle Tanggal
+      document.getElementById('dashLastDate').innerText = res.lastPresensi;
 
-      // 3. Update Statistik
+      // Handle Stats
       if(res.stats) {
          document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal;
          document.getElementById('statPercent').innerText = res.stats.percent + "%";
       }
 
-      // 4. Cek Tombol Absen
       checkTodayStatus(res.history);
-
-      // 5. Render History
       renderHistory(res.history);
       
     } catch(e) { console.log(e); }
@@ -303,7 +316,6 @@
     var isPresent = false;
     
     if(history.length > 0) {
-      // History index 0 adalah yang terbaru
       var lastRaw = new Date(history[0].tanggalRaw);
       if(lastRaw.getDate() === today.getDate() && 
          lastRaw.getMonth() === today.getMonth() && 
@@ -318,8 +330,7 @@
     if(isPresent) {
       btn.disabled = true;
       btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI";
-      btn.classList.replace('btn-primary', 'btn-secondary'); // Ubah warna jadi abu
-      btn.style.background = "#cbd5e1"; // Paksa warna
+      btn.style.background = "#cbd5e1";
       status.classList.remove('hidden');
     } else {
       btn.disabled = false;
@@ -339,11 +350,11 @@
     }
 
     list.forEach(item => {
-       var tglIndo = item.tanggal.replace("Minggu", "Ahad");
+       // UPDATE 3: TANGGAL SUDAH DI FORMAT DI SERVER
        var html = `
        <div class="history-item">
           <div>
-            <div class="hist-date">${tglIndo}</div>
+            <div class="hist-date">${item.tanggal}</div>
             <div class="hist-loc"><i class="bi bi-geo-alt"></i> ${item.lokasi.split('(')[0].substring(0, 25)}...</div>
           </div>
           <div class="hist-time badge bg-light text-dark border">${item.jam}</div>
@@ -352,7 +363,7 @@
     });
   }
 
-  // === CORE & AUTH ===
+  // === CORE ===
   async function doLogin() {
     var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
     if(!u||!p) return alert("Isi data");
@@ -390,8 +401,10 @@
     var ctx = cvs.getContext('2d');
     ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
+    // Watermark (UPDATE: Hari Indonesia)
     var now = new Date();
-    var dateStr = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).replace("Minggu","Ahad");
+    var options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    var dateStr = now.toLocaleDateString('id-ID', options).replace("Minggu", "Ahad");
     var timeStr = now.toLocaleTimeString('id-ID', {hour12:false}) + " WIB";
     
     ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
