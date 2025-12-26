@@ -6,60 +6,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f766e">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <style>
-    :root { --primary: #0f766e; --bg: #f1f5f9; }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; }
-    .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+    :root { --primary: #0f766e; --bg: #f8fafc; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
+    .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
     /* LOGIN SCREEN */
-    #authScreen { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 100; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+    #authScreen { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 200; background: white; padding: 30px; display: flex; flex-direction: column; justify-content: center; }
     .auth-logo { width: 80px; display: block; margin: 0 auto 20px; }
     .auth-title { text-align: center; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
-
-    /* HEADER APP */
-    .header-decoration { background: linear-gradient(135deg, var(--primary), #0d9488); height: 260px; border-bottom-radius: 35px; padding: 20px; color: white; text-align: center; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;}
-    .user-welcome { background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 10px; }
-    
-    /* CLOCK */
-    .digital-clock { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 10px; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; }
-    .clock-time { font-family: 'JetBrains Mono'; font-size: 1.8rem; font-weight: 700; }
-    .clock-divider { width: 1px; height: 35px; background: rgba(255,255,255,0.4); }
-    .clock-date-wrapper { text-align: left; }
-    .clock-day { font-weight: 700; line-height: 1; } .clock-date { font-size: 0.75rem; opacity: 0.9; }
-
-    /* MAIN CONTENT */
-    .main-content { background: white; margin: -50px 20px 20px; border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); position: relative; flex-grow: 1; }
-    
-    .camera-placeholder { background: #000; border-radius: 16px; margin-bottom: 20px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: white; flex-direction: column;}
-    .camera-wrapper { width: 100%; height: 100%; position: relative; overflow: hidden; border-radius: 16px;}
-    #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    
-    .input-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
-    .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 5px; display: block;}
+    .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
-    .info-text { font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px; margin-left: 5px; display: block;}
-
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
-    button.btn-primary:disabled { background: #ccc; }
+
+    /* DASHBOARD (HOME) */
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--primary), #0d9488);
+      padding: 25px 20px 60px;
+      border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
+      color: white; position: relative;
+    }
+    .user-info h5 { font-weight: 700; margin: 0; }
+    .user-info p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
+    .btn-logout { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; }
+
+    .last-presence-card {
+      background: white; margin: -40px 20px 20px; border-radius: 20px; padding: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center; position: relative; z-index: 10;
+    }
+    .photo-circle { 
+      width: 80px; height: 80px; border-radius: 50%; object-fit: cover; 
+      border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.15); margin-top: -45px; background: #eee;
+    }
+    .status-text { font-size: 0.8rem; color: #64748b; margin-top: 5px; }
+    .status-date { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+
+    .action-area { padding: 0 20px 20px; }
+    #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
+    #btnStartAbsen:disabled { background: #cbd5e1; color: #64748b; box-shadow: none; cursor: not-allowed; }
+
+    .history-section { padding: 0 20px 80px; }
+    .section-title { font-weight: 700; font-size: 1rem; color: #334155; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; }
+    .hist-time { font-size: 0.75rem; color: #64748b; }
+    .hist-loc { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+
+    /* PRESENSI SCREEN (FULL OVERLAY) */
+    #presensiScreen { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: white; z-index: 150; display: flex; flex-direction: column;
+    }
+    .presensi-header { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #eee; }
+    .btn-back { background: none; border: none; font-size: 1.5rem; color: #334155; margin-right: 15px; }
     
-    .status-pill { padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 600;}
-    .status-ok { background: #d1fae5; color: #047857; } .status-err { background: #fee2e2; color: #b91c1c; }
+    .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; }
+    #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .presensi-form { padding: 20px; flex-grow: 1; overflow-y: auto; }
     
-    .hidden { display: none !important; }
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-    
-    .btn-logout { position: absolute; top: 20px; right: 20px; color: white; background: rgba(0,0,0,0.2); border: none; padding: 5px 10px; border-radius: 10px; font-size: 0.75rem; z-index: 10; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<div id="loading" class="hidden"><div class="spinner-border text-success"></div><p class="mt-2 text-success fw-bold small">Memproses...</p></div>
+<div id="loading" class="hidden"><div class="spinner-border text-success"></div><p class="mt-2 fw-bold text-success small">Memproses...</p></div>
 
 <div class="app-container">
 
@@ -75,103 +92,83 @@
     </div>
 
     <div id="formRegister" class="hidden">
-      <div class="alert alert-info py-2 small">Pilih Nama & AUM Anda untuk membuat akun presensi.</div>
-      
-      <div class="input-box">
-         <select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama Anda --</option></select>
-      </div>
-      
-      <div class="input-box">
-         <select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih Asal AUM --</option></select>
-      </div>
-
-      <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username Baru"></div>
-      <small class="info-text">* Username bisa berupa Email atau Nomor HP</small>
-      
-      <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"></div>
-      
+      <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
+      <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
+      <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
+      <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Username Baru"></div>
+      <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Password Baru"></div>
       <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
       <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
     </div>
   </div>
 
-  <div id="mainApp" class="hidden">
-    <div class="header-decoration">
-      <button class="btn-logout" onclick="doLogout()">Logout <i class="bi bi-box-arrow-right"></i></button>
-      <div class="user-welcome"><i class="bi bi-person-circle"></i> <span id="displayNama">User</span></div>
-      <h5 class="fw-bold m-0">Presensi Kajian</h5>
-      
-      <div class="digital-clock">
-         <div id="clockTime" class="clock-time">00:00</div>
-         <div class="clock-divider"></div>
-         <div class="clock-date-wrapper">
-            <div id="clockDay" class="clock-day">Ahad</div>
-            <div id="clockDate" class="clock-date">Date</div>
-         </div>
+  <div id="homeScreen" class="hidden">
+    <div class="dashboard-header">
+      <div class="user-info">
+        <h5 id="dashNama">Nama User</h5>
+        <p id="dashAum">Asal AUM</p>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Keluar</button>
+    </div>
+
+    <div class="last-presence-card">
+      <img id="dashFoto" src="https://via.placeholder.com/150?text=..." class="photo-circle">
+      <div class="mt-2">
+        <div class="status-text">Presensi Terakhir:</div>
+        <div id="dashLastDate" class="status-date">-</div>
       </div>
     </div>
 
-    <div class="main-content">
-      <div id="statusWaktu" class="hidden"></div>
-      
-      <div class="camera-placeholder">
-          <div class="camera-wrapper">
-             <video id="camera" autoplay playsinline></video>
-          </div>
+    <div class="action-area">
+      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()">
+        <i class="bi bi-camera-fill"></i> PRESENSI SEKARANG
+      </button>
+      <div id="todayStatus" class="text-center mt-2 small text-success fw-bold hidden">
+         <i class="bi bi-check-circle-fill"></i> Anda sudah presensi hari ini
       </div>
-      <canvas id="canvas" class="hidden"></canvas>
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">Identitas</label>
-        <div class="input-box bg-light">
-          <strong id="formNama" class="d-block text-dark">Nama Pengguna</strong>
-          <small id="formAum" class="text-muted">Asal AUM</small>
-        </div>
+    <div class="history-section">
+      <div class="section-title">
+        <span>Riwayat Presensi</span>
+        <select id="limitSelect" class="form-select form-select-sm" style="width: auto;" onchange="loadDashboardData()">
+           <option value="10">10</option>
+           <option value="25">25</option>
+           <option value="50">50</option>
+           <option value="100">100</option>
+        </select>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Kesimpulan</label>
-        <div class="input-box">
-          <textarea id="kesimpulan" class="form-control-plain" rows="2" placeholder="Catatan kajian..."></textarea>
-        </div>
+      <div id="historyList">
+         <div class="text-center text-muted small py-3">Memuat data...</div>
       </div>
+    </div>
+  </div>
 
-      <div id="statusLokasiBox" class="status-pill status-err"><span>Mencari GPS...</span></div>
-
-      <div class="d-flex gap-2">
-        <button class="btn-primary" style="background:#0284c7; width: 40%;" onclick="bukaModalReport()"><i class="bi bi-clock-history"></i> Riwayat</button>
-        <button id="btnAbsen" class="btn-primary" onclick="kirimAbsen()" disabled>KIRIM</button>
-      </div>
+  <div id="presensiScreen" class="hidden">
+    <div class="presensi-header">
+      <button class="btn-back" onclick="closePresensiMode()"><i class="bi bi-arrow-left"></i></button>
+      <h6 class="m-0 fw-bold">Form Presensi</h6>
     </div>
     
-    <div class="text-center pb-4 text-muted small">&copy; PCM Kebakkramat</div>
-  </div>
+    <div class="camera-container">
+       <video id="camera" autoplay playsinline></video>
+    </div>
+    <canvas id="canvas" class="hidden"></canvas>
 
-</div>
-
-<div class="modal fade" id="modalReport">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content" style="border-radius: 20px;">
-      <div class="modal-header border-0"><h5 class="fw-bold fs-6">Riwayat Saya</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body text-center">
-        <div class="d-flex gap-2 mb-3"><input type="date" id="filterStart" class="form-control form-control-sm"><input type="date" id="filterEnd" class="form-control form-control-sm"><button class="btn btn-sm btn-success" onclick="loadReportData()">Cari</button></div>
-        <div id="loadingReport" class="hidden"><div class="spinner-border text-success"></div></div>
-        <div id="contentReport" class="hidden">
-           <div id="boxFoto" class="hidden mb-2"><img id="imgFotoTerbaru" style="width:80px;height:80px;border-radius:50%;object-fit:cover;"></div>
-           <div class="row g-2 mb-3">
-             <div class="col-6"><div class="p-2 bg-light rounded"><small>Hadir</small><div class="fw-bold text-success" id="repTotal">0</div></div></div>
-             <div class="col-6"><div class="p-2 bg-light rounded"><small>Persen</small><div class="fw-bold text-primary" id="repPercent">0%</div></div></div>
-           </div>
-           <table class="table table-borderless table-sm text-start small"><tbody id="tabelHistory"></tbody></table>
-        </div>
+    <div class="presensi-form">
+      <div class="mb-3">
+         <div id="statusLokasiBox" class="alert alert-warning py-2 small mb-2"><i class="bi bi-geo"></i> Mencari Lokasi...</div>
+         <label class="form-label small fw-bold text-muted">Kesimpulan Kajian</label>
+         <textarea id="kesimpulan" class="form-control" rows="3" placeholder="Tulis catatan..."></textarea>
       </div>
+      <button id="btnKirim" class="btn-primary" onclick="kirimAbsen()" disabled>KIRIM DATA</button>
     </div>
   </div>
+
 </div>
 
 <script>
-  // === KONFIGURASI ===
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJmlfIJSXmxjdxTjebN4OIqecqmX9dCS7ht1tpZvuIVfOKXFtfSNPzq8PacJeP7V63mw/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSk00MUgZUd_UadJ5pEbe67nTmCr8T5Yoj74sgxy1E91e-zd03V22H_LN7P-cg9vEofQ/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -185,52 +182,28 @@
 
   var CURRENT_USER = null; 
   var video = document.getElementById('camera');
-  var latUser = 0, lngUser = 0, lokasiString = "", jarakUser = 0, namaLokasiTerdekat = "", namaKegiatan = "";
-  var isTimeOpen = false, isLocationOk = false, myModal;
+  var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
 
   window.onload = function() {
-    myModal = new bootstrap.Modal(document.getElementById('modalReport'));
     checkSession(); 
-    initClock();
-    loadDbOptions();
-    
-    // GPS hanya dinyalakan saat perlu
-    if (navigator.geolocation) {
-       navigator.geolocation.watchPosition(updatePosisi, e => document.getElementById('statusLokasiBox').innerText="GPS Error", { enableHighAccuracy: true });
-    }
+    loadDbOptions(); // Load dropdown register
   };
 
-  // === FUNGSI KAMERA (BARU: HANYA NYALA SETELAH LOGIN) ===
-  function startCamera() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-      .then(s => { video.srcObject = s; })
-      .catch(e => console.log("Camera error/denied", e));
-    }
-  }
-
-  function stopCamera() {
-    if(video.srcObject) {
-      video.srcObject.getTracks().forEach(track => track.stop());
-      video.srcObject = null;
-    }
-  }
-
-  // === AUTHENTICATION LOGIC ===
+  // === NAVIGATION & AUTH ===
   function checkSession() {
     var stored = localStorage.getItem("PCM_USER");
     if (stored) {
       CURRENT_USER = JSON.parse(stored);
-      showMainApp();
+      showDashboard();
     } else {
       showLogin();
     }
   }
 
   function showLogin() {
-    stopCamera(); // Matikan kamera saat logout
     document.getElementById('authScreen').classList.remove('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
+    document.getElementById('homeScreen').classList.add('hidden');
+    document.getElementById('presensiScreen').classList.add('hidden');
     document.getElementById('formLogin').classList.remove('hidden');
     document.getElementById('formRegister').classList.add('hidden');
   }
@@ -240,55 +213,34 @@
     document.getElementById('formRegister').classList.remove('hidden');
   }
 
-  function showMainApp() {
+  function showDashboard() {
     document.getElementById('authScreen').classList.add('hidden');
-    document.getElementById('mainApp').classList.remove('hidden');
+    document.getElementById('presensiScreen').classList.add('hidden');
+    document.getElementById('homeScreen').classList.remove('hidden');
     
-    document.getElementById('displayNama').innerText = CURRENT_USER.nama.split(' ')[0];
-    document.getElementById('formNama').innerText = CURRENT_USER.nama;
-    document.getElementById('formAum').innerText = CURRENT_USER.aum;
+    // Set Info Header
+    document.getElementById('dashNama').innerText = CURRENT_USER.nama.split(' ')[0];
+    document.getElementById('dashAum').innerText = CURRENT_USER.aum;
     
-    cekWaktuBuka();
-    startCamera(); // Nyalakan kamera hanya di sini
+    // Load Data
+    loadDashboardData();
   }
 
-  async function doLogin() {
-    var u = document.getElementById('loginUser').value;
-    var p = document.getElementById('loginPass').value;
-    if(!u || !p) return alert("Isi username & password");
+  function openPresensiMode() {
+    document.getElementById('homeScreen').classList.add('hidden');
+    document.getElementById('presensiScreen').classList.remove('hidden');
     
-    loading(true);
-    try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
-      let res = await req.json();
-      loading(false);
-      
-      if(res.status === 'success') {
-        CURRENT_USER = { nama: res.nama, aum: res.aum };
-        localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
-        showMainApp();
-      } else {
-        alert(res.message);
-      }
-    } catch(e) { loading(false); alert("Error: " + e); }
+    // Nyalakan Kamera & GPS
+    startCamera();
+    if (navigator.geolocation) {
+       navigator.geolocation.watchPosition(updatePosisi, e => {}, { enableHighAccuracy: true });
+    }
   }
 
-  async function doRegister() {
-    var nama = document.getElementById('regNama').value;
-    var aum = document.getElementById('regAum').value; // Ambil manual dari dropdown
-    var u = document.getElementById('regUser').value;
-    var p = document.getElementById('regPass').value;
-    
-    if(!nama || !aum || !u || !p) return alert("Lengkapi semua data!");
-    
-    loading(true);
-    try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'register', data: { username: u, password: p, nama: nama, aum: aum } }) });
-      let res = await req.json();
-      loading(false);
-      alert(res.message);
-      if(res.status === 'success') showLogin();
-    } catch(e) { loading(false); alert("Error: " + e); }
+  function closePresensiMode() {
+    stopCamera();
+    document.getElementById('presensiScreen').classList.add('hidden');
+    document.getElementById('homeScreen').classList.remove('hidden');
   }
 
   function doLogout() {
@@ -297,47 +249,137 @@
     showLogin();
   }
 
-  // Load Data Nama dan AUM untuk Dropdown Register
-  async function loadDbOptions() {
-    try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
-      let res = await req.json();
-      if(res.status === 'success') {
-        // Isi Dropdown Nama
-        var selNama = document.getElementById('regNama');
-        selNama.innerHTML = '<option disabled selected>-- Pilih Nama Anda --</option>';
-        res.nama.forEach(n => {
-           var opt = document.createElement('option');
-           opt.value = n; opt.text = n; selNama.add(opt);
-        });
+  // === DATA LOADING ===
+  async function loadDashboardData() {
+    // loading(true); // Optional: Loading overlay di dashboard
+    var limit = document.getElementById('limitSelect').value;
 
-        // Isi Dropdown AUM (Baru)
-        var selAum = document.getElementById('regAum');
-        selAum.innerHTML = '<option disabled selected>-- Pilih Asal AUM --</option>';
-        res.aum.forEach(a => {
-           var opt = document.createElement('option');
-           opt.value = a; opt.text = a; selAum.add(opt);
-        });
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
+         action: 'getReport', 
+         nama: CURRENT_USER.nama, 
+         limit: limit 
+      })});
+      let res = await req.json();
+      
+      // Update Foto & Tanggal Terakhir
+      if(res.fotoTerbaru) {
+         document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru;
       }
-    } catch(e) {}
+      var lastDateText = res.lastPresensi.replace("Minggu", "Ahad");
+      document.getElementById('dashLastDate').innerText = lastDateText;
+
+      // Cek Apakah Sudah Absen Hari Ini?
+      checkTodayStatus(res.history);
+
+      // Render History
+      renderHistory(res.history);
+      
+    } catch(e) { console.log(e); }
+    // loading(false);
   }
 
-  // === CORE PRESENSI ===
-  async function kirimAbsen() {
-    var kesimpulan = document.getElementById('kesimpulan').value;
-    if (!kesimpulan) return alert("Isi kesimpulan!");
+  function checkTodayStatus(history) {
+    var today = new Date();
+    var isPresent = false;
     
+    if(history.length > 0) {
+      // History pertama adalah yang terbaru
+      var lastRaw = new Date(history[0].tanggalRaw);
+      if(lastRaw.getDate() === today.getDate() && 
+         lastRaw.getMonth() === today.getMonth() && 
+         lastRaw.getFullYear() === today.getFullYear()) {
+         isPresent = true;
+      }
+    }
+
+    var btn = document.getElementById('btnStartAbsen');
+    var status = document.getElementById('todayStatus');
+
+    if(isPresent) {
+      btn.disabled = true;
+      btn.innerHTML = "SUDAH PRESENSI";
+      status.classList.remove('hidden');
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG';
+      status.classList.add('hidden');
+    }
+  }
+
+  function renderHistory(list) {
+    var container = document.getElementById('historyList');
+    container.innerHTML = "";
+    
+    if(list.length === 0) {
+       container.innerHTML = "<div class='text-center text-muted small py-3'>Belum ada riwayat.</div>";
+       return;
+    }
+
+    list.forEach(item => {
+       // Format Tanggal: Minggu -> Ahad
+       var tglIndo = item.tanggal.replace("Minggu", "Ahad");
+       
+       var html = `
+       <div class="history-item">
+          <div>
+            <div class="hist-date">${tglIndo}</div>
+            <div class="hist-loc"><i class="bi bi-geo-alt"></i> ${item.lokasi.split('(')[0].substring(0, 25)}...</div>
+          </div>
+          <div class="hist-time badge bg-light text-dark border">${item.jam}</div>
+       </div>`;
+       container.innerHTML += html;
+    });
+  }
+
+  // === CORE FUNCTIONS (Login, Reg, Absen) ===
+  async function doLogin() {
+    var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
+    if(!u||!p) return alert("Isi data");
     loading(true);
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
+      let res = await req.json(); loading(false);
+      if(res.status==='success') {
+        CURRENT_USER = { nama: res.nama, aum: res.aum };
+        localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
+        showDashboard();
+      } else alert(res.message);
+    } catch(e) { loading(false); alert(e); }
+  }
+
+  async function doRegister() {
+    var n=document.getElementById('regNama').value; var a=document.getElementById('regAum').value;
+    var u=document.getElementById('regUser').value; var p=document.getElementById('regPass').value;
+    if(!n||!a||!u||!p) return alert("Lengkapi data");
+    loading(true);
+    try {
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'register', data: { username: u, password: p, nama: n, aum: a } }) });
+      let res = await req.json(); loading(false);
+      alert(res.message); if(res.status==='success') showLogin();
+    } catch(e) { loading(false); alert(e); }
+  }
+
+  async function kirimAbsen() {
+    var kes = document.getElementById('kesimpulan').value;
+    if(!kes) return alert("Isi kesimpulan");
+    loading(true);
+    
+    // Capture Photo
     var cvs = document.getElementById('canvas');
     cvs.width = video.videoWidth; cvs.height = video.videoHeight;
     var ctx = cvs.getContext('2d');
     ctx.save(); ctx.translate(cvs.width, 0); ctx.scale(-1, 1); ctx.drawImage(video, 0, 0); ctx.restore();
     
     // Watermark
-    ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 100, cvs.width, 100);
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).replace("Minggu","Ahad");
+    var timeStr = now.toLocaleTimeString('id-ID', {hour12:false});
+    
+    ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(0, cvs.height - 80, cvs.width, 80);
     ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "white"; 
-    ctx.fillText(document.getElementById('clockDay').innerText + ", " + document.getElementById('clockDate').innerText + " " + document.getElementById('clockTime').innerText, 20, cvs.height - 60);
-    ctx.fillText(namaLokasiTerdekat + " ("+jarakUser+"m)", 20, cvs.height - 30);
+    ctx.fillText(dateStr + " " + timeStr + " WIB", 20, cvs.height - 50);
+    ctx.fillText(namaLokasiTerdekat + " ("+jarakUser+"m)", 20, cvs.height - 25);
     
     var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
     
@@ -345,92 +387,69 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
           action: 'savePresensi', 
           data: { 
-             nama: CURRENT_USER.nama, 
-             aum: CURRENT_USER.aum, 
-             kegiatan: namaKegiatan, 
-             kesimpulan: kesimpulan, 
-             lokasiString: lokasiString, 
-             lat: latUser, lng: lngUser, image: base64 
+             nama: CURRENT_USER.nama, aum: CURRENT_USER.aum, 
+             kegiatan: "Pengajian - " + dateStr, 
+             kesimpulan: kes, lokasiString: lokasiString, lat: latUser, lng: lngUser, image: base64 
           } 
       })});
       let res = await req.json();
       loading(false);
       alert(res.message);
-      if(res.status === 'success') location.reload();
-    } catch(e) { loading(false); alert("Gagal: " + e); }
+      if(res.status==='success') {
+         closePresensiMode();
+         loadDashboardData(); // Refresh Home
+      }
+    } catch(e) { loading(false); alert(e); }
   }
 
-  async function loadReportData() {
-    loadingReport(true);
+  // === HELPERS & GPS ===
+  function startCamera() {
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(s=>video.srcObject=s);
+    }
+  }
+  function stopCamera() { if(video.srcObject) { video.srcObject.getTracks().forEach(t=>t.stop()); video.srcObject=null; } }
+  
+  async function loadDbOptions() {
     try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ 
-         action: 'getReport', 
-         nama: CURRENT_USER.nama, 
-         start: document.getElementById('filterStart').value, 
-         end: document.getElementById('filterEnd').value 
-      })});
-      let res = await req.json();
-      loadingReport(false);
-      document.getElementById('contentReport').classList.remove('hidden');
-      
-      document.getElementById('repTotal').innerText = res.count + " / " + res.totalEvents;
-      document.getElementById('repPercent').innerText = res.percent + "%";
-      
-      var img = document.getElementById('imgFotoTerbaru'), box = document.getElementById('boxFoto');
-      if(res.fotoTerbaru) { img.src = "data:image/png;base64," + res.fotoTerbaru; box.classList.remove('hidden'); } else { box.classList.add('hidden'); }
-
-      var tbody = document.getElementById('tabelHistory'); tbody.innerHTML = "";
-      if(res.history.length === 0) tbody.innerHTML = "<tr><td class='text-center text-muted'>Belum ada data</td></tr>";
-      else res.history.forEach(i => tbody.innerHTML += `<tr><td><div class='fw-bold'>${i.tanggal.split('-')[0]}</div><div class='text-muted'>${i.tanggal.split('-')[1]||''}</div></td><td class='text-end text-success'><i class='bi bi-check-circle-fill'></i></td></tr>`);
-    } catch(e) { loadingReport(false); alert("Error: " + e); }
+       let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
+       let d = await r.json();
+       if(d.status==='success') {
+          var s1 = document.getElementById('regNama'); s1.innerHTML='<option disabled selected>-- Pilih Nama --</option>';
+          d.nama.forEach(n=>{ var o=document.createElement('option'); o.value=n; o.text=n; s1.add(o); });
+          var s2 = document.getElementById('regAum'); s2.innerHTML='<option disabled selected>-- Pilih AUM --</option>';
+          d.aum.forEach(a=>{ var o=document.createElement('option'); o.value=a; o.text=a; s2.add(o); });
+       }
+    } catch(e){}
   }
 
-  // === HELPER FUNCTIONS ===
-  function loading(show) { document.getElementById('loading').classList.toggle('hidden', !show); }
-  function loadingReport(show) { 
-     if(show) { document.getElementById('loadingReport').classList.remove('hidden'); document.getElementById('contentReport').classList.add('hidden'); }
-     else { document.getElementById('loadingReport').classList.add('hidden'); }
-  }
-  function bukaModalReport() { myModal.show(); loadReportData(); }
-  function initClock() { updateClock(); setInterval(updateClock, 1000); }
-  function updateClock() {
-    var now = new Date();
-    document.getElementById('clockTime').innerText = now.toLocaleTimeString('id-ID', { hour12: false }).replace(/\./g, ":");
-    var dName = now.toLocaleDateString('id-ID', { weekday: 'long' }); if(dName==='Minggu') dName='Ahad';
-    document.getElementById('clockDay').innerText = dName;
-    var dFull = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-    document.getElementById('clockDate').innerText = dFull.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-    namaKegiatan = "Pengajian Ahad Pagi - " + dName + ", " + dFull;
-  }
   function updatePosisi(pos) {
     latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
     var closest=Infinity, name="";
     DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
     jarakUser=Math.round(closest); namaLokasiTerdekat=name;
-    var el=document.getElementById('statusLokasiBox');
-    if(jarakUser<=MAX_RADIUS){ isLocationOk=true; el.className='status-pill status-ok'; el.innerHTML=`<i class="bi bi-geo-alt-fill text-success"></i> ${name} (${jarakUser}m)`; }
-    else { isLocationOk=false; el.className='status-pill status-err'; el.innerHTML=`<i class="bi bi-exclamation-triangle-fill text-danger"></i> Kejauhan (${jarakUser}m)`; }
-    cekTombol();
+    
+    var btn = document.getElementById('btnKirim');
+    var stat = document.getElementById('statusLokasiBox');
+    
+    if(jarakUser<=MAX_RADIUS){ 
+       btn.disabled=false; 
+       stat.className = "alert alert-success py-2 small mb-2";
+       stat.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`;
+    } else { 
+       btn.disabled=true; 
+       stat.className = "alert alert-danger py-2 small mb-2";
+       stat.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`;
+    }
   }
+  
   function calcDist(lat1,lon1,lat2,lon2) {
     var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
     var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
     return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
-  function cekWaktuBuka() {
-    var now=new Date(), day=now.getDay(), h=now.getHours(), m=now.getMinutes();
-    var isOpen=(day===0 && ((h===6) || (h===7 && m<=30)));
-    // isOpen = true; // TESTING
-    var el=document.getElementById('statusWaktu');
-    if(isOpen) { isTimeOpen=true; el.classList.add('hidden'); }
-    else { isTimeOpen=false; el.classList.remove('hidden'); el.className='status-pill status-err'; el.innerHTML="⛔ Presensi Ditutup"; }
-    cekTombol();
-  }
-  function cekTombol() {
-    var btn=document.getElementById('btnAbsen');
-    if(isTimeOpen && isLocationOk) { btn.disabled=false; btn.innerHTML='KIRIM PRESENSI'; }
-    else { btn.disabled=true; btn.innerHTML=!isTimeOpen?"⛔ TUTUP":"❌ LOKASI"; }
-  }
+  
+  function loading(show) { document.getElementById('loading').classList.toggle('hidden', !show); }
 </script>
 </body>
 </html>
