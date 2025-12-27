@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Presensi Kajian AUM</title>
+  <title>Presensi Kajian AUM PCM Kebakkramat Karanganyar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f766e">
@@ -31,9 +31,6 @@
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* MODAL PANDUAN (Fix Z-Index agar muncul di atas Auth) */
-    #infoModal { z-index: 400 !important; }
-
     /* INPUTS & BUTTONS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
@@ -90,11 +87,20 @@
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
     
-    #dashboardMsg { text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; display: none; border: 1px solid #ffeeba; }
+    /* Pesan Error/Info Dashboard */
+    #dashboardMsg { 
+        text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; 
+        border-radius: 10px; background: #fff3cd; color: #856404; display: none; 
+        border: 1px solid #ffeeba;
+    }
+    .msg-danger { background: #fee2e2 !important; color: #991b1b !important; border-color: #fca5a5 !important; }
 
+    /* HISTORY LIST */
     .history-section { padding: 0 20px 80px; }
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-    .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; }
+    .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 3px; }
+    .hist-loc { font-size: 0.75rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
+    .hist-loc i { color: #dc2626; } /* Ikon Lokasi Merah */
     
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -102,6 +108,7 @@
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     
     /* MODAL PANDUAN STYLES */
+    #infoModal { z-index: 400 !important; }
     .nav-tabs .nav-link { color: #64748b; font-size: 0.9rem; }
     .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
     .guide-step { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; }
@@ -206,7 +213,10 @@
     </div>
 
     <div class="action-area">
-      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled><div class="spinner-border spinner-border-sm"></div> Memuat...</button>
+      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled>
+         <div class="spinner-border spinner-border-sm"></div> Memuat...
+      </button>
+      
       <div id="dashboardMsg"></div>
     </div>
 
@@ -361,6 +371,7 @@
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
+  var gpsErrorMsg = "";
 
   window.onload = function() {
     checkSession(); 
@@ -420,17 +431,75 @@
     } catch(e) { loading(false); alert(e); }
   }
 
+  // --- VALIDASI TOMBOL UTAMA ---
   function validateButtonState() {
     if(!CURRENT_USER) return;
-    var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
-    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; else isTimeValid = false;
-    // isTimeValid = true; // TESTING
-    var btn = document.getElementById('btnStartAbsen'); var msg = document.getElementById('dashboardMsg');
-    btn.classList.remove('btn-primary', 'btn-secondary'); msg.style.display = 'none';
-    if (isAlreadyPresent) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary'); }
-    else if (!isTimeValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Jadwal:</b> Ahad 06:00 - 07:30 WIB."; msg.style.display = 'block'; }
-    else if (!isLocationValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b>"; msg.style.display = 'block'; }
-    else { btn.disabled = false; btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; btn.classList.add('btn-primary'); }
+    
+    var now = new Date(); 
+    var day = now.getDay(); // 0 = Ahad
+    var h = now.getHours(); 
+    var m = now.getMinutes(); 
+    var timeVal = h * 100 + m;
+    
+    // CEK WAKTU (AHAD 06:00 - 07:30)
+    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; 
+    else isTimeValid = false;
+    
+    // Uncomment untuk TESTING (Jika bukan hari Ahad)
+    // isTimeValid = true;
+
+    var btn = document.getElementById('btnStartAbsen'); 
+    var msg = document.getElementById('dashboardMsg');
+    
+    btn.classList.remove('btn-primary', 'btn-secondary'); 
+    btn.classList.remove('btn-danger'); // Remove old danger class just in case
+    msg.style.display = 'none';
+    msg.className = ""; // Reset class
+
+    if (isAlreadyPresent) {
+        // SUDAH ABSEN
+        btn.disabled = true; 
+        btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; 
+        btn.classList.add('btn-secondary'); 
+    
+    } else if (!isTimeValid) {
+        // BELUM WAKTUNYA
+        btn.disabled = true; 
+        btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; 
+        btn.classList.add('btn-secondary'); 
+        msg.innerHTML = "<b>Jadwal Kajian:</b> Ahad 06:00 - 07:30 WIB."; 
+        msg.style.display = 'block'; 
+        
+    } else if (gpsErrorMsg !== "") {
+        // GPS MATI / ERROR
+        btn.disabled = true;
+        btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS";
+        btn.classList.add('btn-secondary');
+        // Tampilkan pesan error merah
+        msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi & refresh halaman.`;
+        msg.style.display = 'block';
+        msg.classList.add('msg-danger');
+
+    } else if (latUser === 0 && lngUser === 0) {
+        // SEDANG MENCARI GPS
+        btn.disabled = true;
+        btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS...";
+        btn.classList.add('btn-secondary');
+
+    } else if (!isLocationValid) {
+        // GPS NYALA TAPI JAUH
+        btn.disabled = true; 
+        btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; 
+        btn.classList.add('btn-secondary'); 
+        msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat ke lokasi."; 
+        msg.style.display = 'block'; 
+        
+    } else {
+        // READY
+        btn.disabled = false; 
+        btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; 
+        btn.classList.add('btn-primary'); 
+    }
   }
 
   async function loadDashboardData() {
@@ -458,7 +527,26 @@
   function renderHistory(list) {
     var c = document.getElementById('historyList'); c.innerHTML = "";
     if(list.length === 0) { c.innerHTML = "<div class='text-center small text-muted'>Belum ada riwayat.</div>"; return; }
-    list.forEach(i => { c.innerHTML += `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt"></i> ${i.lokasi.split('(')[0].substring(0,25)}...</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`; });
+    list.forEach(i => { 
+        // CLEANUP NAMA LOKASI (HILANGKAN KOORDINAT)
+        var cleanLoc = i.lokasi;
+        if(cleanLoc.includes('(')) {
+            cleanLoc = cleanLoc.split('(')[0].trim();
+        }
+        if(cleanLoc.length < 3) cleanLoc = "Lokasi Kajian"; // Fallback
+
+        var html = `
+        <div class="history-item">
+            <div>
+                <div class="hist-date">${i.tanggal}</div>
+                <div class="hist-loc">
+                    <i class="bi bi-geo-alt-fill"></i> ${cleanLoc}
+                </div>
+            </div>
+            <div class="badge bg-light text-dark border">${i.jam}</div>
+        </div>`;
+        c.innerHTML += html; 
+    });
   }
 
   function formatTanggalIndoJS(d) {
@@ -476,7 +564,7 @@
       if(res.status==='success') {
         CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum };
         localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER)); showDashboard();
-        if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, e=>{}, {enableHighAccuracy:true});
+        if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
       } else alert(res.message);
     } catch(e) { loading(false); alert(e); }
   }
@@ -510,9 +598,16 @@
   function checkSession() { var stored = localStorage.getItem("PCM_USER"); if (stored) { CURRENT_USER = JSON.parse(stored); showDashboard(); } else showLogin(); }
   function showLogin() { document.getElementById('authScreen').classList.remove('hidden'); document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('formLogin').classList.remove('hidden'); document.getElementById('formRegister').classList.add('hidden'); }
   function showRegister() { document.getElementById('formLogin').classList.add('hidden'); document.getElementById('formRegister').classList.remove('hidden'); }
-  function showDashboard() { document.getElementById('authScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden'); document.getElementById('dashNama').innerText = CURRENT_USER.nama; document.getElementById('dashAum').innerText = CURRENT_USER.aum; loadDashboardData(); }
+  
+  function showDashboard() { 
+    document.getElementById('authScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden');
+    document.getElementById('dashNama').innerText = CURRENT_USER.nama; document.getElementById('dashAum').innerText = CURRENT_USER.aum;
+    loadDashboardData(); 
+    if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
+  }
+  
   function doLogout() { localStorage.removeItem("PCM_USER"); CURRENT_USER = null; showLogin(); }
-  function openPresensiMode() { document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('presensiScreen').classList.remove('hidden'); if(navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s=>video.srcObject=s); if(navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, e=>{}, {enableHighAccuracy:true}); }
+  function openPresensiMode() { document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('presensiScreen').classList.remove('hidden'); if(navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s=>video.srcObject=s); if(navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true}); }
   function closePresensiMode() { if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); document.getElementById('presensiScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden'); }
   
   async function loadDbOptions() {
@@ -529,14 +624,31 @@
     } catch(e){}
   }
 
+  function handleGpsError(err) {
+    console.warn('GPS Error:', err.code);
+    if(err.code == 1) gpsErrorMsg = "Izin Lokasi Ditolak.";
+    else if(err.code == 2) gpsErrorMsg = "GPS Mati / Tidak Terdeteksi.";
+    else if(err.code == 3) gpsErrorMsg = "Waktu Habis Mencari GPS.";
+    else gpsErrorMsg = "Error GPS Tidak Diketahui.";
+    
+    isLocationValid = false;
+    latUser = 0; lngUser = 0;
+    validateButtonState();
+  }
+
   function updatePosisi(pos) {
+    gpsErrorMsg = ""; 
     latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
+    
     var closest=Infinity, name="";
     DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
     jarakUser=Math.round(closest); namaLokasiTerdekat=name;
     isLocationValid = (jarakUser <= MAX_RADIUS);
+    
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
-    if(isLocationValid){ btnKirim.disabled=false; statBox.className = "alert alert-success py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`; } else { btnKirim.disabled=true; statBox.className = "alert alert-danger py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`; }
+    if(isLocationValid){ btnKirim.disabled=false; statBox.className = "alert alert-success py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`; } 
+    else { btnKirim.disabled=true; statBox.className = "alert alert-danger py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`; }
+    
     validateButtonState();
   }
   function calcDist(lat1,lon1,lat2,lon2) { var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); }
