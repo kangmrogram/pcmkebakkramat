@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Presensi Kajian AUM PCM Kebakkramat Karanganyar</title>
+  <title>Presensi Kajian AUM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f766e">
@@ -87,7 +87,6 @@
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
     
-    /* Pesan Error/Info Dashboard */
     #dashboardMsg { 
         text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; 
         border-radius: 10px; background: #fff3cd; color: #856404; display: none; 
@@ -100,7 +99,7 @@
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
     .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 3px; }
     .hist-loc { font-size: 0.75rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
-    .hist-loc i { color: #dc2626; } /* Ikon Lokasi Merah */
+    .hist-loc i { color: #dc2626; } 
     
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -133,9 +132,7 @@
   <div id="authScreen" class="fullscreen-overlay">
     <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
         
-        <button class="auth-help-btn" onclick="openInfoModal()" title="Panduan & Instalasi">
-            <i class="bi bi-question-lg"></i>
-        </button>
+        <button class="auth-help-btn" onclick="openInfoModal()" title="Panduan & Instalasi"><i class="bi bi-question-lg"></i></button>
 
         <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
         <h4 class="auth-title">Presensi Kajian AUM</h4>
@@ -163,7 +160,6 @@
 
   <div id="homeScreen" class="hidden">
     <div class="dashboard-header">
-      
       <div class="header-top">
         <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png'">
         <div class="header-title">
@@ -173,39 +169,24 @@
       </div>
 
       <div class="header-actions">
-        <button class="btn-action-glass" onclick="openInfoModal()" title="Panduan & Info">
-          <i class="bi bi-question-lg"></i>
-        </button>
-        <button class="btn-action-glass" onclick="openChangePassword()" title="Ganti Password">
-          <i class="bi bi-key-fill"></i>
-        </button>
-        <button class="btn-action-glass" onclick="doLogout()" title="Keluar">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
+        <button class="btn-action-glass" onclick="openInfoModal()"><i class="bi bi-question-lg"></i></button>
+        <button class="btn-action-glass" onclick="openChangePassword()"><i class="bi bi-key-fill"></i></button>
+        <button class="btn-action-glass" onclick="doLogout()"><i class="bi bi-box-arrow-right"></i></button>
       </div>
 
       <div class="user-info-row">
-        <div class="u-text">
-          <h5 id="dashNama">Nama User</h5>
-          <p id="dashAum">Asal AUM</p>
-        </div>
-        <button class="btn-detail-profile" onclick="openProfile()" title="Lihat Detail Profil">
-          <i class="bi bi-person-lines-fill"></i>
-        </button>
+        <div class="u-text"><h5 id="dashNama">Nama User</h5><p id="dashAum">Asal AUM</p></div>
+        <button class="btn-detail-profile" onclick="openProfile()"><i class="bi bi-person-lines-fill"></i></button>
       </div>
     </div>
 
     <div class="main-card">
-      <div id="photoContainer" class="photo-loading">
-         <span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span>
-      </div>
+      <div id="photoContainer" class="photo-loading"><span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span></div>
       <img id="dashFoto" class="photo-display hidden">
-      
       <div class="text-center mb-3">
          <small class="text-muted">Terakhir Hadir:</small><br>
          <strong id="dashLastDate" class="text-primary">-</strong>
       </div>
-
       <div class="stats-grid">
          <div class="stat-item"><small class="text-muted">KEHADIRAN</small><div id="statCount" class="stat-value">0 / 0</div></div>
          <div class="stat-item"><small class="text-muted">PERSENTASE</small><div id="statPercent" class="stat-value highlight">0%</div></div>
@@ -213,10 +194,7 @@
     </div>
 
     <div class="action-area">
-      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled>
-         <div class="spinner-border spinner-border-sm"></div> Memuat...
-      </button>
-      
+      <button id="btnStartAbsen" class="btn-primary" onclick="openPresensiMode()" disabled><div class="spinner-border spinner-border-sm"></div> Memuat...</button>
       <div id="dashboardMsg"></div>
     </div>
 
@@ -246,10 +224,7 @@
   </div>
 
   <div id="profileScreen" class="fullscreen-overlay hidden">
-    <div class="overlay-header">
-      <h6 class="m-0 fw-bold">Profil Anggota</h6>
-      <button class="btn-close-custom" onclick="closeProfile()"><i class="bi bi-arrow-left"></i></button>
-    </div>
+    <div class="overlay-header"><h6 class="m-0 fw-bold">Profil Anggota</h6><button class="btn-close-custom" onclick="closeProfile()"><i class="bi bi-arrow-left"></i></button></div>
     <div class="overlay-body">
         <div class="alert alert-light border small mb-3">Lengkapi data diri Anda.</div>
         <label class="form-label">Nama Lengkap</label><div class="input-box"><input type="text" id="profNama" class="form-control-plain"></div>
@@ -266,10 +241,7 @@
   </div>
 
   <div id="passwordScreen" class="fullscreen-overlay hidden">
-    <div class="overlay-header">
-      <h6 class="m-0 fw-bold">Ganti Password</h6>
-      <button class="btn-close-custom" onclick="closeChangePassword()"><i class="bi bi-x"></i></button>
-    </div>
+    <div class="overlay-header"><h6 class="m-0 fw-bold">Ganti Password</h6><button class="btn-close-custom" onclick="closeChangePassword()"><i class="bi bi-x"></i></button></div>
     <div class="overlay-body">
         <div class="input-box"><input type="password" id="passNew" class="form-control-plain" placeholder="Password Baru"></div>
         <div class="input-box"><input type="password" id="passConfirm" class="form-control-plain" placeholder="Ulangi Password Baru"></div>
@@ -278,73 +250,29 @@
   </div>
 
   <div id="infoModal" class="fullscreen-overlay hidden">
-    <div class="overlay-header">
-        <h6 class="m-0 fw-bold">Panduan Aplikasi</h6>
-        <button class="btn-close-custom" onclick="closeInfoModal()"><i class="bi bi-x"></i></button>
-    </div>
+    <div class="overlay-header"><h6 class="m-0 fw-bold">Panduan Aplikasi</h6><button class="btn-close-custom" onclick="closeInfoModal()"><i class="bi bi-x"></i></button></div>
     <div class="overlay-body">
         <ul class="nav nav-tabs mb-3" id="infoTabs">
             <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabDaftar">Akun</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabInstall">Instalasi</a></li>
         </ul>
-        
         <div class="tab-content">
             <div class="tab-pane fade show active" id="tabDaftar">
                 <h6 class="fw-bold mb-3">Cara Klaim Nama / Daftar</h6>
-                <div class="guide-step">
-                    <div class="step-num">1</div>
-                    <div class="step-text">Klik <b>"Klaim Nama / Daftar Akun"</b> di halaman login.</div>
-                </div>
-                <div class="guide-step">
-                    <div class="step-num">2</div>
-                    <div class="step-text">Pilih <b>Nama Lengkap</b> Anda dari daftar yang tersedia. (Jika nama tidak ada, hubungi Admin PCM).</div>
-                </div>
-                <div class="guide-step">
-                    <div class="step-num">3</div>
-                    <div class="step-text">Pilih <b>Asal AUM</b> yang sesuai.</div>
-                </div>
-                <div class="guide-step">
-                    <div class="step-num">4</div>
-                    <div class="step-text">Buat <b>Username</b> (bisa No.HP atau Email) dan <b>Password</b> untuk login selanjutnya.</div>
-                </div>
+                <div class="guide-step"><div class="step-num">1</div><div class="step-text">Klik <b>"Klaim Nama / Daftar Akun"</b> di halaman login.</div></div>
+                <div class="guide-step"><div class="step-num">2</div><div class="step-text">Pilih <b>Nama Lengkap</b> Anda dari daftar yang tersedia. (Jika nama tidak ada, hubungi Admin PCM).</div></div>
+                <div class="guide-step"><div class="step-num">3</div><div class="step-text">Pilih <b>Asal AUM</b> yang sesuai.</div></div>
+                <div class="guide-step"><div class="step-num">4</div><div class="step-text">Buat <b>Username</b> (bisa No.HP atau Email) dan <b>Password</b> untuk login selanjutnya.</div></div>
             </div>
-
             <div class="tab-pane fade" id="tabInstall">
                 <div class="alert alert-light border small">Instal aplikasi ini agar muncul di layar depan HP Anda.</div>
-                
-                <div class="mb-4">
-                    <span class="browser-badge bg-chrome">Android (Chrome)</span>
-                    <div class="guide-step">
-                        <div class="step-num"><i class="bi bi-three-dots-vertical"></i></div>
-                        <div class="step-text">Ketuk ikon titik tiga di pojok kanan atas browser.</div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="step-num"><i class="bi bi-phone"></i></div>
-                        <div class="step-text">Pilih menu <b>"Tambahkan ke Layar Utama"</b> (Add to Home Screen).</div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="step-num">Ok</div>
-                        <div class="step-text">Ketuk <b>Install</b> atau <b>Tambah</b>.</div>
-                    </div>
+                <div class="mb-4"><span class="browser-badge bg-chrome">Android (Chrome)</span>
+                    <div class="guide-step"><div class="step-num"><i class="bi bi-three-dots-vertical"></i></div><div class="step-text">Ketuk ikon titik tiga di pojok kanan atas browser.</div></div>
+                    <div class="guide-step"><div class="step-num"><i class="bi bi-phone"></i></div><div class="step-text">Pilih menu <b>"Tambahkan ke Layar Utama"</b> (Add to Home Screen).</div></div>
                 </div>
-
-                <div class="mb-4">
-                    <span class="browser-badge bg-safari">iOS (Safari)</span>
-                    <div class="guide-step">
-                        <div class="step-num"><i class="bi bi-box-arrow-up"></i></div>
-                        <div class="step-text">Ketuk tombol <b>Share</b> (kotak dengan panah ke atas) di bagian bawah layar.</div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="step-num"><i class="bi bi-plus-square"></i></div>
-                        <div class="step-text">Geser ke bawah dan pilih <b>"Tambah ke Layar Utama"</b> (Add to Home Screen).</div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <span class="browser-badge bg-samsung">Samsung / Xiaomi Browser</span>
-                    <div class="guide-step">
-                        <div class="step-text">Buka menu (ikon garis tiga) &rarr; Cari opsi <b>"Tambah halaman ke"</b> (Add page to) &rarr; Pilih <b>"Layar Depan"</b> (Home Screen).</div>
-                    </div>
+                <div class="mb-4"><span class="browser-badge bg-safari">iOS (Safari)</span>
+                    <div class="guide-step"><div class="step-num"><i class="bi bi-box-arrow-up"></i></div><div class="step-text">Ketuk tombol <b>Share</b> (kotak dengan panah ke atas) di bagian bawah layar.</div></div>
+                    <div class="guide-step"><div class="step-num"><i class="bi bi-plus-square"></i></div><div class="step-text">Geser ke bawah dan pilih <b>"Tambah ke Layar Utama"</b> (Add to Home Screen).</div></div>
                 </div>
             </div>
         </div>
@@ -378,6 +306,25 @@
     loadDbOptions(); 
     setInterval(validateButtonState, 1000);
   };
+
+  // --- REVERSE GEOCODING LOGIC (FIND NEAREST NAME FROM COORDS) ---
+  function getNearestLocationName(lat, lng) {
+    if(!lat || !lng) return "Lokasi Tidak Diketahui";
+    var closestName = "Lokasi Tidak Diketahui";
+    var minDist = Infinity;
+    
+    DAFTAR_LOKASI.forEach(loc => {
+        var d = calcDist(lat, lng, loc.lat, loc.lng);
+        if(d < minDist) {
+            minDist = d;
+            closestName = loc.nama;
+        }
+    });
+    
+    // Jika jarak terlalu jauh (misal > 2km), mungkin koordinat salah/error
+    // Tapi user minta "titik terdekat", jadi kita kembalikan saja nama terdekatnya
+    return closestName; 
+  }
 
   function openInfoModal() { document.getElementById('infoModal').classList.remove('hidden'); }
   function closeInfoModal() { document.getElementById('infoModal').classList.add('hidden'); }
@@ -431,75 +378,19 @@
     } catch(e) { loading(false); alert(e); }
   }
 
-  // --- VALIDASI TOMBOL UTAMA ---
   function validateButtonState() {
     if(!CURRENT_USER) return;
-    
-    var now = new Date(); 
-    var day = now.getDay(); // 0 = Ahad
-    var h = now.getHours(); 
-    var m = now.getMinutes(); 
-    var timeVal = h * 100 + m;
-    
-    // CEK WAKTU (AHAD 06:00 - 07:30)
-    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; 
-    else isTimeValid = false;
-    
-    // Uncomment untuk TESTING (Jika bukan hari Ahad)
-    // isTimeValid = true;
-
-    var btn = document.getElementById('btnStartAbsen'); 
-    var msg = document.getElementById('dashboardMsg');
-    
-    btn.classList.remove('btn-primary', 'btn-secondary'); 
-    btn.classList.remove('btn-danger'); // Remove old danger class just in case
-    msg.style.display = 'none';
-    msg.className = ""; // Reset class
-
-    if (isAlreadyPresent) {
-        // SUDAH ABSEN
-        btn.disabled = true; 
-        btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; 
-        btn.classList.add('btn-secondary'); 
-    
-    } else if (!isTimeValid) {
-        // BELUM WAKTUNYA
-        btn.disabled = true; 
-        btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; 
-        btn.classList.add('btn-secondary'); 
-        msg.innerHTML = "<b>Jadwal Kajian:</b> Ahad 06:00 - 07:30 WIB."; 
-        msg.style.display = 'block'; 
-        
-    } else if (gpsErrorMsg !== "") {
-        // GPS MATI / ERROR
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS";
-        btn.classList.add('btn-secondary');
-        // Tampilkan pesan error merah
-        msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi & refresh halaman.`;
-        msg.style.display = 'block';
-        msg.classList.add('msg-danger');
-
-    } else if (latUser === 0 && lngUser === 0) {
-        // SEDANG MENCARI GPS
-        btn.disabled = true;
-        btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS...";
-        btn.classList.add('btn-secondary');
-
-    } else if (!isLocationValid) {
-        // GPS NYALA TAPI JAUH
-        btn.disabled = true; 
-        btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; 
-        btn.classList.add('btn-secondary'); 
-        msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat ke lokasi."; 
-        msg.style.display = 'block'; 
-        
-    } else {
-        // READY
-        btn.disabled = false; 
-        btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; 
-        btn.classList.add('btn-primary'); 
-    }
+    var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
+    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; else isTimeValid = false;
+    // isTimeValid = true; // TESTING
+    var btn = document.getElementById('btnStartAbsen'); var msg = document.getElementById('dashboardMsg');
+    btn.classList.remove('btn-primary', 'btn-secondary'); btn.classList.remove('btn-danger'); msg.style.display = 'none'; msg.className = "";
+    if (isAlreadyPresent) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary'); }
+    else if (!isTimeValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Jadwal:</b> Ahad 06:00 - 07:30 WIB."; msg.style.display = 'block'; }
+    else if (gpsErrorMsg !== "") { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS"; btn.classList.add('btn-secondary'); msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi.`; msg.style.display = 'block'; msg.classList.add('msg-danger'); }
+    else if (latUser === 0 && lngUser === 0) { btn.disabled = true; btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS..."; btn.classList.add('btn-secondary'); }
+    else if (!isLocationValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat."; msg.style.display = 'block'; }
+    else { btn.disabled = false; btn.innerHTML = '<i class="bi bi-camera-fill"></i> PRESENSI SEKARANG'; btn.classList.add('btn-primary'); }
   }
 
   async function loadDashboardData() {
@@ -524,23 +415,38 @@
     validateButtonState();
   }
 
+  // --- RENDER HISTORY (MODIFIED TO SHOW LOCATION NAME) ---
   function renderHistory(list) {
     var c = document.getElementById('historyList'); c.innerHTML = "";
     if(list.length === 0) { c.innerHTML = "<div class='text-center small text-muted'>Belum ada riwayat.</div>"; return; }
+    
     list.forEach(i => { 
-        // CLEANUP NAMA LOKASI (HILANGKAN KOORDINAT)
-        var cleanLoc = i.lokasi;
-        if(cleanLoc.includes('(')) {
-            cleanLoc = cleanLoc.split('(')[0].trim();
+        var displayName = i.lokasi;
+        
+        // 1. Coba Parsing Regex (untuk menangkap lat,long)
+        // Format: "Nama Lokasi (-7.123, 110.123)" atau hanya "-7.123, 110.123"
+        var coordsMatch = i.lokasi.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
+        
+        if (coordsMatch && coordsMatch.length === 3) {
+            // Jika ada koordinat, kita hitung jarak ke semua lokasi terdaftar
+            // dan ambil nama lokasi yang paling dekat
+            var lat = parseFloat(coordsMatch[1]);
+            var lng = parseFloat(coordsMatch[2]);
+            displayName = getNearestLocationName(lat, lng);
+        } else {
+            // Fallback: Jika format lama "Nama (Coord)" tapi regex gagal, 
+            // kita ambil teks sebelum tanda kurung
+            if(displayName.includes('(')) {
+                displayName = displayName.split('(')[0].trim();
+            }
         }
-        if(cleanLoc.length < 3) cleanLoc = "Lokasi Kajian"; // Fallback
 
         var html = `
         <div class="history-item">
             <div>
                 <div class="hist-date">${i.tanggal}</div>
                 <div class="hist-loc">
-                    <i class="bi bi-geo-alt-fill"></i> ${cleanLoc}
+                    <i class="bi bi-geo-alt-fill"></i> ${displayName}
                 </div>
             </div>
             <div class="badge bg-light text-dark border">${i.jam}</div>
@@ -630,9 +536,7 @@
     else if(err.code == 2) gpsErrorMsg = "GPS Mati / Tidak Terdeteksi.";
     else if(err.code == 3) gpsErrorMsg = "Waktu Habis Mencari GPS.";
     else gpsErrorMsg = "Error GPS Tidak Diketahui.";
-    
-    isLocationValid = false;
-    latUser = 0; lngUser = 0;
+    isLocationValid = false; latUser = 0; lngUser = 0;
     validateButtonState();
   }
 
