@@ -31,12 +31,25 @@
     
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
-    .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem;}
+    .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem; color: #334155; }
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px; margin-left: 5px; }
     .pass-toggle { color: #94a3b8; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
     .pass-toggle.active { color: var(--primary); }
-    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; background: #fff; }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
+
+    /* CUSTOM PICKER STYLE */
+    .picker-trigger { cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .picker-placeholder { color: #64748b; font-style: italic; }
+    .picker-value { color: #334155; font-weight: 500; }
+    
+    /* PICKER MODAL (POP UP) */
+    #pickerModal { z-index: 400 !important; background: #f8fafc; }
+    .picker-search-container { position: sticky; top: 0; background: #f8fafc; padding: 10px 20px; z-index: 5; border-bottom: 1px solid #e2e8f0; }
+    .picker-search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .picker-list { padding: 10px 20px; padding-bottom: 50px; }
+    .picker-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 8px; cursor: pointer; border: 1px solid #e2e8f0; transition: 0.2s; }
+    .picker-item:active { background: #e0f2fe; border-color: var(--primary); transform: scale(0.98); }
+    .picker-item strong { display: block; font-size: 0.9rem; color: #334155; }
 
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -118,17 +131,19 @@
         </div>
 
         <div id="formRegister" class="hidden">
-          <div class="alert alert-info py-2 small">Cari Nama & AUM pada kotak pencarian di bawah.</div>
+          <div class="alert alert-info py-2 small">Lengkapi data akun presensi Anda.</div>
           
           <label class="form-label">Nama Lengkap</label>
-          <input type="text" class="filter-input" placeholder="Ketik nama untuk mencari..." onkeyup="filterOptions('regNama', this.value)">
-          <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
-          
-          <label class="form-label">Asal AUM</label>
-          <input type="text" class="filter-input" placeholder="Ketik AUM untuk mencari..." onkeyup="filterOptions('regAum', this.value)">
-          <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
-          
-          <label class="form-label">Username Baru</label>
+          <div class="input-box picker-trigger" onclick="openPicker('nama')">
+             <span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span>
+             <i class="bi bi-chevron-down text-muted"></i>
+          </div>
+          <input type="hidden" id="regNama"> <label class="form-label">Asal AUM</label>
+          <div class="input-box picker-trigger" onclick="openPicker('aum')">
+             <span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span>
+             <i class="bi bi-chevron-down text-muted"></i>
+          </div>
+          <input type="hidden" id="regAum"> <label class="form-label">Username Baru</label>
           <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div>
           <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
           
@@ -175,7 +190,6 @@
 
     <div class="history-section">
       <h6 class="fw-bold mb-3">Riwayat Kehadiran</h6>
-      
       <div class="filter-box">
          <div class="row g-2">
             <div class="col-5"><input type="date" id="filterStart" class="form-control form-control-sm"></div>
@@ -183,9 +197,20 @@
             <div class="col-2"><button class="btn btn-sm btn-dark w-100" onclick="loadDashboardData()"><i class="bi bi-search"></i></button></div>
          </div>
       </div>
-
       <div id="historyList"><div class="text-center small text-muted">Memuat data...</div></div>
     </div>
+  </div>
+
+  <div id="pickerModal" class="fullscreen-overlay hidden">
+    <div class="overlay-header">
+      <h6 class="m-0 fw-bold" id="pickerTitle">Pilih Item</h6>
+      <button class="btn-close-custom" onclick="closePicker()"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="picker-search-container">
+       <input type="text" id="pickerSearch" class="picker-search-input" placeholder="Ketik untuk mencari..." onkeyup="filterPicker()">
+    </div>
+    <div class="picker-list" id="pickerListContainer">
+       </div>
   </div>
 
   <div id="presensiScreen" class="fullscreen-overlay hidden">
@@ -274,6 +299,7 @@
 
   var CURRENT_USER = null; 
   var LIST_NAMA_DB = []; var LIST_AUM_DB = []; 
+  var CURRENT_PICKER_TYPE = ""; // 'nama' or 'aum'
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
@@ -285,6 +311,67 @@
     setInterval(validateButtonState, 1000);
   };
 
+  // --- NEW: PICKER MODAL LOGIC ---
+  function openPicker(type) {
+    CURRENT_PICKER_TYPE = type;
+    var title = (type === 'nama') ? "Pilih Nama" : "Pilih Asal AUM";
+    document.getElementById('pickerTitle').innerText = title;
+    
+    // Populate List
+    renderPickerList("");
+    
+    // Clear Search Input
+    document.getElementById('pickerSearch').value = "";
+    
+    document.getElementById('pickerModal').classList.remove('hidden');
+  }
+
+  function closePicker() {
+    document.getElementById('pickerModal').classList.add('hidden');
+  }
+
+  function renderPickerList(filter) {
+    var container = document.getElementById('pickerListContainer');
+    container.innerHTML = "";
+    
+    var source = (CURRENT_PICKER_TYPE === 'nama') ? LIST_NAMA_DB : LIST_AUM_DB;
+    var filtered = source.filter(item => item.toLowerCase().includes(filter.toLowerCase()));
+    
+    if (filtered.length === 0) {
+        container.innerHTML = "<div class='text-center text-muted mt-3'>Tidak ditemukan</div>";
+        return;
+    }
+
+    filtered.forEach(item => {
+        var div = document.createElement('div');
+        div.className = "picker-item";
+        div.innerHTML = `<strong>${item}</strong>`;
+        div.onclick = function() { selectPickerItem(item); };
+        container.appendChild(div);
+    });
+  }
+
+  function filterPicker() {
+    var val = document.getElementById('pickerSearch').value;
+    renderPickerList(val);
+  }
+
+  function selectPickerItem(value) {
+    if (CURRENT_PICKER_TYPE === 'nama') {
+        document.getElementById('regNama').value = value;
+        document.getElementById('textRegNama').innerText = value;
+        document.getElementById('textRegNama').classList.remove('picker-placeholder');
+        document.getElementById('textRegNama').classList.add('picker-value');
+    } else {
+        document.getElementById('regAum').value = value;
+        document.getElementById('textRegAum').innerText = value;
+        document.getElementById('textRegAum').classList.remove('picker-placeholder');
+        document.getElementById('textRegAum').classList.add('picker-value');
+    }
+    closePicker();
+  }
+
+  // --- EXISTING FUNCTIONS ---
   function togglePassword(inputId, icon) {
     var input = document.getElementById(inputId);
     if(input.type === "password") { input.type = "text"; icon.classList.replace("bi-eye-slash", "bi-eye"); icon.classList.add("active"); } 
@@ -296,15 +383,6 @@
     var errorSpan = document.getElementById(input.id + 'Error');
     if(input.value.includes(" ")) { if(errorSpan) { errorSpan.classList.remove('hidden'); input.parentElement.classList.add('error'); } } 
     else { if(errorSpan) { errorSpan.classList.add('hidden'); input.parentElement.classList.remove('error'); } }
-  }
-
-  function filterOptions(selectId, keyword) {
-    var select = document.getElementById(selectId);
-    var sourceData = (selectId === 'regNama') ? LIST_NAMA_DB : LIST_AUM_DB;
-    select.innerHTML = `<option disabled selected>-- Pilih ${selectId==='regNama'?'Nama':'AUM'} --</option>`;
-    var filtered = sourceData.filter(item => item.toLowerCase().includes(keyword.toLowerCase()));
-    if(filtered.length === 0) { var opt = document.createElement('option'); opt.text = "Tidak ditemukan"; opt.disabled = true; select.add(opt); } 
-    else { filtered.forEach(item => { var opt = document.createElement('option'); opt.value = item; opt.text = item; select.add(opt); }); }
   }
 
   function getNearestLocationName(lat, lng) {
@@ -485,10 +563,9 @@
        let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
        let d = await r.json();
        if(d.status==='success') {
-          LIST_NAMA_DB = d.nama; LIST_AUM_DB = d.aum; 
-          // Populate default
-          filterOptions('regNama', '');
-          filterOptions('regAum', '');
+          // SORTING DILAKUKAN DI SERVER, TAPI KITA PASTIKAN LAGI DI SINI
+          LIST_NAMA_DB = d.nama; 
+          LIST_AUM_DB = d.aum; 
        }
     } catch(e){}
   }
