@@ -16,14 +16,12 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* UTILITIES */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
     .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
     .overlay-body { padding: 20px; flex-grow: 1; }
     .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
     .hidden { display: none !important; }
 
-    /* AUTH SCREEN */
     #authScreen { z-index: 300; justify-content: center; position: relative; } 
     .auth-help-btn { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; z-index: 310; }
     .auth-logo { width: 90px; display: block; margin: 0 auto 15px; }
@@ -31,54 +29,43 @@
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* INPUTS & BUTTONS */
-    .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; }
-    .form-control-plain { border: none; background: transparent; width: 100%; outline: none; }
-    .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 2px; }
+    /* INPUTS STYLE */
+    .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
+    .input-box.error { border-color: #ef4444; background: #fef2f2; }
+    .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem;}
+    .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px; margin-left: 5px; }
+    
+    /* PASSWORD TOGGLE */
+    .pass-toggle { color: #94a3b8; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
+    .pass-toggle.active { color: var(--primary); }
+
+    /* SEARCH FILTER */
+    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; }
+    .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
+
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-    /* DASHBOARD HEADER */
-    .dashboard-header { 
-      background: linear-gradient(135deg, var(--primary), #0d9488); 
-      padding: 20px 20px 80px; 
-      border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; 
-      color: white; position: relative; 
-    }
-    
+    /* DASHBOARD */
+    .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 20px 20px 80px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; color: white; position: relative; }
     .header-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding-right: 90px; }
     .header-logo-img { width: 45px; height: 45px; border-radius: 10px; background: rgba(255,255,255,0.2); padding: 5px; backdrop-filter: blur(5px); }
     .header-title h1 { font-size: 1.1rem; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: 0.5px; }
     .header-title p { font-size: 0.75rem; margin: 0; opacity: 0.85; font-weight: 400; }
-
     .header-actions { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
-    .btn-action-glass {
-      background: rgba(255,255,255,0.2); border: none; color: white;
-      width: 32px; height: 32px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(4px); font-size: 0.9rem; transition: 0.2s;
-    }
+    .btn-action-glass { background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); font-size: 0.9rem; transition: 0.2s; }
     .btn-action-glass:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
-
     .user-info-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 16px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
     .u-text h5 { margin: 0; font-size: 0.95rem; font-weight: 600; }
     .u-text p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
-    .btn-detail-profile { 
-      background: white; color: var(--primary); border: none; 
-      width: 30px; height: 30px; border-radius: 50%; 
-      display: flex; align-items: center; justify-content: center; 
-      font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+    .btn-detail-profile { background: white; color: var(--primary); border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-    /* MAIN CARD & STATS */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
-    
     .last-date-info { text-align: center; margin-bottom: 15px; }
     .last-date-info small { color: #64748b; font-size: 0.75rem; display: block; }
     .last-date-info strong { color: var(--primary); font-size: 0.9rem; }
-
     .stats-grid { display: flex; gap: 10px; margin-bottom: 20px; }
     .stat-item { flex: 1; background: #f8fafc; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; }
     .stat-value { font-weight: 700; font-size: 1.1rem; color: #334155; }
@@ -86,15 +73,9 @@
 
     .action-area { padding: 0 20px 20px; }
     #btnStartAbsen { width: 100%; padding: 16px; font-size: 1rem; border-radius: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(15, 118, 110, 0.2); transition: 0.3s; }
-    
-    #dashboardMsg { 
-        text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; 
-        border-radius: 10px; background: #fff3cd; color: #856404; display: none; 
-        border: 1px solid #ffeeba;
-    }
+    #dashboardMsg { text-align: center; font-size: 0.8rem; margin-top: 10px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; display: none; border: 1px solid #ffeeba; }
     .msg-danger { background: #fee2e2 !important; color: #991b1b !important; border-color: #fca5a5 !important; }
 
-    /* HISTORY LIST */
     .history-section { padding: 0 20px 80px; }
     .history-item { background: white; padding: 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
     .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 3px; }
@@ -105,22 +86,14 @@
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-    
-    /* MODAL PANDUAN STYLES */
     #infoModal { z-index: 400 !important; }
     .nav-tabs .nav-link { color: #64748b; font-size: 0.9rem; }
     .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
     .guide-step { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; }
-    .step-num { 
-        background: #e0f2fe; color: var(--primary); width: 28px; height: 28px; 
-        border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-        font-weight: 700; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;
-    }
+    .step-num { background: #e0f2fe; color: var(--primary); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px; }
     .step-text { font-size: 0.9rem; color: #334155; line-height: 1.5; }
     .browser-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; margin-bottom: 10px; display: inline-block; font-weight: 600;}
-    .bg-chrome { background: #fef3c7; color: #b45309; }
-    .bg-safari { background: #e0e7ff; color: #3730a3; }
-    .bg-samsung { background: #fce7f3; color: #9d174d; }
+    .bg-chrome { background: #fef3c7; color: #b45309; } .bg-safari { background: #e0e7ff; color: #3730a3; } .bg-samsung { background: #fce7f3; color: #9d174d; }
   </style>
 </head>
 <body>
@@ -139,19 +112,44 @@
         <p class="auth-subtitle">PCM Kebakkramat, Karanganyar</p>
         
         <div id="formLogin">
-          <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP"></div>
-          <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"></div>
+          <label class="form-label">Username</label>
+          <div class="input-box">
+             <input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)">
+          </div>
+          <span id="loginUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
+
+          <label class="form-label">Password</label>
+          <div class="input-box">
+             <input type="password" id="loginPass" class="form-control-plain" placeholder="Password">
+             <i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('loginPass', this)"></i>
+          </div>
           <button class="btn-primary" onclick="doLogin()">MASUK</button>
           <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
         </div>
 
         <div id="formRegister" class="hidden">
           <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
+          
+          <label class="form-label">Nama Lengkap</label>
+          <input type="text" class="filter-input" placeholder="Cari nama..." onkeyup="filterOptions('regNama', this.value)">
           <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
+          
+          <label class="form-label">Asal AUM</label>
+          <input type="text" class="filter-input" placeholder="Cari AUM..." onkeyup="filterOptions('regAum', this.value)">
           <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
-          <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Username Baru"></div>
-          <small class="text-muted" style="font-size:0.7rem; display:block; margin-top:-10px; margin-bottom:10px;">* Bisa No.HP atau Email</small>
-          <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Password Baru"></div>
+          
+          <label class="form-label">Username Baru</label>
+          <div class="input-box">
+             <input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)">
+          </div>
+          <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
+          
+          <label class="form-label">Password Baru</label>
+          <div class="input-box">
+             <input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password">
+             <i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i>
+          </div>
+          
           <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
           <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
         </div>
@@ -162,18 +160,13 @@
     <div class="dashboard-header">
       <div class="header-top">
         <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png'">
-        <div class="header-title">
-          <h1>Presensi Kajian AUM</h1>
-          <p>PCM Kebakkramat, Karanganyar</p>
-        </div>
+        <div class="header-title"><h1>Presensi Kajian AUM</h1><p>PCM Kebakkramat, Karanganyar</p></div>
       </div>
-
       <div class="header-actions">
         <button class="btn-action-glass" onclick="openInfoModal()"><i class="bi bi-question-lg"></i></button>
         <button class="btn-action-glass" onclick="openChangePassword()"><i class="bi bi-key-fill"></i></button>
         <button class="btn-action-glass" onclick="doLogout()"><i class="bi bi-box-arrow-right"></i></button>
       </div>
-
       <div class="user-info-row">
         <div class="u-text"><h5 id="dashNama">Nama User</h5><p id="dashAum">Asal AUM</p></div>
         <button class="btn-detail-profile" onclick="openProfile()"><i class="bi bi-person-lines-fill"></i></button>
@@ -184,8 +177,7 @@
       <div id="photoContainer" class="photo-loading"><span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span></div>
       <img id="dashFoto" class="photo-display hidden">
       <div class="text-center mb-3">
-         <small class="text-muted">Terakhir Hadir:</small><br>
-         <strong id="dashLastDate" class="text-primary">-</strong>
+         <small class="text-muted">Terakhir Hadir:</small><br><strong id="dashLastDate" class="text-primary">-</strong>
       </div>
       <div class="stats-grid">
          <div class="stat-item"><small class="text-muted">KEHADIRAN</small><div id="statCount" class="stat-value">0 / 0</div></div>
@@ -201,19 +193,14 @@
     <div class="history-section">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="fw-bold">Riwayat</span>
-        <select id="limitSelect" class="form-select form-select-sm w-auto" onchange="loadDashboardData()">
-           <option value="10">10</option><option value="25">25</option><option value="50">50</option>
-        </select>
+        <select id="limitSelect" class="form-select form-select-sm w-auto" onchange="loadDashboardData()"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select>
       </div>
       <div id="historyList"><div class="text-center small text-muted">Memuat...</div></div>
     </div>
   </div>
 
   <div id="presensiScreen" class="fullscreen-overlay hidden">
-    <div class="overlay-header">
-      <h6 class="m-0 fw-bold">Form Presensi</h6>
-      <button class="btn-close-custom" onclick="closePresensiMode()"><i class="bi bi-x"></i></button>
-    </div>
+    <div class="overlay-header"><h6 class="m-0 fw-bold">Form Presensi</h6><button class="btn-close-custom" onclick="closePresensiMode()"><i class="bi bi-x"></i></button></div>
     <div class="overlay-body">
         <div class="camera-container mb-3"><video id="camera" autoplay playsinline></video></div>
         <canvas id="canvas" class="hidden"></canvas>
@@ -226,7 +213,6 @@
   <div id="profileScreen" class="fullscreen-overlay hidden">
     <div class="overlay-header"><h6 class="m-0 fw-bold">Profil Anggota</h6><button class="btn-close-custom" onclick="closeProfile()"><i class="bi bi-arrow-left"></i></button></div>
     <div class="overlay-body">
-        <div class="alert alert-light border small mb-3">Lengkapi data diri Anda.</div>
         <label class="form-label">Nama Lengkap</label><div class="input-box"><input type="text" id="profNama" class="form-control-plain"></div>
         <label class="form-label">Asal AUM</label><div class="input-box"><select id="profAum" class="form-control-plain"></select></div>
         <label class="form-label">Jenis Kelamin</label><div class="input-box"><select id="profJk" class="form-control-plain"><option value="">- Pilih -</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
@@ -243,8 +229,8 @@
   <div id="passwordScreen" class="fullscreen-overlay hidden">
     <div class="overlay-header"><h6 class="m-0 fw-bold">Ganti Password</h6><button class="btn-close-custom" onclick="closeChangePassword()"><i class="bi bi-x"></i></button></div>
     <div class="overlay-body">
-        <div class="input-box"><input type="password" id="passNew" class="form-control-plain" placeholder="Password Baru"></div>
-        <div class="input-box"><input type="password" id="passConfirm" class="form-control-plain" placeholder="Ulangi Password Baru"></div>
+        <div class="input-box"><input type="password" id="passNew" class="form-control-plain" placeholder="Password Baru"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('passNew', this)"></i></div>
+        <div class="input-box"><input type="password" id="passConfirm" class="form-control-plain" placeholder="Ulangi Password Baru"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('passConfirm', this)"></i></div>
         <button class="btn-primary" onclick="savePassword()">UBAH PASSWORD</button>
     </div>
   </div>
@@ -260,9 +246,9 @@
             <div class="tab-pane fade show active" id="tabDaftar">
                 <h6 class="fw-bold mb-3">Cara Klaim Nama / Daftar</h6>
                 <div class="guide-step"><div class="step-num">1</div><div class="step-text">Klik <b>"Klaim Nama / Daftar Akun"</b> di halaman login.</div></div>
-                <div class="guide-step"><div class="step-num">2</div><div class="step-text">Pilih <b>Nama Lengkap</b> Anda dari daftar yang tersedia. (Jika nama tidak ada, hubungi Admin PCM).</div></div>
+                <div class="guide-step"><div class="step-num">2</div><div class="step-text">Gunakan <b>Kotak Pencarian</b> untuk menemukan <b>Nama Lengkap</b> Anda.</div></div>
                 <div class="guide-step"><div class="step-num">3</div><div class="step-text">Pilih <b>Asal AUM</b> yang sesuai.</div></div>
-                <div class="guide-step"><div class="step-num">4</div><div class="step-text">Buat <b>Username</b> (bisa No.HP atau Email) dan <b>Password</b> untuk login selanjutnya.</div></div>
+                <div class="guide-step"><div class="step-num">4</div><div class="step-text">Buat <b>Username</b> (Tanpa spasi) dan <b>Password</b>.</div></div>
             </div>
             <div class="tab-pane fade" id="tabInstall">
                 <div class="alert alert-light border small">Instal aplikasi ini agar muncul di layar depan HP Anda.</div>
@@ -272,7 +258,7 @@
                 </div>
                 <div class="mb-4"><span class="browser-badge bg-safari">iOS (Safari)</span>
                     <div class="guide-step"><div class="step-num"><i class="bi bi-box-arrow-up"></i></div><div class="step-text">Ketuk tombol <b>Share</b> (kotak dengan panah ke atas) di bagian bawah layar.</div></div>
-                    <div class="guide-step"><div class="step-num"><i class="bi bi-plus-square"></i></div><div class="step-text">Geser ke bawah dan pilih <b>"Tambah ke Layar Utama"</b> (Add to Home Screen).</div></div>
+                    <div class="guide-step"><div class="step-num"><i class="bi bi-plus-square"></i></div><div class="step-text">Geser ke bawah dan pilih <b>"Tambah ke Layar Utama"</b>.</div></div>
                 </div>
             </div>
         </div>
@@ -282,7 +268,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhguWqTSNaj04RRTi_5FjRd5mi6hKn4Sx1XuTdClIo5buq6-vkjHrIvXB6e5nfTdG13g/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw2xX5TmEMzk_7mbXcoBCKlHauhbEgEcgdjApAxzaI3RY-8N9G5pT4LhV5XcrCbijaOQ/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -291,11 +277,14 @@
     { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
     { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
     { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
-    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 }
+    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 },
+    // LOKASI BARU
+    { nama: "Catering Pandu", lat: -7.500030621538215, lng: 110.90614961162527 },
+    { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742 }
   ];
 
   var CURRENT_USER = null; 
-  var LIST_AUM_CACHE = [];
+  var LIST_NAMA_DB = []; var LIST_AUM_DB = []; // Global cache for search
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
@@ -307,25 +296,58 @@
     setInterval(validateButtonState, 1000);
   };
 
-  // --- REVERSE GEOCODING LOGIC (FIND NEAREST NAME FROM COORDS) ---
+  // --- NEW FEATURES: TOGGLE & VALIDATION & SEARCH ---
+  function togglePassword(inputId, icon) {
+    var input = document.getElementById(inputId);
+    if(input.type === "password") {
+       input.type = "text"; icon.classList.replace("bi-eye-slash", "bi-eye"); icon.classList.add("active");
+    } else {
+       input.type = "password"; icon.classList.replace("bi-eye", "bi-eye-slash"); icon.classList.remove("active");
+    }
+  }
+
+  function validateUsername(input) {
+    // 1. Lowercase
+    input.value = input.value.toLowerCase();
+    // 2. Check Space
+    var errorSpan = document.getElementById(input.id + 'Error');
+    if(input.value.includes(" ")) {
+       if(errorSpan) { errorSpan.classList.remove('hidden'); input.parentElement.classList.add('error'); }
+    } else {
+       if(errorSpan) { errorSpan.classList.add('hidden'); input.parentElement.classList.remove('error'); }
+    }
+  }
+
+  function filterOptions(selectId, keyword) {
+    var select = document.getElementById(selectId);
+    var sourceData = (selectId === 'regNama') ? LIST_NAMA_DB : LIST_AUM_DB;
+    
+    // Clear and Rebuild
+    select.innerHTML = `<option disabled selected>-- Pilih ${selectId==='regNama'?'Nama':'AUM'} --</option>`;
+    
+    var filtered = sourceData.filter(item => item.toLowerCase().includes(keyword.toLowerCase()));
+    
+    if(filtered.length === 0) {
+        var opt = document.createElement('option'); opt.text = "Tidak ditemukan"; opt.disabled = true; select.add(opt);
+    } else {
+        filtered.forEach(item => {
+            var opt = document.createElement('option'); opt.value = item; opt.text = item; select.add(opt);
+        });
+    }
+  }
+
   function getNearestLocationName(lat, lng) {
     if(!lat || !lng) return "Lokasi Tidak Diketahui";
     var closestName = "Lokasi Tidak Diketahui";
     var minDist = Infinity;
-    
     DAFTAR_LOKASI.forEach(loc => {
         var d = calcDist(lat, lng, loc.lat, loc.lng);
-        if(d < minDist) {
-            minDist = d;
-            closestName = loc.nama;
-        }
+        if(d < minDist) { minDist = d; closestName = loc.nama; }
     });
-    
-    // Jika jarak terlalu jauh (misal > 2km), mungkin koordinat salah/error
-    // Tapi user minta "titik terdekat", jadi kita kembalikan saja nama terdekatnya
     return closestName; 
   }
 
+  // --- STANDARD FUNCTIONS ---
   function openInfoModal() { document.getElementById('infoModal').classList.remove('hidden'); }
   function closeInfoModal() { document.getElementById('infoModal').classList.add('hidden'); }
 
@@ -338,7 +360,7 @@
         var d = res.data;
         document.getElementById('profNama').value = d.nama;
         var selAum = document.getElementById('profAum'); selAum.innerHTML = "";
-        LIST_AUM_CACHE.forEach(a => { var opt = document.createElement('option'); opt.value = a; opt.text = a; if(a == d.aum) opt.selected = true; selAum.add(opt); });
+        LIST_AUM_DB.forEach(a => { var opt = document.createElement('option'); opt.value = a; opt.text = a; if(a == d.aum) opt.selected = true; selAum.add(opt); });
         document.getElementById('profJk').value = d.jk; document.getElementById('profNbm').value = d.nbm;
         document.getElementById('profAlamat').value = d.alamat; document.getElementById('profTempat').value = d.tempat_lahir;
         document.getElementById('profTgl').value = d.tgl_lahir; document.getElementById('profEmail').value = d.email;
@@ -415,42 +437,18 @@
     validateButtonState();
   }
 
-  // --- RENDER HISTORY (MODIFIED TO SHOW LOCATION NAME) ---
   function renderHistory(list) {
     var c = document.getElementById('historyList'); c.innerHTML = "";
     if(list.length === 0) { c.innerHTML = "<div class='text-center small text-muted'>Belum ada riwayat.</div>"; return; }
-    
     list.forEach(i => { 
         var displayName = i.lokasi;
-        
-        // 1. Coba Parsing Regex (untuk menangkap lat,long)
-        // Format: "Nama Lokasi (-7.123, 110.123)" atau hanya "-7.123, 110.123"
         var coordsMatch = i.lokasi.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
-        
         if (coordsMatch && coordsMatch.length === 3) {
-            // Jika ada koordinat, kita hitung jarak ke semua lokasi terdaftar
-            // dan ambil nama lokasi yang paling dekat
-            var lat = parseFloat(coordsMatch[1]);
-            var lng = parseFloat(coordsMatch[2]);
-            displayName = getNearestLocationName(lat, lng);
+            displayName = getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2]));
         } else {
-            // Fallback: Jika format lama "Nama (Coord)" tapi regex gagal, 
-            // kita ambil teks sebelum tanda kurung
-            if(displayName.includes('(')) {
-                displayName = displayName.split('(')[0].trim();
-            }
+            if(displayName.includes('(')) displayName = displayName.split('(')[0].trim();
         }
-
-        var html = `
-        <div class="history-item">
-            <div>
-                <div class="hist-date">${i.tanggal}</div>
-                <div class="hist-loc">
-                    <i class="bi bi-geo-alt-fill"></i> ${displayName}
-                </div>
-            </div>
-            <div class="badge bg-light text-dark border">${i.jam}</div>
-        </div>`;
+        var html = `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt-fill"></i> ${displayName}</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`;
         c.innerHTML += html; 
     });
   }
@@ -463,6 +461,7 @@
   async function doLogin() {
     var u=document.getElementById('loginUser').value; var p=document.getElementById('loginPass').value;
     if(!u||!p) return alert("Isi data");
+    if(u.includes(" ")) return alert("Username tidak boleh ada spasi");
     loading(true);
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
@@ -478,6 +477,7 @@
   async function doRegister() {
     var n=document.getElementById('regNama').value; var a=document.getElementById('regAum').value; var u=document.getElementById('regUser').value; var p=document.getElementById('regPass').value;
     if(!n||!a||!u||!p) return alert("Lengkapi data");
+    if(u.includes(" ")) return alert("Username tidak boleh ada spasi");
     loading(true);
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'register', data: { username: u, password: p, nama: n, aum: a } }) });
@@ -521,11 +521,9 @@
        let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
        let d = await r.json();
        if(d.status==='success') {
-          LIST_AUM_CACHE = d.aum; 
-          var s1 = document.getElementById('regNama'); s1.innerHTML='<option disabled selected>-- Pilih Nama --</option>';
-          d.nama.forEach(n=>{ var o=document.createElement('option'); o.value=n; o.text=n; s1.add(o); });
-          var s2 = document.getElementById('regAum'); s2.innerHTML='<option disabled selected>-- Pilih AUM --</option>';
-          d.aum.forEach(a=>{ var o=document.createElement('option'); o.value=a; o.text=a; s2.add(o); });
+          LIST_NAMA_DB = d.nama; LIST_AUM_DB = d.aum; // Cache for search
+          // Initial Load (Show First 10 maybe? Or empty until search)
+          // We leave it empty until user searches for performance on mobile
        }
     } catch(e){}
   }
