@@ -29,24 +29,18 @@
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* INPUTS STYLE */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem;}
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px; margin-left: 5px; }
-    
-    /* PASSWORD TOGGLE */
     .pass-toggle { color: #94a3b8; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
     .pass-toggle.active { color: var(--primary); }
-
-    /* SEARCH FILTER */
-    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; }
+    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; background: #fff; }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
 
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-    /* DASHBOARD */
     .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 20px 20px 80px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; color: white; position: relative; }
     .header-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding-right: 90px; }
     .header-logo-img { width: 45px; height: 45px; border-radius: 10px; background: rgba(255,255,255,0.2); padding: 5px; backdrop-filter: blur(5px); }
@@ -81,6 +75,8 @@
     .hist-date { font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 3px; }
     .hist-loc { font-size: 0.75rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
     .hist-loc i { color: #dc2626; } 
+    .filter-box { background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 15px; }
+    .form-control-sm { font-size: 0.8rem; padding: 6px 10px; border-radius: 8px; }
     
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -113,42 +109,31 @@
         
         <div id="formLogin">
           <label class="form-label">Username</label>
-          <div class="input-box">
-             <input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)">
-          </div>
+          <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)"></div>
           <span id="loginUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
-
           <label class="form-label">Password</label>
-          <div class="input-box">
-             <input type="password" id="loginPass" class="form-control-plain" placeholder="Password">
-             <i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('loginPass', this)"></i>
-          </div>
+          <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('loginPass', this)"></i></div>
           <button class="btn-primary" onclick="doLogin()">MASUK</button>
           <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
         </div>
 
         <div id="formRegister" class="hidden">
-          <div class="alert alert-info py-2 small">Pilih Nama & AUM untuk membuat akun.</div>
+          <div class="alert alert-info py-2 small">Cari Nama & AUM pada kotak pencarian di bawah.</div>
           
           <label class="form-label">Nama Lengkap</label>
-          <input type="text" class="filter-input" placeholder="Cari nama..." onkeyup="filterOptions('regNama', this.value)">
+          <input type="text" class="filter-input" placeholder="Ketik nama untuk mencari..." onkeyup="filterOptions('regNama', this.value)">
           <div class="input-box"><select id="regNama" class="form-control-plain"><option disabled selected>-- Pilih Nama --</option></select></div>
           
           <label class="form-label">Asal AUM</label>
-          <input type="text" class="filter-input" placeholder="Cari AUM..." onkeyup="filterOptions('regAum', this.value)">
+          <input type="text" class="filter-input" placeholder="Ketik AUM untuk mencari..." onkeyup="filterOptions('regAum', this.value)">
           <div class="input-box"><select id="regAum" class="form-control-plain"><option disabled selected>-- Pilih AUM --</option></select></div>
           
           <label class="form-label">Username Baru</label>
-          <div class="input-box">
-             <input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)">
-          </div>
+          <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div>
           <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
           
           <label class="form-label">Password Baru</label>
-          <div class="input-box">
-             <input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password">
-             <i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i>
-          </div>
+          <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i></div>
           
           <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
           <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
@@ -176,9 +161,7 @@
     <div class="main-card">
       <div id="photoContainer" class="photo-loading"><span><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Memuat Foto...</span></div>
       <img id="dashFoto" class="photo-display hidden">
-      <div class="text-center mb-3">
-         <small class="text-muted">Terakhir Hadir:</small><br><strong id="dashLastDate" class="text-primary">-</strong>
-      </div>
+      <div class="text-center mb-3"><small class="text-muted">Terakhir Hadir:</small><br><strong id="dashLastDate" class="text-primary">-</strong></div>
       <div class="stats-grid">
          <div class="stat-item"><small class="text-muted">KEHADIRAN</small><div id="statCount" class="stat-value">0 / 0</div></div>
          <div class="stat-item"><small class="text-muted">PERSENTASE</small><div id="statPercent" class="stat-value highlight">0%</div></div>
@@ -191,11 +174,17 @@
     </div>
 
     <div class="history-section">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <span class="fw-bold">Riwayat</span>
-        <select id="limitSelect" class="form-select form-select-sm w-auto" onchange="loadDashboardData()"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select>
+      <h6 class="fw-bold mb-3">Riwayat Kehadiran</h6>
+      
+      <div class="filter-box">
+         <div class="row g-2">
+            <div class="col-5"><input type="date" id="filterStart" class="form-control form-control-sm"></div>
+            <div class="col-5"><input type="date" id="filterEnd" class="form-control form-control-sm"></div>
+            <div class="col-2"><button class="btn btn-sm btn-dark w-100" onclick="loadDashboardData()"><i class="bi bi-search"></i></button></div>
+         </div>
       </div>
-      <div id="historyList"><div class="text-center small text-muted">Memuat...</div></div>
+
+      <div id="historyList"><div class="text-center small text-muted">Memuat data...</div></div>
     </div>
   </div>
 
@@ -246,7 +235,7 @@
             <div class="tab-pane fade show active" id="tabDaftar">
                 <h6 class="fw-bold mb-3">Cara Klaim Nama / Daftar</h6>
                 <div class="guide-step"><div class="step-num">1</div><div class="step-text">Klik <b>"Klaim Nama / Daftar Akun"</b> di halaman login.</div></div>
-                <div class="guide-step"><div class="step-num">2</div><div class="step-text">Gunakan <b>Kotak Pencarian</b> untuk menemukan <b>Nama Lengkap</b> Anda.</div></div>
+                <div class="guide-step"><div class="step-num">2</div><div class="step-text">Gunakan <b>Kotak Pencarian</b> untuk menemukan <b>Nama Lengkap</b> Anda. Pilih nama Anda dari daftar dropdown yang muncul.</div></div>
                 <div class="guide-step"><div class="step-num">3</div><div class="step-text">Pilih <b>Asal AUM</b> yang sesuai.</div></div>
                 <div class="guide-step"><div class="step-num">4</div><div class="step-text">Buat <b>Username</b> (Tanpa spasi) dan <b>Password</b>.</div></div>
             </div>
@@ -268,7 +257,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw2xX5TmEMzk_7mbXcoBCKlHauhbEgEcgdjApAxzaI3RY-8N9G5pT4LhV5XcrCbijaOQ/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0SYgY7AyOrfHaiG37S7eNTJf8qfMeYM9wxkZM1jOU79YGPs3WyR8yh9fKXoKYCtd2QA/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
@@ -284,7 +273,7 @@
   ];
 
   var CURRENT_USER = null; 
-  var LIST_NAMA_DB = []; var LIST_AUM_DB = []; // Global cache for search
+  var LIST_NAMA_DB = []; var LIST_AUM_DB = []; 
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
@@ -296,58 +285,36 @@
     setInterval(validateButtonState, 1000);
   };
 
-  // --- NEW FEATURES: TOGGLE & VALIDATION & SEARCH ---
   function togglePassword(inputId, icon) {
     var input = document.getElementById(inputId);
-    if(input.type === "password") {
-       input.type = "text"; icon.classList.replace("bi-eye-slash", "bi-eye"); icon.classList.add("active");
-    } else {
-       input.type = "password"; icon.classList.replace("bi-eye", "bi-eye-slash"); icon.classList.remove("active");
-    }
+    if(input.type === "password") { input.type = "text"; icon.classList.replace("bi-eye-slash", "bi-eye"); icon.classList.add("active"); } 
+    else { input.type = "password"; icon.classList.replace("bi-eye", "bi-eye-slash"); icon.classList.remove("active"); }
   }
 
   function validateUsername(input) {
-    // 1. Lowercase
     input.value = input.value.toLowerCase();
-    // 2. Check Space
     var errorSpan = document.getElementById(input.id + 'Error');
-    if(input.value.includes(" ")) {
-       if(errorSpan) { errorSpan.classList.remove('hidden'); input.parentElement.classList.add('error'); }
-    } else {
-       if(errorSpan) { errorSpan.classList.add('hidden'); input.parentElement.classList.remove('error'); }
-    }
+    if(input.value.includes(" ")) { if(errorSpan) { errorSpan.classList.remove('hidden'); input.parentElement.classList.add('error'); } } 
+    else { if(errorSpan) { errorSpan.classList.add('hidden'); input.parentElement.classList.remove('error'); } }
   }
 
   function filterOptions(selectId, keyword) {
     var select = document.getElementById(selectId);
     var sourceData = (selectId === 'regNama') ? LIST_NAMA_DB : LIST_AUM_DB;
-    
-    // Clear and Rebuild
     select.innerHTML = `<option disabled selected>-- Pilih ${selectId==='regNama'?'Nama':'AUM'} --</option>`;
-    
     var filtered = sourceData.filter(item => item.toLowerCase().includes(keyword.toLowerCase()));
-    
-    if(filtered.length === 0) {
-        var opt = document.createElement('option'); opt.text = "Tidak ditemukan"; opt.disabled = true; select.add(opt);
-    } else {
-        filtered.forEach(item => {
-            var opt = document.createElement('option'); opt.value = item; opt.text = item; select.add(opt);
-        });
-    }
+    if(filtered.length === 0) { var opt = document.createElement('option'); opt.text = "Tidak ditemukan"; opt.disabled = true; select.add(opt); } 
+    else { filtered.forEach(item => { var opt = document.createElement('option'); opt.value = item; opt.text = item; select.add(opt); }); }
   }
 
   function getNearestLocationName(lat, lng) {
     if(!lat || !lng) return "Lokasi Tidak Diketahui";
     var closestName = "Lokasi Tidak Diketahui";
     var minDist = Infinity;
-    DAFTAR_LOKASI.forEach(loc => {
-        var d = calcDist(lat, lng, loc.lat, loc.lng);
-        if(d < minDist) { minDist = d; closestName = loc.nama; }
-    });
+    DAFTAR_LOKASI.forEach(loc => { var d = calcDist(lat, lng, loc.lat, loc.lng); if(d < minDist) { minDist = d; closestName = loc.nama; } });
     return closestName; 
   }
 
-  // --- STANDARD FUNCTIONS ---
   function openInfoModal() { document.getElementById('infoModal').classList.remove('hidden'); }
   function closeInfoModal() { document.getElementById('infoModal').classList.add('hidden'); }
 
@@ -404,7 +371,6 @@
     if(!CURRENT_USER) return;
     var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
     if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; else isTimeValid = false;
-    // isTimeValid = true; // TESTING
     var btn = document.getElementById('btnStartAbsen'); var msg = document.getElementById('dashboardMsg');
     btn.classList.remove('btn-primary', 'btn-secondary'); btn.classList.remove('btn-danger'); msg.style.display = 'none'; msg.className = "";
     if (isAlreadyPresent) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary'); }
@@ -416,9 +382,10 @@
   }
 
   async function loadDashboardData() {
-    var limit = document.getElementById('limitSelect').value;
+    var start = document.getElementById('filterStart').value;
+    var end = document.getElementById('filterEnd').value;
     try {
-      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getReport', nama: CURRENT_USER.nama, limit: limit })});
+      let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getReport', nama: CURRENT_USER.nama, start: start, end: end })});
       let res = await req.json();
       if(res.fotoTerbaru) { document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru; document.getElementById('dashFoto').classList.remove('hidden'); document.getElementById('photoContainer').classList.add('hidden'); } 
       else { document.getElementById('photoContainer').innerHTML = "Belum Ada Foto"; }
@@ -443,11 +410,8 @@
     list.forEach(i => { 
         var displayName = i.lokasi;
         var coordsMatch = i.lokasi.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
-        if (coordsMatch && coordsMatch.length === 3) {
-            displayName = getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2]));
-        } else {
-            if(displayName.includes('(')) displayName = displayName.split('(')[0].trim();
-        }
+        if (coordsMatch && coordsMatch.length === 3) { displayName = getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2])); } 
+        else { if(displayName.includes('(')) displayName = displayName.split('(')[0].trim(); }
         var html = `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt-fill"></i> ${displayName}</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`;
         c.innerHTML += html; 
     });
@@ -521,9 +485,10 @@
        let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
        let d = await r.json();
        if(d.status==='success') {
-          LIST_NAMA_DB = d.nama; LIST_AUM_DB = d.aum; // Cache for search
-          // Initial Load (Show First 10 maybe? Or empty until search)
-          // We leave it empty until user searches for performance on mobile
+          LIST_NAMA_DB = d.nama; LIST_AUM_DB = d.aum; 
+          // Populate default
+          filterOptions('regNama', '');
+          filterOptions('regAum', '');
        }
     } catch(e){}
   }
