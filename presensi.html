@@ -61,20 +61,46 @@
 
     async function loadActiveEvents() {
         try {
-            let res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getEvents', role: 'pengurus' }) }); // Role pengurus/admin sama saja untuk list ini (hanya status Buka)
+            // Kirim data user agar backend bisa cek apakah dia sudah absen
+            let res = await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'getEvents', role: 'pengurus', user: USER }) 
+            });
             let data = await res.json();
             document.getElementById('loading').classList.add('hidden');
             
             let html = '';
-            if(data.data.length === 0) html = '<div class="text-center text-muted mt-5">Tidak ada kegiatan aktif saat ini.</div>';
+            if(data.data.length === 0) html = '<div class="text-center text-muted mt-5">Tidak ada kegiatan aktif.</div>';
             else {
                 data.data.forEach(e => {
+                    let btnHTML = '';
+                    let cardClass = 'event-card';
+                    let clickAction = `onclick="openCam('${e.id}', '${e.nama}')"`;
+
+                    if (e.alreadyAttended) {
+                        // SUDAH HADIR
+                        btnHTML = `<span class="badge bg-secondary"><i class="bi bi-check-circle"></i> Sudah Hadir</span>`;
+                        cardClass += ' bg-light text-muted border-success'; // Visual feedback
+                        clickAction = ''; // Disable click
+                    } else if (e.statusCode === 'future') {
+                        // AKAN DATANG
+                        btnHTML = `<span class="badge bg-info text-dark">Belum Dimulai</span>`;
+                        clickAction = ''; // Disable click
+                    } else if (e.statusCode === 'buka') {
+                        // BUKA & BELUM HADIR
+                        btnHTML = `<span class="badge bg-success">Presensi Sekarang</span>`;
+                    } else {
+                        // TUTUP (Fallback)
+                        btnHTML = `<span class="badge bg-danger">Ditutup</span>`;
+                        clickAction = '';
+                    }
+
                     html += `
-                    <div class="event-card" onclick="openCam('${e.id}', '${e.nama}')">
+                    <div class="${cardClass}" ${clickAction}>
                         <div class="fw-bold text-dark">${e.nama}</div>
-                        <div class="small text-muted"><i class="bi bi-clock"></i> ${e.jam}</div>
+                        <div class="small text-muted"><i class="bi bi-calendar"></i> ${e.tanggal} | ${e.jam}</div>
                         <div class="small text-muted"><i class="bi bi-geo-alt"></i> ${e.lokasi}</div>
-                        <div class="text-end mt-2"><span class="badge bg-success">Klik untuk Presensi</span></div>
+                        <div class="text-end mt-2">${btnHTML}</div>
                     </div>`;
                 });
             }
