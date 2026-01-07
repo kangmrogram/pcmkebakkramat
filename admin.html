@@ -48,18 +48,27 @@
 
 <button id="btnAddEvent" class="btn-fab" onclick="openFormModal()"><i class="bi bi-plus"></i></button>
 
-<div id="modalForm" class="fullscreen-modal">
+  <div id="modalForm" class="fullscreen-modal">
     <div class="modal-head">
         <h6 class="m-0 fw-bold" id="modalTitle">Buat Kegiatan Baru</h6>
         <button class="btn btn-sm btn-light" onclick="closeModal('modalForm')"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="modal-body-custom">
-        <input type="hidden" id="evtId"> <div class="mb-3"><label class="small fw-bold">Nama Kegiatan</label><input type="text" id="evtNama" class="form-control"></div>
+        <input type="hidden" id="evtId">
+        
+        <div class="mb-3"><label class="small fw-bold">Nama Kegiatan</label><input type="text" id="evtNama" class="form-control"></div>
         <div class="row g-2 mb-3">
             <div class="col-6"><label class="small fw-bold">Tanggal</label><input type="date" id="evtTgl" class="form-control"></div>
             <div class="col-3"><label class="small fw-bold">Mulai</label><input type="time" id="evtStart" class="form-control"></div>
             <div class="col-3"><label class="small fw-bold">Selesai</label><input type="time" id="evtEnd" class="form-control"></div>
         </div>
+        
+        <div class="form-check form-switch bg-light p-3 rounded border mb-3">
+            <input class="form-check-input" type="checkbox" id="evtManualClose">
+            <label class="form-check-label fw-bold" for="evtManualClose">Tutup Presensi Secara Manual</label>
+            <div class="small text-muted" style="font-size:0.75rem">Jika dicentang, pengurus tidak bisa absen meski waktu masih berjalan.</div>
+        </div>
+
         <div class="mb-3"><label class="small fw-bold">Nama Lokasi</label><input type="text" id="evtLocName" class="form-control" placeholder="Cth: Gedung Dakwah"></div>
         
         <div class="mb-3">
@@ -68,22 +77,8 @@
                 <span class="text-primary" style="cursor:pointer" onclick="toggleTutorial()">Cara Isi? <i class="bi bi-info-circle"></i></span>
             </label>
             <input type="text" id="evtCoord" class="form-control" placeholder="-7.xxx, 110.xxx">
-            
             <div id="boxTutorial" class="tutorial-box">
-                <strong><i class="bi bi-laptop"></i> Via Laptop/PC:</strong>
-                <ol>
-                    <li>Buka Google Maps, cari lokasi.</li>
-                    <li><strong>Klik Kanan</strong> pada titik lokasi.</li>
-                    <li>Klik angka koordinat paling atas (akan otomatis tersalin).</li>
-                    <li>Paste di kolom ini.</li>
-                </ol>
-                <hr class="my-1">
-                <strong><i class="bi bi-phone"></i> Via HP:</strong>
-                <ol>
-                    <li>Buka App Google Maps.</li>
-                    <li><strong>Tekan Tahan</strong> di peta sampai muncul pin merah.</li>
-                    <li>Lihat di kolom pencarian atas atau info di bawah, salin angkanya.</li>
-                </ol>
+                <strong><i class="bi bi-phone"></i> Via HP:</strong> Tekan tahan di peta Google Maps sampai muncul pin merah, salin angkanya.
             </div>
         </div>
 
@@ -193,22 +188,23 @@
     }
 
     function openEditModal(id) {
-        // Cari data di cache
         var item = cachedEvents.find(x => x.id === id);
         if(!item) return;
 
-        // Isi Form dengan data lama
         document.getElementById('modalTitle').innerText = "Edit Kegiatan";
-        document.getElementById('evtId').value = item.id; // ID Terisi = Mode Edit
+        document.getElementById('evtId').value = item.id;
         document.getElementById('evtNama').value = item.nama;
-        document.getElementById('evtTgl').value = item.tglInput; // Format yyyy-MM-dd
+        document.getElementById('evtTgl').value = item.tglInput;
         document.getElementById('evtStart').value = item.waktuMulai;
         document.getElementById('evtEnd').value = item.waktuSelesai;
         document.getElementById('evtLocName').value = item.lokasi;
         document.getElementById('evtCoord').value = item.koordinat;
         document.getElementById('evtRad').value = item.radius;
+        
+        // SET CHECKBOX STATE
+        document.getElementById('evtManualClose').checked = (item.manualClose === true);
+
         document.getElementById('modalForm').style.display = 'flex';
-        document.getElementById('boxTutorial').style.display = 'none';
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
