@@ -34,7 +34,7 @@
         <h5 class="m-0 fw-bold">Kegiatan PCM</h5>
         <small id="roleDisplay">Memuat role...</small>
     </div>
-    <a href="<?= ScriptApp.getService().getUrl() ?>" class="text-white text-decoration-none border px-2 py-1 rounded small"><i class="bi bi-arrow-left"></i> Kembali</a>
+    <a href="index.html" class="text-white text-decoration-none border px-2 py-1 rounded small"><i class="bi bi-arrow-left"></i> Kembali</a>
 </div>
 
 <div class="container mt-3">
@@ -77,12 +77,15 @@
 </div>
 
 <script>
+    // --- GANTI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA ---
+    const SCRIPT_URL = "PASTE_URL_WEB_APP_EXEC_DISINI"; 
+
     var USER = JSON.parse(localStorage.getItem("PCM_USER"));
     var latUser=0, lngUser=0;
 
     window.onload = function() {
         if(!USER || (USER.role !== 'admin' && USER.role !== 'pengurus')) {
-            alert("Akses ditolak!"); window.location.href = "<?= ScriptApp.getService().getUrl() ?>"; return;
+            alert("Akses ditolak!"); window.location.href = "index.html"; return;
         }
         document.getElementById('roleDisplay').innerText = "Mode: " + USER.role.toUpperCase();
         if(USER.role === 'admin') document.getElementById('btnAddEvent').style.display = 'flex';
@@ -90,34 +93,55 @@
         loadEvents();
     };
 
-    function loadEvents() {
-        google.script.run.withSuccessHandler(renderList).processEventRequest({ action: 'getEvents', role: USER.role });
+    // --- FUNGSI API FETCH (PENGGANTI google.script.run) ---
+    async function apiCall(action, data = {}, id = null, role = null) {
+        try {
+            let body = { action: action };
+            if(data) body.data = data;
+            if(id) body.id = id;
+            if(role) body.role = role;
+
+            let response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            return await response.json();
+        } catch (e) {
+            alert("Koneksi Error: " + e);
+            return { status: 'error' };
+        }
+    }
+
+    async function loadEvents() {
+        let res = await apiCall('getEvents', null, null, USER.role);
+        renderList(res);
     }
 
     function renderList(res) {
         var html = '';
-        if(res.data.length === 0) html = '<div class="text-center mt-5 text-muted">Tidak ada kegiatan aktif.</div>';
-        
-        res.data.forEach(item => {
-            var btnAction = '';
-            if(USER.role === 'admin') {
-                btnAction = `<button class="btn btn-sm btn-outline-danger mt-2" onclick="deleteEvent('${item.id}')"><i class="bi bi-trash"></i> Hapus</button>`;
-            } else {
-                btnAction = `<button class="btn btn-sm btn-primary mt-2 w-100" onclick="openPresensi('${item.id}', '${item.nama}')"><i class="bi bi-camera-fill"></i> Hadir</button>`;
-            }
+        if(!res.data || res.data.length === 0) html = '<div class="text-center mt-5 text-muted">Tidak ada kegiatan aktif.</div>';
+        else {
+            res.data.forEach(item => {
+                var btnAction = '';
+                if(USER.role === 'admin') {
+                    btnAction = `<button class="btn btn-sm btn-outline-danger mt-2" onclick="deleteEvent('${item.id}')"><i class="bi bi-trash"></i> Hapus</button>`;
+                } else {
+                    btnAction = `<button class="btn btn-sm btn-primary mt-2 w-100" onclick="openPresensi('${item.id}', '${item.nama}')"><i class="bi bi-camera-fill"></i> Hadir</button>`;
+                }
 
-            html += `
-            <div class="card-event">
-                <div class="d-flex justify-content-between">
-                    <div class="event-title">${item.nama}</div>
-                    <span class="status-badge">${item.status}</span>
-                </div>
-                <div class="event-meta"><i class="bi bi-calendar"></i> ${item.tanggal}</div>
-                <div class="event-meta"><i class="bi bi-clock"></i> ${item.jam}</div>
-                <div class="event-meta"><i class="bi bi-geo-alt"></i> ${item.lokasi}</div>
-                ${btnAction}
-            </div>`;
-        });
+                html += `
+                <div class="card-event">
+                    <div class="d-flex justify-content-between">
+                        <div class="event-title">${item.nama}</div>
+                        <span class="status-badge">${item.status}</span>
+                    </div>
+                    <div class="event-meta"><i class="bi bi-calendar"></i> ${item.tanggal}</div>
+                    <div class="event-meta"><i class="bi bi-clock"></i> ${item.jam}</div>
+                    <div class="event-meta"><i class="bi bi-geo-alt"></i> ${item.lokasi}</div>
+                    ${btnAction}
+                </div>`;
+            });
+        }
         document.getElementById('eventList').innerHTML = html;
     }
 
@@ -125,7 +149,7 @@
     function openAddModal() { document.getElementById('modalAdd').style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     
-    function saveEvent() {
+    async function saveEvent() {
         var d = {
             nama: document.getElementById('evtNama').value,
             tanggal: document.getElementById('evtTgl').value,
@@ -138,17 +162,16 @@
         if(!d.nama || !d.tanggal || !d.koordinat) return alert("Lengkapi data!");
         
         document.getElementById('loading').style.display = 'flex';
-        google.script.run.withSuccessHandler(r => {
-            document.getElementById('loading').style.display = 'none';
-            alert(r.message); closeModal('modalAdd'); loadEvents();
-        }).processEventRequest({ action: 'saveEvent', data: d });
+        let r = await apiCall('saveEvent', d);
+        document.getElementById('loading').style.display = 'none';
+        alert(r.message);
+        if(r.status === 'success') { closeModal('modalAdd'); loadEvents(); }
     }
 
-    function deleteEvent(id) {
+    async function deleteEvent(id) {
         if(!confirm("Hapus kegiatan ini?")) return;
-        google.script.run.withSuccessHandler(r => {
-            alert(r.message); loadEvents();
-        }).processEventRequest({ action: 'deleteEvent', id: id });
+        let r = await apiCall('deleteEvent', null, id);
+        alert(r.message); loadEvents();
     }
 
     // --- PENGURUS FUNCTIONS ---
@@ -157,17 +180,20 @@
         document.getElementById('presensiTitle').innerText = nama;
         document.getElementById('modalPresensi').style.display = 'flex';
         
-        // Start Camera & GPS
-        navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
-        navigator.geolocation.watchPosition(pos => {
-            latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
-            document.getElementById('gpsStatus').className = 'alert alert-success py-1 small';
-            document.getElementById('gpsStatus').innerText = "Lokasi terkunci: " + latUser.toFixed(4);
-            document.getElementById('btnSubmitPresensi').disabled = false;
-        });
+        if(navigator.mediaDevices) {
+             navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
+        }
+        if(navigator.geolocation) {
+            navigator.geolocation.watchPosition(pos => {
+                latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
+                document.getElementById('gpsStatus').className = 'alert alert-success py-1 small';
+                document.getElementById('gpsStatus').innerText = "Lokasi terkunci: " + latUser.toFixed(4);
+                document.getElementById('btnSubmitPresensi').disabled = false;
+            });
+        }
     }
 
-    function submitPresensi() {
+    async function submitPresensi() {
         var video = document.getElementById('camera');
         var cvs = document.getElementById('canvas');
         cvs.width = video.videoWidth; cvs.height = video.videoHeight;
@@ -182,11 +208,10 @@
         };
 
         document.getElementById('loading').style.display = 'flex';
-        google.script.run.withSuccessHandler(r => {
-            document.getElementById('loading').style.display = 'none';
-            alert(r.message);
-            if(r.status === 'success') closeModal('modalPresensi');
-        }).processEventRequest({ action: 'submitEventPresence', data: data });
+        let r = await apiCall('submitEventPresence', data);
+        document.getElementById('loading').style.display = 'none';
+        alert(r.message);
+        if(r.status === 'success') closeModal('modalPresensi');
     }
 </script>
 
