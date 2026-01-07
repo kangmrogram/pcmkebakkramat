@@ -594,12 +594,66 @@
   function showLogin() { document.getElementById('authScreen').classList.remove('hidden'); document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('formLogin').classList.remove('hidden'); document.getElementById('formRegister').classList.add('hidden'); }
   function showRegister() { document.getElementById('formLogin').classList.add('hidden'); document.getElementById('formRegister').classList.remove('hidden'); }
   
-  function showDashboard() { 
-    document.getElementById('authScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden');
-    document.getElementById('dashNama').innerText = CURRENT_USER.nama; document.getElementById('dashAum').innerText = CURRENT_USER.aum;
-    loadDashboardData(); 
-    if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
+  // Update fungsi showDashboard
+  function showDashboard() {
+      document.getElementById('authScreen').classList.add('hidden'); 
+      document.getElementById('homeScreen').classList.remove('hidden');
+      document.getElementById('dashNama').innerText = CURRENT_USER.nama;
+      document.getElementById('dashAum').innerText = CURRENT_USER.aum;
+      
+      // RENDER MENU SESUAI ROLE
+      renderMenu();
+      
+      loadDashboardData(); 
+      if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
   }
+
+  function renderMenu() {
+    var role = CURRENT_USER.role || 'karyawan'; // Default
+    var menuHTML = '';
+
+    // 1. Menu Profil (Semua Role)
+    menuHTML += `
+    <li class="menu-item" onclick="openProfile(); toggleMenu()">
+        <div class="menu-icon"><i class="bi bi-person-circle"></i></div>
+        <div class="menu-text">Profil Saya</div><i class="bi bi-chevron-right menu-chevron"></i>
+    </li>
+    <li class="menu-item" onclick="openChangePassword(); toggleMenu()">
+        <div class="menu-icon"><i class="bi bi-key-fill"></i></div>
+        <div class="menu-text">Ganti Password</div><i class="bi bi-chevron-right menu-chevron"></i>
+    </li>`;
+
+    // 2. Menu Admin (Hanya Admin)
+    if (role === 'admin') {
+        menuHTML += `
+        <li class="menu-item" onclick="window.location.href='<?= ScriptApp.getService().getUrl() ?>?page=admin'">
+            <div class="menu-icon" style="background:#dbeafe; color:#1e40af"><i class="bi bi-shield-lock-fill"></i></div>
+            <div class="menu-text">Kelola Jadwal (Admin)</div><i class="bi bi-chevron-right menu-chevron"></i>
+        </li>`;
+    }
+
+    // 3. Menu Pengurus (Admin & Pengurus)
+    if (role === 'admin' || role === 'pengurus') {
+        menuHTML += `
+        <li class="menu-item" onclick="window.location.href='<?= ScriptApp.getService().getUrl() ?>?page=admin'">
+            <div class="menu-icon" style="background:#fce7f3; color:#9d174d"><i class="bi bi-calendar-check-fill"></i></div>
+            <div class="menu-text">Presensi Kepanitiaan</div><i class="bi bi-chevron-right menu-chevron"></i>
+        </li>`;
+    }
+
+    // 4. Menu Umum (Semua Role)
+    menuHTML += `
+    <li class="menu-item" onclick="openInfoModal(); toggleMenu()">
+        <div class="menu-icon"><i class="bi bi-question-circle-fill"></i></div>
+        <div class="menu-text">Panduan & Instalasi</div><i class="bi bi-chevron-right menu-chevron"></i>
+    </li>
+    <li class="menu-item logout" onclick="doLogout()">
+        <div class="menu-icon"><i class="bi bi-box-arrow-right"></i></div>
+        <div class="menu-text">Keluar Aplikasi</div>
+    </li>`;
+
+    document.getElementById('menuListContainer').innerHTML = menuHTML;
+}
   
   function doLogout() { localStorage.removeItem("PCM_USER"); CURRENT_USER = null; showLogin(); }
   function openPresensiMode() { document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('presensiScreen').classList.remove('hidden'); if(navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s=>video.srcObject=s); if(navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true}); }
