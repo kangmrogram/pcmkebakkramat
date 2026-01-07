@@ -2,52 +2,41 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Panel Admin & Pengurus</title>
+  <title>Kelola Jadwal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    :root { --primary: #0f766e; --bg: #f8fafc; }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg); padding-bottom: 80px; }
-    .header-admin { background: var(--primary); padding: 20px; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
-    .card-event { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .event-title { font-weight: 700; font-size: 1rem; color: #334155; }
-    .event-meta { font-size: 0.8rem; color: #64748b; display: flex; align-items: center; gap: 5px; margin-top: 5px; }
-    .btn-fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(15, 118, 110, 0.4); border: none; z-index: 100; }
-    
-    /* MODAL FULLSCREEN */
+    :root { --primary: #1e40af; --bg: #eff6ff; } /* Nuansa Biru untuk Admin */
+    body { font-family: sans-serif; background: var(--bg); padding-bottom: 80px; }
+    .header-admin { background: var(--primary); padding: 20px; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .card-event { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; position: relative; }
+    .btn-fab { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: white; font-size: 1.8rem; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; }
     .fullscreen-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; display: none; flex-direction: column; }
-    .modal-head { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-    .modal-body-custom { padding: 20px; overflow-y: auto; flex-grow: 1; }
-    
-    .status-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; background: #d1fae5; color: #065f46; font-weight: 600; }
-    #loading { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:999; display:none; align-items:center; justify-content:center;}
+    #loading { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:999; display:flex; align-items:center; justify-content:center;}
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<div id="loading"><div class="spinner-border text-success"></div></div>
+<div id="loading"><div class="spinner-border text-primary"></div></div>
 
 <div class="header-admin">
-    <div>
-        <h5 class="m-0 fw-bold">Kegiatan PCM</h5>
-        <small id="roleDisplay">Memuat role...</small>
-    </div>
-    <a href="index.html" class="text-white text-decoration-none border px-2 py-1 rounded small"><i class="bi bi-arrow-left"></i> Kembali</a>
+    <h5 class="m-0 fw-bold">Kelola Jadwal</h5>
+    <a href="index.html" class="btn btn-sm btn-outline-light"><i class="bi bi-arrow-left"></i> Kembali</a>
 </div>
 
-<div class="container mt-3">
-    <div id="eventList">
-        <div class="text-center text-muted py-5">Memuat jadwal...</div>
+<div class="container mt-4" id="eventList">
     </div>
-</div>
 
-<button id="btnAddEvent" class="btn-fab" onclick="openAddModal()" style="display:none;"><i class="bi bi-plus"></i></button>
+<button class="btn-fab" onclick="openAddModal()"><i class="bi bi-plus"></i></button>
 
 <div id="modalAdd" class="fullscreen-modal">
-    <div class="modal-head"><h6 class="m-0 fw-bold">Buat Kegiatan Baru</h6><button class="btn btn-sm btn-light" onclick="closeModal('modalAdd')"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body-custom">
+    <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+        <h6 class="m-0 fw-bold">Buat Kegiatan Baru</h6>
+        <button class="btn btn-sm btn-secondary" onclick="closeAddModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="p-4 overflow-auto">
         <div class="mb-3"><label class="small fw-bold">Nama Kegiatan</label><input type="text" id="evtNama" class="form-control"></div>
         <div class="row g-2 mb-3">
             <div class="col-6"><label class="small fw-bold">Tanggal</label><input type="date" id="evtTgl" class="form-control"></div>
@@ -56,99 +45,57 @@
         </div>
         <div class="mb-3"><label class="small fw-bold">Nama Lokasi</label><input type="text" id="evtLocName" class="form-control" placeholder="Cth: Gedung Dakwah"></div>
         <div class="mb-3"><label class="small fw-bold">Koordinat (Lat,Lng)</label><input type="text" id="evtCoord" class="form-control" placeholder="-7.xxx, 110.xxx">
-        <small class="text-muted" style="font-size:0.7rem">Bisa diambil dari Google Maps.</small></div>
+        <small class="text-muted" style="font-size:0.75rem">Paste dari Google Maps</small></div>
         <div class="mb-3"><label class="small fw-bold">Radius (Meter)</label><input type="number" id="evtRad" class="form-control" value="100"></div>
-        <button class="btn btn-primary w-100 mt-3" onclick="saveEvent()">SIMPAN JADWAL</button>
-    </div>
-</div>
-
-<div id="modalPresensi" class="fullscreen-modal">
-    <div class="modal-head"><h6 class="m-0 fw-bold">Presensi Pengurus</h6><button class="btn btn-sm btn-light" onclick="closeModal('modalPresensi')"><i class="bi bi-x-lg"></i></button></div>
-    <div class="modal-body-custom">
-        <h5 id="presensiTitle" class="fw-bold mb-3">Nama Kegiatan</h5>
-        <div style="background:black; border-radius:12px; overflow:hidden; aspect-ratio:1; margin-bottom:15px;">
-            <video id="camera" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
-        </div>
-        <canvas id="canvas" style="display:none;"></canvas>
-        <div id="gpsStatus" class="alert alert-warning py-1 small">Mencari Lokasi...</div>
-        <input type="hidden" id="targetEventId">
-        <button id="btnSubmitPresensi" class="btn btn-primary w-100" onclick="submitPresensi()" disabled>KIRIM PRESENSI</button>
+        <button class="btn btn-primary w-100 py-2 fw-bold" onclick="saveEvent()">SIMPAN JADWAL</button>
     </div>
 </div>
 
 <script>
-    // --- URL SUDAH DIPERBAIKI ---
+    // --- PASTE SCRIPT URL ANDA DISINI ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVCw1ZHhfTZAa4AzQh8slJOco8MQwCADz7bTiS1lPEKhVTUzRljSv9eG6zzyBrUx0D8Q/exec"; 
 
     var USER = JSON.parse(localStorage.getItem("PCM_USER"));
-    var latUser=0, lngUser=0;
 
     window.onload = function() {
-        if(!USER || (USER.role !== 'admin' && USER.role !== 'pengurus')) {
-            alert("Akses ditolak!"); window.location.href = "index.html"; return;
+        if(!USER || USER.role !== 'admin') {
+            alert("Akses Admin Diperlukan!"); window.location.href = "index.html"; return;
         }
-        document.getElementById('roleDisplay').innerText = "Mode: " + USER.role.toUpperCase();
-        if(USER.role === 'admin') document.getElementById('btnAddEvent').style.display = 'flex';
-        
         loadEvents();
     };
 
-    // --- FUNGSI API FETCH ---
-    async function apiCall(action, data = {}, id = null, role = null) {
-        try {
-            let body = { action: action };
-            if(data) body.data = data;
-            if(id) body.id = id;
-            if(role) body.role = role;
-
-            let response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(body)
-            });
-            return await response.json();
-        } catch (e) {
-            alert("Koneksi Error: " + e);
-            return { status: 'error' };
-        }
-    }
-
     async function loadEvents() {
-        let res = await apiCall('getEvents', null, null, USER.role);
-        renderList(res);
+        try {
+            let res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getEvents', role: 'admin' }) });
+            let data = await res.json();
+            document.getElementById('loading').classList.add('hidden');
+            renderList(data.data);
+        } catch(e) { alert("Gagal load: " + e); }
     }
 
-    function renderList(res) {
+    function renderList(list) {
         var html = '';
-        if(!res.data || res.data.length === 0) html = '<div class="text-center mt-5 text-muted">Tidak ada kegiatan aktif.</div>';
-        else {
-            res.data.forEach(item => {
-                var btnAction = '';
-                if(USER.role === 'admin') {
-                    btnAction = `<button class="btn btn-sm btn-outline-danger mt-2" onclick="deleteEvent('${item.id}')"><i class="bi bi-trash"></i> Hapus</button>`;
-                } else {
-                    btnAction = `<button class="btn btn-sm btn-primary mt-2 w-100" onclick="openPresensi('${item.id}', '${item.nama}')"><i class="bi bi-camera-fill"></i> Hadir</button>`;
-                }
-
-                html += `
-                <div class="card-event">
-                    <div class="d-flex justify-content-between">
-                        <div class="event-title">${item.nama}</div>
-                        <span class="status-badge">${item.status}</span>
+        if(list.length === 0) html = '<div class="text-center mt-5 text-muted">Belum ada jadwal kegiatan.</div>';
+        
+        list.forEach(item => {
+            html += `
+            <div class="card-event">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-bold text-dark fs-6">${item.nama}</div>
+                        <div class="text-muted small mt-1"><i class="bi bi-calendar-event"></i> ${item.tanggal} | ${item.jam}</div>
+                        <div class="text-muted small"><i class="bi bi-geo-alt"></i> ${item.lokasi}</div>
                     </div>
-                    <div class="event-meta"><i class="bi bi-calendar"></i> ${item.tanggal}</div>
-                    <div class="event-meta"><i class="bi bi-clock"></i> ${item.jam}</div>
-                    <div class="event-meta"><i class="bi bi-geo-alt"></i> ${item.lokasi}</div>
-                    ${btnAction}
-                </div>`;
-            });
-        }
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteEvent('${item.id}')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>`;
+        });
         document.getElementById('eventList').innerHTML = html;
     }
 
-    // --- ADMIN FUNCTIONS ---
     function openAddModal() { document.getElementById('modalAdd').style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    
+    function closeAddModal() { document.getElementById('modalAdd').style.display = 'none'; }
+
     async function saveEvent() {
         var d = {
             nama: document.getElementById('evtNama').value,
@@ -159,61 +106,25 @@
             koordinat: document.getElementById('evtCoord').value,
             radius: document.getElementById('evtRad').value
         };
-        if(!d.nama || !d.tanggal || !d.koordinat) return alert("Lengkapi data!");
+        if(!d.nama || !d.tanggal) return alert("Lengkapi data!");
+
+        document.getElementById('loading').classList.remove('hidden');
+        let res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'saveEvent', data: d }) });
+        let r = await res.json();
         
-        document.getElementById('loading').style.display = 'flex';
-        let r = await apiCall('saveEvent', d);
-        document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading').classList.add('hidden');
         alert(r.message);
-        if(r.status === 'success') { closeModal('modalAdd'); loadEvents(); }
+        if(r.status==='success') { closeAddModal(); loadEvents(); }
     }
 
     async function deleteEvent(id) {
-        if(!confirm("Hapus kegiatan ini?")) return;
-        let r = await apiCall('deleteEvent', null, id);
-        alert(r.message); loadEvents();
-    }
-
-    // --- PENGURUS FUNCTIONS ---
-    function openPresensi(id, nama) {
-        document.getElementById('targetEventId').value = id;
-        document.getElementById('presensiTitle').innerText = nama;
-        document.getElementById('modalPresensi').style.display = 'flex';
-        
-        if(navigator.mediaDevices) {
-             navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
-        }
-        if(navigator.geolocation) {
-            navigator.geolocation.watchPosition(pos => {
-                latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
-                document.getElementById('gpsStatus').className = 'alert alert-success py-1 small';
-                document.getElementById('gpsStatus').innerText = "Lokasi terkunci: " + latUser.toFixed(4);
-                document.getElementById('btnSubmitPresensi').disabled = false;
-            });
-        }
-    }
-
-    async function submitPresensi() {
-        var video = document.getElementById('camera');
-        var cvs = document.getElementById('canvas');
-        cvs.width = video.videoWidth; cvs.height = video.videoHeight;
-        var ctx = cvs.getContext('2d'); ctx.scale(-1,1); ctx.drawImage(video,0,0, -cvs.width, cvs.height);
-        var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
-        
-        var data = {
-            eventId: document.getElementById('targetEventId').value,
-            nama: USER.nama, aum: USER.aum,
-            lat: latUser, lng: lngUser, lokasiString: latUser+","+lngUser,
-            image: base64
-        };
-
-        document.getElementById('loading').style.display = 'flex';
-        let r = await apiCall('submitEventPresence', data);
-        document.getElementById('loading').style.display = 'none';
-        alert(r.message);
-        if(r.status === 'success') closeModal('modalPresensi');
+        if(!confirm("Hapus jadwal ini?")) return;
+        document.getElementById('loading').classList.remove('hidden');
+        let res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteEvent', id: id }) });
+        let r = await res.json();
+        document.getElementById('loading').classList.add('hidden');
+        loadEvents();
     }
 </script>
-
 </body>
 </html>
