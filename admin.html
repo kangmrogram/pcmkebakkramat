@@ -77,8 +77,8 @@
 </div>
 
 <script>
-    // --- GANTI DENGAN URL DEPLOYMENT GOOGLE SCRIPT ANDA ---
-    const SCRIPT_URL = "PASTE_URL_WEB_APP_EXEC_DISINI"; 
+    // --- URL SUDAH DIPERBAIKI ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVCw1ZHhfTZAa4AzQh8slJOco8MQwCADz7bTiS1lPEKhVTUzRljSv9eG6zzyBrUx0D8Q/exec"; 
 
     var USER = JSON.parse(localStorage.getItem("PCM_USER"));
     var latUser=0, lngUser=0;
@@ -93,7 +93,7 @@
         loadEvents();
     };
 
-    // --- FUNGSI API FETCH (PENGGANTI google.script.run) ---
+    // --- FUNGSI API FETCH ---
     async function apiCall(action, data = {}, id = null, role = null) {
         try {
             let body = { action: action };
