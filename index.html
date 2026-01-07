@@ -16,12 +16,14 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
+    /* UTILITIES */
     .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; display: flex; flex-direction: column; overflow-y: auto; }
     .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
     .overlay-body { padding: 20px; flex-grow: 1; }
     .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
     .hidden { display: none !important; }
 
+    /* AUTH SCREEN */
     #authScreen { z-index: 300; justify-content: center; position: relative; } 
     .auth-help-btn { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; z-index: 310; }
     .auth-logo { width: 90px; display: block; margin: 0 auto 15px; }
@@ -29,6 +31,7 @@
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
+    /* INPUTS & BUTTONS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem; color: #334155; }
@@ -37,12 +40,10 @@
     .pass-toggle.active { color: var(--primary); }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
 
-    /* CUSTOM PICKER STYLE */
+    /* PICKER STYLE */
     .picker-trigger { cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .picker-placeholder { color: #64748b; font-style: italic; }
     .picker-value { color: #334155; font-weight: 500; }
-    
-    /* PICKER MODAL (POP UP) */
     #pickerModal { z-index: 400 !important; background: #f8fafc; }
     .picker-search-container { position: sticky; top: 0; background: #f8fafc; padding: 10px 20px; z-index: 5; border-bottom: 1px solid #e2e8f0; }
     .picker-search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -54,19 +55,60 @@
     button.btn-primary { background: var(--primary); border: none; width: 100%; padding: 15px; border-radius: 15px; color: white; font-weight: 600; margin-top: 10px; }
     button.btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-    .dashboard-header { background: linear-gradient(135deg, var(--primary), #0d9488); padding: 20px 20px 80px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; color: white; position: relative; }
-    .header-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; padding-right: 90px; }
+    /* --- DASHBOARD HEADER REVISI --- */
+    .dashboard-header { 
+      background: linear-gradient(135deg, var(--primary), #0d9488); 
+      padding: 20px 20px 80px; 
+      border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; 
+      color: white; position: relative; 
+    }
+    
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .header-brand { display: flex; align-items: center; gap: 12px; flex-grow: 1; }
     .header-logo-img { width: 45px; height: 45px; border-radius: 10px; background: rgba(255,255,255,0.2); padding: 5px; backdrop-filter: blur(5px); }
     .header-title h1 { font-size: 1.1rem; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: 0.5px; }
     .header-title p { font-size: 0.75rem; margin: 0; opacity: 0.85; font-weight: 400; }
-    .header-actions { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
-    .btn-action-glass { background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); font-size: 0.9rem; transition: 0.2s; }
-    .btn-action-glass:active { transform: scale(0.95); background: rgba(255,255,255,0.3); }
+
+    /* MENU TOGGLE BUTTON (Hanya 1 Tombol) */
+    .btn-menu-toggle {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px); font-size: 1.4rem; transition: 0.2s;
+    }
+    .btn-menu-toggle:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
+
     .user-info-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 16px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
     .u-text h5 { margin: 0; font-size: 0.95rem; font-weight: 600; }
     .u-text p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
-    .btn-detail-profile { background: white; color: var(--primary); border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    /* --- BOTTOM SHEET MENU (NEW) --- */
+    .menu-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 250; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .menu-backdrop.show { opacity: 1; visibility: visible; }
+    
+    .bottom-sheet { 
+        position: fixed; bottom: -100%; left: 0; width: 100%; 
+        background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; 
+        z-index: 260; padding: 25px 20px; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        box-shadow: 0 -5px 30px rgba(0,0,0,0.15);
+        max-width: 480px; margin: 0 auto; right: 0; /* Center on desktop */
+    }
+    .bottom-sheet.show { bottom: 0; }
+    
+    .sheet-handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 20px; }
+    
+    .menu-list { list-style: none; padding: 0; margin: 0; }
+    .menu-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; color: #334155; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:active { background: #f8fafc; }
+    .menu-icon { width: 36px; height: 36px; background: #f1f5f9; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.1rem; }
+    .menu-text { font-weight: 500; font-size: 0.95rem; flex-grow: 1; }
+    .menu-chevron { color: #cbd5e1; font-size: 0.9rem; }
+    
+    .menu-item.logout { color: #dc2626; }
+    .menu-item.logout .menu-icon { background: #fee2e2; color: #dc2626; }
 
+    /* MAIN CARD & STATS */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
@@ -113,13 +155,10 @@
 
   <div id="authScreen" class="fullscreen-overlay">
     <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
-        
         <button class="auth-help-btn" onclick="openInfoModal()" title="Panduan & Instalasi"><i class="bi bi-question-lg"></i></button>
-
         <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
         <h4 class="auth-title">Presensi Kajian AUM</h4>
         <p class="auth-subtitle">PCM Kebakkramat, Karanganyar</p>
-        
         <div id="formLogin">
           <label class="form-label">Username</label>
           <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)"></div>
@@ -129,27 +168,23 @@
           <button class="btn-primary" onclick="doLogin()">MASUK</button>
           <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
         </div>
-
         <div id="formRegister" class="hidden">
           <div class="alert alert-info py-2 small">Lengkapi data akun presensi Anda.</div>
-          
           <label class="form-label">Nama Lengkap</label>
           <div class="input-box picker-trigger" onclick="openPicker('nama')">
-             <span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span>
-             <i class="bi bi-chevron-down text-muted"></i>
+             <span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span><i class="bi bi-chevron-down text-muted"></i>
           </div>
-          <input type="hidden" id="regNama"> <label class="form-label">Asal AUM</label>
+          <input type="hidden" id="regNama">
+          <label class="form-label">Asal AUM</label>
           <div class="input-box picker-trigger" onclick="openPicker('aum')">
-             <span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span>
-             <i class="bi bi-chevron-down text-muted"></i>
+             <span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span><i class="bi bi-chevron-down text-muted"></i>
           </div>
-          <input type="hidden" id="regAum"> <label class="form-label">Username Baru</label>
+          <input type="hidden" id="regAum">
+          <label class="form-label">Username Baru</label>
           <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div>
           <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
-          
           <label class="form-label">Password Baru</label>
           <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i></div>
-          
           <button class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
           <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
         </div>
@@ -159,18 +194,47 @@
   <div id="homeScreen" class="hidden">
     <div class="dashboard-header">
       <div class="header-top">
-        <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png'">
-        <div class="header-title"><h1>Presensi Kajian AUM</h1><p>PCM Kebakkramat, Karanganyar</p></div>
+        <div class="header-brand">
+            <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png'">
+            <div class="header-title"><h1>Presensi Kajian AUM</h1><p>PCM Kebakkramat, Karanganyar</p></div>
+        </div>
+        
+        <button class="btn-menu-toggle" onclick="toggleMenu()">
+            <i class="bi bi-list"></i>
+        </button>
       </div>
-      <div class="header-actions">
-        <button class="btn-action-glass" onclick="openInfoModal()"><i class="bi bi-question-lg"></i></button>
-        <button class="btn-action-glass" onclick="openChangePassword()"><i class="bi bi-key-fill"></i></button>
-        <button class="btn-action-glass" onclick="doLogout()"><i class="bi bi-box-arrow-right"></i></button>
-      </div>
+
       <div class="user-info-row">
         <div class="u-text"><h5 id="dashNama">Nama User</h5><p id="dashAum">Asal AUM</p></div>
-        <button class="btn-detail-profile" onclick="openProfile()"><i class="bi bi-person-lines-fill"></i></button>
       </div>
+    </div>
+
+    <div class="menu-backdrop" id="menuBackdrop" onclick="toggleMenu()"></div>
+    <div class="bottom-sheet" id="mainMenu">
+        <div class="sheet-handle"></div>
+        <h6 class="fw-bold mb-3 ps-2 text-dark">Menu Aplikasi</h6>
+        <ul class="menu-list">
+            <li class="menu-item" onclick="openProfile(); toggleMenu()">
+                <div class="menu-icon"><i class="bi bi-person-circle"></i></div>
+                <div class="menu-text">Profil Saya</div>
+                <i class="bi bi-chevron-right menu-chevron"></i>
+            </li>
+            <li class="menu-item" onclick="openChangePassword(); toggleMenu()">
+                <div class="menu-icon"><i class="bi bi-key-fill"></i></div>
+                <div class="menu-text">Ganti Password</div>
+                <i class="bi bi-chevron-right menu-chevron"></i>
+            </li>
+            <li class="menu-item" onclick="openInfoModal(); toggleMenu()">
+                <div class="menu-icon"><i class="bi bi-question-circle-fill"></i></div>
+                <div class="menu-text">Panduan & Instalasi</div>
+                <i class="bi bi-chevron-right menu-chevron"></i>
+            </li>
+
+            <li class="menu-item logout" onclick="doLogout()">
+                <div class="menu-icon"><i class="bi bi-box-arrow-right"></i></div>
+                <div class="menu-text">Keluar Aplikasi</div>
+            </li>
+        </ul>
     </div>
 
     <div class="main-card">
@@ -202,15 +266,9 @@
   </div>
 
   <div id="pickerModal" class="fullscreen-overlay hidden">
-    <div class="overlay-header">
-      <h6 class="m-0 fw-bold" id="pickerTitle">Pilih Item</h6>
-      <button class="btn-close-custom" onclick="closePicker()"><i class="bi bi-x"></i></button>
-    </div>
-    <div class="picker-search-container">
-       <input type="text" id="pickerSearch" class="picker-search-input" placeholder="Ketik untuk mencari..." onkeyup="filterPicker()">
-    </div>
-    <div class="picker-list" id="pickerListContainer">
-       </div>
+    <div class="overlay-header"><h6 class="m-0 fw-bold" id="pickerTitle">Pilih Item</h6><button class="btn-close-custom" onclick="closePicker()"><i class="bi bi-x"></i></button></div>
+    <div class="picker-search-container"><input type="text" id="pickerSearch" class="picker-search-input" placeholder="Ketik untuk mencari..." onkeyup="filterPicker()"></div>
+    <div class="picker-list" id="pickerListContainer"></div>
   </div>
 
   <div id="presensiScreen" class="fullscreen-overlay hidden">
@@ -282,24 +340,23 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvsBdpMl4RIsYPUh1aSVoDnFystZlBgxjeV4Ggs6ntVQO3122EvEZPkPrOAm1zlMEEyw/exec"; 
+  const SCRIPT_URL = "PASTE_URL_WEB_APP_EXEC_DISINI"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
-    { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
-    { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768 },
-    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423 },
-    { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
+    { nama: "Masjid Abdul Aziz (SMPM 8)", lat: -7.520470615403366, lng: 110.9065007512984 },
+    { nama: "Gedung Dakwah PDM", lat: -7.586223863399417, lng: 110.91830297060768 },
+    { nama: "Masjid Al Mukarromah", lat: -7.5991158597467505, lng: 110.95277542273423 },
+    { nama: "SMP Muhammadiyah 2 Kra", lat: -7.59240065605104, lng: 110.95609234835774 },
     { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
-    { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
+    { nama: "Kantor Desa Ngadiluwih", lat: -7.633272545502858, lng: 110.99996825526591 },
     { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 },
-    // LOKASI BARU
     { nama: "Catering Pandu", lat: -7.500030621538215, lng: 110.90614961162527 },
     { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742 }
   ];
 
   var CURRENT_USER = null; 
   var LIST_NAMA_DB = []; var LIST_AUM_DB = []; 
-  var CURRENT_PICKER_TYPE = ""; // 'nama' or 'aum'
+  var CURRENT_PICKER_TYPE = ""; 
   var video = document.getElementById('camera');
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
@@ -311,51 +368,41 @@
     setInterval(validateButtonState, 1000);
   };
 
-  // --- NEW: PICKER MODAL LOGIC ---
+  // --- MENU BOTTOM SHEET LOGIC ---
+  function toggleMenu() {
+    var menu = document.getElementById('mainMenu');
+    var backdrop = document.getElementById('menuBackdrop');
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        backdrop.classList.remove('show');
+    } else {
+        menu.classList.add('show');
+        backdrop.classList.add('show');
+    }
+  }
+
+  // --- PICKER MODAL LOGIC ---
   function openPicker(type) {
     CURRENT_PICKER_TYPE = type;
-    var title = (type === 'nama') ? "Pilih Nama" : "Pilih Asal AUM";
-    document.getElementById('pickerTitle').innerText = title;
-    
-    // Populate List
-    renderPickerList("");
-    
-    // Clear Search Input
+    document.getElementById('pickerTitle').innerText = (type === 'nama') ? "Pilih Nama" : "Pilih Asal AUM";
     document.getElementById('pickerSearch').value = "";
-    
+    renderPickerList("");
     document.getElementById('pickerModal').classList.remove('hidden');
   }
-
-  function closePicker() {
-    document.getElementById('pickerModal').classList.add('hidden');
-  }
-
+  function closePicker() { document.getElementById('pickerModal').classList.add('hidden'); }
+  
   function renderPickerList(filter) {
-    var container = document.getElementById('pickerListContainer');
-    container.innerHTML = "";
-    
+    var container = document.getElementById('pickerListContainer'); container.innerHTML = "";
     var source = (CURRENT_PICKER_TYPE === 'nama') ? LIST_NAMA_DB : LIST_AUM_DB;
     var filtered = source.filter(item => item.toLowerCase().includes(filter.toLowerCase()));
-    
-    if (filtered.length === 0) {
-        container.innerHTML = "<div class='text-center text-muted mt-3'>Tidak ditemukan</div>";
-        return;
-    }
-
+    if (filtered.length === 0) { container.innerHTML = "<div class='text-center text-muted mt-3'>Tidak ditemukan</div>"; return; }
     filtered.forEach(item => {
-        var div = document.createElement('div');
-        div.className = "picker-item";
-        div.innerHTML = `<strong>${item}</strong>`;
-        div.onclick = function() { selectPickerItem(item); };
+        var div = document.createElement('div'); div.className = "picker-item";
+        div.innerHTML = `<strong>${item}</strong>`; div.onclick = function() { selectPickerItem(item); };
         container.appendChild(div);
     });
   }
-
-  function filterPicker() {
-    var val = document.getElementById('pickerSearch').value;
-    renderPickerList(val);
-  }
-
+  function filterPicker() { renderPickerList(document.getElementById('pickerSearch').value); }
   function selectPickerItem(value) {
     if (CURRENT_PICKER_TYPE === 'nama') {
         document.getElementById('regNama').value = value;
@@ -371,7 +418,7 @@
     closePicker();
   }
 
-  // --- EXISTING FUNCTIONS ---
+  // --- STANDARD FUNCTIONS ---
   function togglePassword(inputId, icon) {
     var input = document.getElementById(inputId);
     if(input.type === "password") { input.type = "text"; icon.classList.replace("bi-eye-slash", "bi-eye"); icon.classList.add("active"); } 
@@ -387,8 +434,7 @@
 
   function getNearestLocationName(lat, lng) {
     if(!lat || !lng) return "Lokasi Tidak Diketahui";
-    var closestName = "Lokasi Tidak Diketahui";
-    var minDist = Infinity;
+    var closestName = "Lokasi Tidak Diketahui"; var minDist = Infinity;
     DAFTAR_LOKASI.forEach(loc => { var d = calcDist(lat, lng, loc.lat, loc.lng); if(d < minDist) { minDist = d; closestName = loc.nama; } });
     return closestName; 
   }
@@ -563,9 +609,7 @@
        let r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getOptions' }) });
        let d = await r.json();
        if(d.status==='success') {
-          // SORTING DILAKUKAN DI SERVER, TAPI KITA PASTIKAN LAGI DI SINI
-          LIST_NAMA_DB = d.nama; 
-          LIST_AUM_DB = d.aum; 
+          LIST_NAMA_DB = d.nama; LIST_AUM_DB = d.aum; 
        }
     } catch(e){}
   }
@@ -583,16 +627,13 @@
   function updatePosisi(pos) {
     gpsErrorMsg = ""; 
     latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
-    
     var closest=Infinity, name="";
     DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
     jarakUser=Math.round(closest); namaLokasiTerdekat=name;
     isLocationValid = (jarakUser <= MAX_RADIUS);
-    
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
     if(isLocationValid){ btnKirim.disabled=false; statBox.className = "alert alert-success py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`; } 
     else { btnKirim.disabled=true; statBox.className = "alert alert-danger py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`; }
-    
     validateButtonState();
   }
   function calcDist(lat1,lon1,lat2,lon2) { var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); }
