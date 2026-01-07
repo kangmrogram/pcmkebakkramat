@@ -556,7 +556,9 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
       let res = await req.json(); loading(false);
       if(res.status==='success') {
-        CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum };
+        // PERBAIKAN: Tambahkan role: res.role
+        CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum, role: res.role }; 
+        
         localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER)); showDashboard();
         if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
       } else alert(res.message);
