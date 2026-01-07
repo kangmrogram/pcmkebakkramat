@@ -611,7 +611,7 @@
   }
 
   function renderMenu() {
-    var role = CURRENT_USER.role || 'karyawan'; // Default
+    var role = CURRENT_USER.role || 'karyawan'; 
     var menuHTML = '';
 
     // 1. Menu Profil (Semua Role)
@@ -625,19 +625,29 @@
         <div class="menu-text">Ganti Password</div><i class="bi bi-chevron-right menu-chevron"></i>
     </li>`;
 
-    // 2. Menu Admin (Hanya Admin)
+    // 2. LOGIKA ADMIN: MENU KELOLA JADWAL & PRESENSI
     if (role === 'admin') {
+        // Tombol 1: Kelola Jadwal -> Buka admin.html
         menuHTML += `
-        <li class="menu-item" onclick="window.location.href='admin.html'"> <div class="menu-icon" style="background:#dbeafe; color:#1e40af"><i class="bi bi-shield-lock-fill"></i></div>
-            <div class="menu-text">Kelola Jadwal (Admin)</div><i class="bi bi-chevron-right menu-chevron"></i>
+        <li class="menu-item" onclick="window.location.href='admin.html'">
+            <div class="menu-icon" style="background:#dbeafe; color:#1e40af"><i class="bi bi-calendar-plus-fill"></i></div>
+            <div class="menu-text">Kelola Jadwal</div><i class="bi bi-chevron-right menu-chevron"></i>
+        </li>`;
+        
+        // Tombol 2: Presensi Kegiatan -> Buka presensi.html
+        menuHTML += `
+        <li class="menu-item" onclick="window.location.href='presensi.html'">
+            <div class="menu-icon" style="background:#dcfce7; color:#15803d"><i class="bi bi-camera-fill"></i></div>
+            <div class="menu-text">Presensi Kegiatan</div><i class="bi bi-chevron-right menu-chevron"></i>
         </li>`;
     }
 
-    // 3. Menu Pengurus (Admin & Pengurus)
-    if (role === 'admin' || role === 'pengurus') {
+    // 3. LOGIKA PENGURUS: HANYA MENU PRESENSI
+    if (role === 'pengurus') {
         menuHTML += `
-        <li class="menu-item" onclick="window.location.href='admin.html'"> <div class="menu-icon" style="background:#fce7f3; color:#9d174d"><i class="bi bi-calendar-check-fill"></i></div>
-            <div class="menu-text">Presensi Kepanitiaan</div><i class="bi bi-chevron-right menu-chevron"></i>
+        <li class="menu-item" onclick="window.location.href='presensi.html'">
+            <div class="menu-icon" style="background:#fce7f3; color:#9d174d"><i class="bi bi-camera-fill"></i></div>
+            <div class="menu-text">Presensi Kegiatan</div><i class="bi bi-chevron-right menu-chevron"></i>
         </li>`;
     }
 
