@@ -1,76 +1,376 @@
-<div id="modalForm" class="fullscreen-modal">
-    <div class="modal-head">
-        <h6 class="m-0 fw-bold" id="modalTitle">Buat Kegiatan Baru</h6>
-        <button class="btn btn-sm btn-light" onclick="closeModal('modalForm')"><i class="bi bi-x-lg"></i></button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kelola Jadwal PCM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    :root { 
+        --primary: #0f766e; 
+        --bg: #f1f5f9; 
+        --card-bg: #ffffff;
+    }
+    body { 
+        font-family: 'Poppins', sans-serif; 
+        background: var(--bg); 
+        padding-bottom: 100px; /* Space for FAB */
+    }
+
+    /* HEADER STYLING */
+    .admin-header {
+        background: var(--primary);
+        color: white;
+        padding: 20px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 4px 20px rgba(15, 118, 110, 0.15);
+    }
+    .btn-back {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.3); color: white; }
+
+    /* CARD EVENT STYLING */
+    .event-card {
+        background: var(--card-bg);
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+        margin-bottom: 15px;
+        transition: transform 0.2s;
+        overflow: hidden;
+    }
+    .event-card:active { transform: scale(0.99); }
+    
+    .event-status {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.3px;
+    }
+    .status-buka { background: #dcfce7; color: #166534; }
+    .status-tutup { background: #fee2e2; color: #991b1b; }
+    .status-future { background: #e0f2fe; color: #075985; }
+
+    .meta-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+    .meta-row i { color: var(--primary); margin-top: 2px; }
+
+    /* ACTION BUTTONS IN CARD */
+    .card-actions {
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        padding: 10px;
+    }
+
+    /* FAB BUTTON */
+    .btn-fab {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
+        border: none;
+        z-index: 100;
+        transition: 0.3s;
+    }
+    .btn-fab:active { transform: scale(0.9); }
+
+    /* MODAL STYLING */
+    .fullscreen-modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: white; z-index: 1050; display: none; flex-direction: column;
+    }
+    .modal-head {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex; justify-content: space-between; align-items: center;
+        background: white;
+    }
+    .modal-body-custom {
+        padding: 20px;
+        overflow-y: auto;
+        flex-grow: 1;
+        background: #f8fafc;
+    }
+    .form-section {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        margin-bottom: 15px;
+    }
+
+    /* Loading Overlay */
+    #loading {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(255,255,255,0.9); z-index: 2000;
+        display: none; align-items: center; justify-content: center;
+        flex-direction: column;
+    }
+    .tutorial-box { background: #fffbeb; border: 1px dashed #f59e0b; padding: 12px; border-radius: 10px; font-size: 0.8rem; display: none; margin-top: 10px; color: #92400e; }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="spinner-border text-success mb-2" style="width: 3rem; height: 3rem;"></div>
+    <span class="fw-bold text-muted small">Memproses data...</span>
+</div>
+
+<div class="admin-header">
+    <div class="d-flex flex-column">
+        <h5 class="m-0 fw-bold">Kelola Jadwal</h5>
+        <small style="opacity: 0.8" id="roleDisplay">Memuat role...</small>
     </div>
-    <div class="modal-body-custom">
-        <input type="hidden" id="evtId">
-        
-        <div class="mb-3"><label class="small fw-bold">Nama Kegiatan</label><input type="text" id="evtNama" class="form-control"></div>
-        <div class="row g-2 mb-3">
-            <div class="col-6"><label class="small fw-bold">Tanggal</label><input type="date" id="evtTgl" class="form-control"></div>
-            <div class="col-3"><label class="small fw-bold">Mulai</label><input type="time" id="evtStart" class="form-control"></div>
-            <div class="col-3"><label class="small fw-bold">Selesai</label><input type="time" id="evtEnd" class="form-control"></div>
-        </div>
-        
-        <div class="form-check form-switch bg-light p-3 rounded border mb-3">
-            <input class="form-check-input" type="checkbox" id="evtManualClose">
-            <label class="form-check-label fw-bold" for="evtManualClose">Tutup Presensi (Manual)</label>
-            <div class="small text-muted" style="font-size:0.75rem">Centang ini jika ingin menutup presensi meskipun waktu belum habis.</div>
-        </div>
+    <a href="index.html" class="btn-back"><i class="bi bi-arrow-left"></i> Kembali</a>
+</div>
 
-        <div class="mb-3"><label class="small fw-bold">Nama Lokasi</label><input type="text" id="evtLocName" class="form-control" placeholder="Cth: Gedung Dakwah"></div>
-        
-        <div class="mb-3">
-            <label class="small fw-bold d-flex justify-content-between">
-                Koordinat (Lat,Lng) 
-                <span class="text-primary" style="cursor:pointer" onclick="toggleTutorial()">Cara Isi? <i class="bi bi-info-circle"></i></span>
-            </label>
-            <input type="text" id="evtCoord" class="form-control" placeholder="-7.xxx, 110.xxx">
-            <div id="boxTutorial" class="tutorial-box">
-                <strong><i class="bi bi-laptop"></i> Via Laptop:</strong> Klik Kanan di Maps > Salin angka paling atas.<br>
-                <strong><i class="bi bi-phone"></i> Via HP:</strong> Tekan tahan di peta > Muncul pin > Salin angka di bar pencarian.
-            </div>
+<div class="container mt-4">
+    <div id="eventList">
+        <div class="text-center py-5">
+            <div class="spinner-border text-secondary" role="status"></div>
+            <p class="text-muted small mt-2">Mengambil data jadwal...</p>
         </div>
-
-        <div class="mb-3"><label class="small fw-bold">Radius (Meter)</label><input type="number" id="evtRad" class="form-control" value="100"></div>
-        
-        <button class="btn btn-primary w-100 mt-3" onclick="saveEvent()">SIMPAN DATA</button>
     </div>
 </div>
 
+<button id="btnAddEvent" class="btn-fab" onclick="openFormModal()" style="display:none;">
+    <i class="bi bi-plus-lg"></i>
+</button>
+
+<div id="modalForm" class="fullscreen-modal">
+    <div class="modal-head">
+        <h6 class="m-0 fw-bold" id="modalTitle">Jadwal Baru</h6>
+        <button class="btn btn-sm btn-light rounded-circle" onclick="closeModal('modalForm')" style="width:32px;height:32px;"><i class="bi bi-x-lg"></i></button>
+    </div>
+    
+    <div class="modal-body-custom">
+        <div class="form-section">
+            <input type="hidden" id="evtId">
+            
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">NAMA KEGIATAN</label>
+                <input type="text" id="evtNama" class="form-control form-control-lg fw-bold" placeholder="Contoh: Rapat Pleno">
+            </div>
+
+            <div class="row g-2 mb-3">
+                <div class="col-12">
+                    <label class="form-label small fw-bold text-muted">TANGGAL</label>
+                    <input type="date" id="evtTgl" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label small fw-bold text-muted">MULAI</label>
+                    <input type="time" id="evtStart" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label small fw-bold text-muted">SELESAI</label>
+                    <input type="time" id="evtEnd" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label small fw-bold text-muted m-0">LOKASI & KOORDINAT</label>
+                <span class="badge bg-light text-primary border" style="cursor:pointer" onclick="toggleTutorial()">Cara Isi?</span>
+            </div>
+            
+            <div class="mb-3">
+                <input type="text" id="evtLocName" class="form-control mb-2" placeholder="Nama Tempat (Gedung/Masjid)">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-geo-alt"></i></span>
+                    <input type="text" id="evtCoord" class="form-control" placeholder="-7.xxxx, 110.xxxx (Lat, Lng)">
+                </div>
+            </div>
+
+            <div id="boxTutorial" class="tutorial-box">
+                <strong><i class="bi bi-laptop"></i> Via Laptop/PC:</strong><br>
+                Buka Google Maps > Klik Kanan pada lokasi > Klik angka koordinat di paling atas (otomatis tersalin).<br><br>
+                <strong><i class="bi bi-phone"></i> Via HP:</strong><br>
+                Buka Google Maps > Tekan & Tahan peta sampai muncul Pin Merah > Salin angka koordinat di kolom pencarian atas.
+            </div>
+
+            <div class="mb-1">
+                <label class="form-label small fw-bold text-muted">RADIUS PRESENSI (METER)</label>
+                <input type="number" id="evtRad" class="form-control" value="100">
+            </div>
+        </div>
+
+        <div class="form-section bg-white border-warning border" style="border-style: dashed !important;">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="evtManualClose" style="width: 3em; height: 1.5em; margin-right: 10px;">
+                <label class="form-check-label fw-bold pt-1" for="evtManualClose">Tutup Presensi (Manual)</label>
+            </div>
+            <div class="small text-muted mt-2">
+                Jika diaktifkan, status akan menjadi <strong>DITUTUP</strong> dan pengurus tidak bisa absen meskipun waktu kegiatan masih berlangsung.
+            </div>
+        </div>
+
+        <div class="pb-5">
+            <button class="btn btn-primary w-100 py-3 fw-bold rounded-4 shadow-sm" onclick="saveEvent()">SIMPAN DATA</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // ... (Script awal sama) ...
+    // --- GANTI URL INI DENGAN DEPLOYMENT TERBARU ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2vdsRDYW9PV4-5sjABSgdZe8065gndHTc__K0BStZsf6rui-2I0ru0YM9tXM_onfnFg/exec"; 
+
+    var USER = JSON.parse(localStorage.getItem("PCM_USER"));
+    var cachedEvents = [];
+
+    window.onload = function() {
+        if(!USER || (USER.role !== 'admin' && USER.role !== 'pengurus')) {
+            alert("Akses Ditolak!"); window.location.href = "index.html"; return;
+        }
+        
+        document.getElementById('roleDisplay').innerText = "Login sebagai: " + USER.role.toUpperCase();
+        
+        // Hanya Admin yang bisa lihat tombol tambah (+)
+        if(USER.role === 'admin') {
+            document.getElementById('btnAddEvent').style.display = 'flex';
+        }
+        
+        loadEvents();
+    };
+
+    // --- API CALLER ---
+    async function apiCall(action, data = {}, id = null, role = null) {
+        try {
+            let body = { action: action };
+            if(data) body.data = data;
+            if(id) body.id = id;
+            if(role) body.role = role;
+
+            let response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(body) });
+            return await response.json();
+        } catch (e) {
+            alert("Koneksi Server Gagal. Cek internet anda.");
+            return { status: 'error' };
+        }
+    }
+
+    async function loadEvents() {
+        // Ambil data (Admin melihat semua, Pengurus melihat filter)
+        let res = await apiCall('getEvents', null, null, USER.role);
+        cachedEvents = res.data;
+        renderList(res);
+    }
 
     function renderList(res) {
+        var container = document.getElementById('eventList');
         var html = '';
-        if(!res.data || res.data.length === 0) html = '<div class="text-center mt-5 text-muted">Tidak ada kegiatan.</div>';
-        else {
-            res.data.forEach(item => {
-                // LOGIKA WARNA BADGE STATUS
-                var badgeClass = 'bg-secondary';
-                if(item.statusCode === 'buka') badgeClass = 'bg-success';
-                else if(item.statusCode === 'future') badgeClass = 'bg-info text-dark';
-                else badgeClass = 'bg-danger';
 
-                html += `
-                <div class="card-event">
-                    <div class="d-flex justify-content-between">
-                        <div class="event-title text-truncate" style="max-width:65%">${item.nama}</div>
-                        <span class="status-badge ${badgeClass} text-white">${item.statusLabel}</span>
-                    </div>
-                    <div class="event-meta"><i class="bi bi-calendar"></i> ${item.tanggal}</div>
-                    <div class="event-meta"><i class="bi bi-clock"></i> ${item.jam}</div>
-                    <div class="event-meta"><i class="bi bi-geo-alt"></i> ${item.lokasi}</div>
-                    
-                    <div class="mt-2 d-flex gap-2">
-                        <button class="btn btn-sm btn-warning w-50" onclick="openEditModal('${item.id}')"><i class="bi bi-pencil"></i> Edit</button>
-                        <button class="btn btn-sm btn-outline-danger w-50" onclick="deleteEvent('${item.id}')"><i class="bi bi-trash"></i> Hapus</button>
+        if(!res.data || res.data.length === 0) {
+            container.innerHTML = `
+                <div class="text-center mt-5">
+                    <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">Belum ada kegiatan dijadwalkan.</p>
+                </div>`;
+            return;
+        }
+
+        res.data.forEach(item => {
+            // Tentukan Warna Status
+            var badgeClass = 'status-future'; // Default Biru (Akan datang)
+            if (item.statusCode === 'buka') badgeClass = 'status-buka'; // Hijau
+            else if (item.statusCode === 'tutup') badgeClass = 'status-tutup'; // Merah
+
+            // Tombol Aksi (Hanya Admin yang punya Edit/Hapus)
+            var actionButtons = '';
+            if (USER.role === 'admin') {
+                actionButtons = `
+                <div class="card-actions">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-sm btn-outline-warning w-100 fw-bold border-0 bg-light text-warning" onclick="openEditModal('${item.id}')">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-sm btn-outline-danger w-100 fw-bold border-0 bg-light text-danger" onclick="deleteEvent('${item.id}')">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+                        </div>
                     </div>
                 </div>`;
-            });
-        }
-        document.getElementById('eventList').innerHTML = html;
+            }
+
+            html += `
+            <div class="event-card">
+                <div class="p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="fw-bold text-dark mb-0 text-uppercase" style="width:70%">${item.nama}</h6>
+                        <span class="event-status ${badgeClass}">${item.statusLabel}</span>
+                    </div>
+                    
+                    <div class="meta-row">
+                        <i class="bi bi-calendar4-week"></i>
+                        <span>${item.tanggal}</span>
+                    </div>
+                    <div class="meta-row">
+                        <i class="bi bi-clock"></i>
+                        <span>${item.jam}</span>
+                    </div>
+                    <div class="meta-row">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>${item.lokasi}</span>
+                    </div>
+                </div>
+                ${actionButtons}
+            </div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // --- MODAL FUNCTIONS ---
+    function openFormModal() {
+        document.getElementById('modalTitle').innerText = "Jadwal Baru";
+        // Reset Form
+        document.getElementById('evtId').value = "";
+        document.getElementById('evtNama').value = "";
+        document.getElementById('evtTgl').value = "";
+        document.getElementById('evtStart').value = "";
+        document.getElementById('evtEnd').value = "";
+        document.getElementById('evtLocName').value = "";
+        document.getElementById('evtCoord').value = "";
+        document.getElementById('evtRad').value = "100";
+        document.getElementById('evtManualClose').checked = false;
+        
+        document.getElementById('modalForm').style.display = 'flex';
+        document.getElementById('boxTutorial').style.display = 'none';
     }
 
     function openEditModal(id) {
@@ -87,14 +387,23 @@
         document.getElementById('evtCoord').value = item.koordinat;
         document.getElementById('evtRad').value = item.radius;
         
-        // SET STATUS CHECKBOX
-        // Pastikan konversi string "TRUE" ke boolean true jika dari sheets
+        // Handle Checkbox Manual Close (Konversi String "TRUE" dari sheets ke Boolean)
         var isClosed = (item.manualClose === true || item.manualClose === "TRUE" || item.manualClose === "true");
         document.getElementById('evtManualClose').checked = isClosed;
 
         document.getElementById('modalForm').style.display = 'flex';
     }
 
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function toggleTutorial() {
+        var box = document.getElementById('boxTutorial');
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // --- CRUD ACTIONS ---
     async function saveEvent() {
         var d = {
             id: document.getElementById('evtId').value,
@@ -105,10 +414,40 @@
             lokasiNama: document.getElementById('evtLocName').value,
             koordinat: document.getElementById('evtCoord').value,
             radius: document.getElementById('evtRad').value,
-            manualClose: document.getElementById('evtManualClose').checked // Kirim Status Checkbox
+            manualClose: document.getElementById('evtManualClose').checked // Kirim status checkbox
         };
-        // ... (sisanya sama seperti saveEvent sebelumnya)
+
+        if(!d.nama || !d.tanggal || !d.waktuMulai || !d.koordinat) {
+            alert("Mohon lengkapi Nama, Tanggal, Jam, dan Koordinat!");
+            return;
+        }
+
+        document.getElementById('loading').style.display = 'flex';
+        
+        // Tentukan Mode: Baru (saveEvent) atau Edit (updateEvent)
+        var actionType = (d.id === "") ? 'saveEvent' : 'updateEvent';
+
+        let r = await apiCall(actionType, d);
+        document.getElementById('loading').style.display = 'none';
+        
+        alert(r.message);
+        if(r.status === 'success') {
+            closeModal('modalForm');
+            loadEvents();
+        }
     }
-    
-    // ... (fungsi lain sama)
+
+    async function deleteEvent(id) {
+        if(!confirm("Yakin ingin menghapus kegiatan ini? Data presensi terkait mungkin akan kehilangan referensi.")) return;
+        
+        document.getElementById('loading').style.display = 'flex';
+        let r = await apiCall('deleteEvent', null, id);
+        document.getElementById('loading').style.display = 'none';
+        
+        alert(r.message);
+        loadEvents();
+    }
 </script>
+
+</body>
+</html>
