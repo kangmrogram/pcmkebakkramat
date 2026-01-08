@@ -14,7 +14,6 @@
     
     .header-page { background: var(--primary); padding: 20px 20px 60px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; display: flex; justify-content: space-between; align-items: flex-start; }
     
-    /* SUMMARY CARD */
     .summary-card { 
         background: white; border-radius: 20px; padding: 20px; margin: -40px 20px 20px; 
         box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; text-align: center; justify-content: space-around;
@@ -23,20 +22,18 @@
     .sum-item span { font-size: 1.2rem; font-weight: 700; color: #334155; }
     .sum-item.highlight span { color: var(--primary); }
 
-    /* EVENT CARD */
     .event-card { background: white; padding: 15px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #f1f5f9; position: relative; transition: 0.2s; overflow: hidden; }
-    .event-card.disabled { opacity: 0.8; background: #f8fafc; }
+    .event-card.disabled { opacity: 0.9; background: #f8fafc; } /* Opacity dikurangi sedikit agar teks tetap terbaca */
+    
     .status-pill { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; float: right; }
     .st-buka { background: #dcfce7; color: #166534; }
     .st-tutup { background: #fee2e2; color: #991b1b; }
     .st-future { background: #e0f2fe; color: #075985; }
     .st-hadir { background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }
 
-    /* CAMERA UI */
     .camera-box { background:black; border-radius:15px; overflow:hidden; aspect-ratio:1; margin-bottom:15px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     
-    /* PAGINATION */
     .pagination-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
     .btn-page { background: white; border: 1px solid #e2e8f0; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: 600; transition: 0.2s; }
     .btn-page.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -60,11 +57,11 @@
 
 <div class="summary-card">
     <div class="sum-item">
-        <label>TOTAL KEGIATAN</label>
+        <label>KEGIATAN</label>
         <span id="sumTotal">0</span>
     </div>
     <div class="sum-item highlight">
-        <label>KEHADIRAN</label>
+        <label>HADIR</label>
         <span id="sumHadir">0</span>
     </div>
     <div class="sum-item">
@@ -75,9 +72,7 @@
 
 <div class="container pb-5">
     <div id="eventListContainer"></div>
-    
-    <div class="pagination-container" id="paginationControls">
-        </div>
+    <div class="pagination-container" id="paginationControls"></div>
 </div>
 
 <div id="modalCam" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:200; display:none; flex-direction:column;">
@@ -89,22 +84,15 @@
         <div class="alert alert-info py-2 small mb-3 border-0 shadow-sm">
             <i class="bi bi-info-circle-fill me-1"></i> Pastikan wajah terlihat jelas.
         </div>
-        
         <div class="camera-box"><video id="camera" autoplay playsinline></video></div>
         <canvas id="canvas" class="hidden"></canvas>
-        
         <div id="gpsStatusBox" class="card border-0 shadow-sm mb-3 p-3 text-center">
             <small class="text-muted d-block mb-1">JARAK DARI LOKASI</small>
             <h4 class="m-0 fw-bold" id="distDisplay">-- m</h4>
             <small id="gpsDetail" class="text-muted" style="font-size:0.7rem">Mencari GPS...</small>
         </div>
-
-        <input type="hidden" id="targetId">
-        <input type="hidden" id="targetName">
-        <input type="hidden" id="tLat">
-        <input type="hidden" id="tLng">
-        <input type="hidden" id="tRad">
-
+        <input type="hidden" id="targetId"><input type="hidden" id="targetName">
+        <input type="hidden" id="tLat"><input type="hidden" id="tLng"><input type="hidden" id="tRad">
         <button id="btnKirim" class="btn btn-primary w-100 py-3 fw-bold rounded-4 shadow" onclick="kirimPresensi()" disabled>
             <i class="bi bi-camera-fill me-2"></i> AMBIL FOTO & HADIR
         </button>
@@ -113,15 +101,13 @@
 
 <script>
     // --- GANTI URL INI DENGAN DEPLOYMENT TERBARU ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTue6hitE9-_R0SXvzjKM2dB2VRVd7L2a98kRxLjGk3vVWaci30Sb3LZKki54IDsgh8g/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2vdsRDYW9PV4-5sjABSgdZe8065gndHTc__K0BStZsf6rui-2I0ru0YM9tXM_onfnFg/exec"; 
 
     var USER = JSON.parse(localStorage.getItem("PCM_USER"));
     var latUser=0, lngUser=0;
-    
-    // VARIABEL UNTUK DATA & PAGINASI
     var allEvents = [];
     var currentPage = 1;
-    var itemsPerPage = 5; // Tampilkan 5 kegiatan per halaman
+    var itemsPerPage = 5;
 
     window.onload = function() {
         if(!USER) window.location.href = "index.html";
@@ -130,23 +116,19 @@
 
     async function loadEvents() {
         try {
-            // Ambil semua data (Backend sudah tidak memfilter untuk pengurus, tapi memberi status)
             let res = await fetch(SCRIPT_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ action: 'getEvents', role: 'pengurus', user: USER }) 
             });
             let data = await res.json();
-            
             document.getElementById('loading').classList.add('hidden');
             
-            // Update Summary
             if(data.stats) {
                 document.getElementById('sumTotal').innerText = data.stats.total;
                 document.getElementById('sumHadir').innerText = data.stats.hadir;
                 document.getElementById('sumPersen').innerText = data.stats.persen + "%";
             }
 
-            // Simpan data global & render halaman 1
             allEvents = data.data;
             renderPagination();
             
@@ -164,54 +146,54 @@
             return;
         }
 
-        // Hitung Slice Data
         var start = (currentPage - 1) * itemsPerPage;
         var end = start + itemsPerPage;
         var pageData = allEvents.slice(start, end);
         var totalPages = Math.ceil(allEvents.length / itemsPerPage);
 
-        // RENDER LIST ITEM
         pageData.forEach(e => {
             let badgeHTML = '';
             let btnDisabled = false;
             let cardClass = '';
             let clickAction = `onclick="openCam('${e.id}', '${e.nama}', ${e.targetLat}, ${e.targetLng}, ${e.radius})"`;
+            let buttonHTML = '';
 
-            // Logika Tampilan Berdasarkan Status
+            // --- LOGIKA UTAMA TOMBOL & STATUS ---
+            
             if (e.alreadyAttended) {
+                // KONDISI 1: SUDAH HADIR (HIJAU/ABU)
                 badgeHTML = `<span class="status-pill st-hadir"><i class="bi bi-check-circle-fill"></i> Hadir</span>`;
                 btnDisabled = true;
                 cardClass = 'disabled';
                 clickAction = ''; 
+                buttonHTML = `<button class="btn btn-sm btn-outline-success w-100 mt-2 rounded-3 fw-bold" disabled><i class="bi bi-check2"></i> Anda Sudah Hadir</button>`;
+            
             } else if (e.statusCode === 'tutup' || e.statusCode === 'selesai') {
+                // KONDISI 2: TUTUP / SELESAI & BELUM HADIR (MERAH)
                 badgeHTML = `<span class="status-pill st-tutup">${e.statusLabel}</span>`;
                 btnDisabled = true;
                 cardClass = 'disabled';
                 clickAction = '';
+                buttonHTML = `<button class="btn btn-sm btn-danger w-100 mt-2 rounded-3 opacity-75" disabled><i class="bi bi-x-circle"></i> Anda Tidak Hadir</button>`;
+            
             } else if (e.statusCode === 'future') {
+                // KONDISI 3: BELUM MULAI (BIRU)
                 badgeHTML = `<span class="status-pill st-future"><i class="bi bi-clock"></i> Belum Mulai</span>`;
                 btnDisabled = true;
                 cardClass = 'disabled';
                 clickAction = '';
+                buttonHTML = `<button class="btn btn-sm btn-light w-100 mt-2 rounded-3 text-muted" disabled>Belum Dibuka</button>`;
+            
             } else {
-                // STATUS BUKA / SEDANG BERLANGSUNG
-                badgeHTML = `<span class="status-pill st-buka">Buka</span>`;
-            }
-
-            // Tombol di dalam card
-            let buttonHTML = '';
-            if (!btnDisabled) {
+                // KONDISI 4: SEDANG BERLANGSUNG (AKTIF)
+                badgeHTML = `<span class="status-pill st-buka">Sedang Berlangsung</span>`;
                 buttonHTML = `<button class="btn btn-sm btn-primary w-100 mt-2 rounded-3 fw-bold">Presensi Sekarang</button>`;
-            } else if (e.alreadyAttended) {
-                buttonHTML = `<button class="btn btn-sm btn-outline-secondary w-100 mt-2 rounded-3" disabled>Anda Sudah Hadir</button>`;
-            } else {
-                buttonHTML = `<button class="btn btn-sm btn-light w-100 mt-2 rounded-3 text-muted" disabled>Tidak Aktif</button>`;
             }
 
             let html = `
             <div class="event-card ${cardClass}" ${clickAction}>
                 <div class="mb-2 clearfix">
-                    <span class="fw-bold text-dark float-start text-truncate" style="max-width: 65%;">${e.nama}</span>
+                    <span class="fw-bold text-dark float-start text-truncate" style="max-width: 60%;">${e.nama}</span>
                     ${badgeHTML}
                 </div>
                 <div class="small text-muted mb-1"><i class="bi bi-calendar-event me-1"></i> ${e.tanggal} | ${e.jam}</div>
@@ -221,14 +203,12 @@
             container.innerHTML += html;
         });
 
-        // RENDER TOMBOL PAGINASI (Prev - Next)
         if (totalPages > 1) {
             let prevDisabled = (currentPage === 1) ? 'disabled' : '';
             let nextDisabled = (currentPage === totalPages) ? 'disabled' : '';
-
             controls.innerHTML += `
                 <button class="btn-page" ${prevDisabled} onclick="changePage(${currentPage - 1})"><i class="bi bi-chevron-left"></i></button>
-                <span class="d-flex align-items-center px-2 small text-muted">Halaman ${currentPage} dari ${totalPages}</span>
+                <span class="d-flex align-items-center px-2 small text-muted">Hal ${currentPage} / ${totalPages}</span>
                 <button class="btn-page" ${nextDisabled} onclick="changePage(${currentPage + 1})"><i class="bi bi-chevron-right"></i></button>
             `;
         }
@@ -237,12 +217,10 @@
     function changePage(page) {
         currentPage = page;
         renderPagination();
-        window.scrollTo(0, 0); // Scroll ke atas saat ganti halaman
+        window.scrollTo(0, 0);
     }
 
-    // --- KAMERA & GPS LOGIC ---
     var watchID = null;
-
     function openCam(id, nama, lat, lng, rad) {
         document.getElementById('targetId').value = id;
         document.getElementById('targetName').value = nama;
@@ -253,12 +231,7 @@
         document.getElementById('camTitle').innerText = nama;
         document.getElementById('modalCam').style.display = 'flex';
         
-        // Start Kamera
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
-        }
-
-        // Start Tracking GPS Realtime
+        if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
         if (navigator.geolocation) {
             watchID = navigator.geolocation.watchPosition(updateDistanceUI, err => {
                 document.getElementById('gpsDetail').innerText = "Gagal deteksi lokasi.";
@@ -267,32 +240,23 @@
     }
 
     function updateDistanceUI(pos) {
-        latUser = pos.coords.latitude; 
-        lngUser = pos.coords.longitude;
-        
+        latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
         var tLat = parseFloat(document.getElementById('tLat').value);
         var tLng = parseFloat(document.getElementById('tLng').value);
         var tRad = parseFloat(document.getElementById('tRad').value);
+        var dist = Math.round(calcDist(latUser, lngUser, tLat, tLng));
 
-        // Hitung Jarak (Haversine)
-        var dist = calcDist(latUser, lngUser, tLat, tLng);
-        dist = Math.round(dist);
-
-        // Update UI
         document.getElementById('distDisplay').innerText = dist + " m";
-        
         var statusBox = document.getElementById('gpsStatusBox');
         var btn = document.getElementById('btnKirim');
         var detail = document.getElementById('gpsDetail');
 
         if (dist <= tRad) {
-            // Dalam Jangkauan
             statusBox.className = "card border-0 shadow-sm mb-3 p-3 text-center bg-success text-white";
             detail.innerText = `OK! Di dalam radius (${tRad}m)`;
             detail.className = "text-white opacity-75";
             btn.disabled = false;
         } else {
-            // Kejauhan
             statusBox.className = "card border-0 shadow-sm mb-3 p-3 text-center bg-danger text-white";
             detail.innerText = `Terlalu jauh! (Max ${tRad}m)`;
             detail.className = "text-white opacity-75";
@@ -304,7 +268,7 @@
         document.getElementById('modalCam').style.display = 'none';
         let stream = document.getElementById('camera').srcObject;
         if(stream) stream.getTracks().forEach(t => t.stop());
-        if(watchID) navigator.geolocation.clearWatch(watchID); // Stop GPS
+        if(watchID) navigator.geolocation.clearWatch(watchID);
     }
 
     async function kirimPresensi() {
@@ -312,20 +276,16 @@
         var cvs = document.getElementById('canvas');
         cvs.width = video.videoWidth; cvs.height = video.videoHeight;
         var ctx = cvs.getContext('2d'); ctx.scale(-1,1); ctx.drawImage(video,0,0, -cvs.width, cvs.height);
-        
         var base64 = cvs.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
-        var eventId = document.getElementById('targetId').value;
-        var eventName = document.getElementById('targetName').value;
-
-        document.getElementById('loading').classList.remove('hidden');
         
+        document.getElementById('loading').classList.remove('hidden');
         try {
             let res = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'submitEventPresence',
                     data: {
-                        eventId: eventId,
+                        eventId: document.getElementById('targetId').value,
                         nama: USER.nama, aum: USER.aum,
                         lat: latUser, lng: lngUser, lokasiString: latUser+","+lngUser,
                         image: base64
@@ -334,25 +294,12 @@
             });
             let r = await res.json();
             document.getElementById('loading').classList.add('hidden');
-            
-            if(r.status === 'success') { 
-                alert(r.message);
-                closeCam(); 
-                loadEvents(); // Reload untuk update status tombol jadi "Sudah Hadir"
-            } else {
-                alert("Gagal: " + r.message);
-            }
-        } catch(e) {
-            document.getElementById('loading').classList.add('hidden');
-            alert("Error: " + e);
-        }
+            if(r.status === 'success') { alert(r.message); closeCam(); loadEvents(); } else { alert("Gagal: " + r.message); }
+        } catch(e) { document.getElementById('loading').classList.add('hidden'); alert("Error: " + e); }
     }
 
-    // Helper Hitung Jarak
     function calcDist(lat1, lon1, lat2, lon2) {
-        var R = 6371000; 
-        var dLat = (lat2-lat1)*Math.PI/180; 
-        var dLon = (lon2-lon1)*Math.PI/180; 
+        var R = 6371000; var dLat = (lat2-lat1)*Math.PI/180; var dLon = (lon2-lon1)*Math.PI/180; 
         var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)*Math.sin(dLon/2); 
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
