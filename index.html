@@ -505,10 +505,11 @@
     else if (gpsErrorMsg !== "") { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS"; btn.classList.add('btn-secondary'); msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi.`; msg.style.display = 'block'; msg.classList.add('msg-danger'); }
     else if (latUser === 0 && lngUser === 0) { btn.disabled = true; btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS..."; btn.classList.add('btn-secondary'); }
     else if (!isLocationValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat."; msg.style.display = 'block'; }
-    else { btn.disabled = false; 
-        // Ganti ikon di sini:
-      btn.innerHTML = '<i class="bi bi-fingerprint" style="font-size:1.2rem;"></i> PRESENSI KAJIAN';
-      btn.classList.add('btn-primary');
+    else { 
+      btn.disabled = false;
+        // GANTI IKON KAMERA JADI FINGERPRINT
+        btn.innerHTML = '<i class="bi bi-fingerprint" style="font-size:1.2rem;"></i> PRESENSI KAJIAN';
+        btn.classList.add('btn-primary');
   }
 
   async function loadDashboardData() {
