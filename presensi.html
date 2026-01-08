@@ -61,7 +61,7 @@
 
     async function loadActiveEvents() {
         try {
-            // Kirim data user agar backend bisa cek apakah dia sudah absen
+            // Kirim USER agar backend bisa cek sudah absen/belum
             let res = await fetch(SCRIPT_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ action: 'getEvents', role: 'pengurus', user: USER }) 
@@ -80,25 +80,27 @@
                     if (e.alreadyAttended) {
                         // SUDAH HADIR
                         btnHTML = `<span class="badge bg-secondary"><i class="bi bi-check-circle"></i> Sudah Hadir</span>`;
-                        cardClass += ' bg-light text-muted border-success'; // Visual feedback
-                        clickAction = ''; // Disable click
+                        cardClass += ' bg-light text-muted border-success'; 
+                        clickAction = ''; // Matikan klik
                     } else if (e.statusCode === 'future') {
                         // AKAN DATANG
                         btnHTML = `<span class="badge bg-info text-dark">Belum Dimulai</span>`;
-                        clickAction = ''; // Disable click
-                    } else if (e.statusCode === 'buka') {
-                        // BUKA & BELUM HADIR
-                        btnHTML = `<span class="badge bg-success">Presensi Sekarang</span>`;
-                    } else {
-                        // TUTUP (Fallback)
+                        clickAction = ''; // Matikan klik
+                    } else if (e.statusCode === 'tutup') {
+                        // TUTUP / SELESAI
                         btnHTML = `<span class="badge bg-danger">Ditutup</span>`;
-                        clickAction = '';
+                        clickAction = ''; // Matikan klik
+                        cardClass += ' bg-light text-muted';
+                    } else {
+                        // BUKA (NORMAL)
+                        btnHTML = `<span class="badge bg-success">Klik untuk Presensi</span>`;
                     }
 
                     html += `
                     <div class="${cardClass}" ${clickAction}>
                         <div class="fw-bold text-dark">${e.nama}</div>
-                        <div class="small text-muted"><i class="bi bi-calendar"></i> ${e.tanggal} | ${e.jam}</div>
+                        <div class="small text-muted"><i class="bi bi-calendar-event"></i> ${e.tanggal}</div>
+                        <div class="small text-muted"><i class="bi bi-clock"></i> ${e.jam}</div>
                         <div class="small text-muted"><i class="bi bi-geo-alt"></i> ${e.lokasi}</div>
                         <div class="text-end mt-2">${btnHTML}</div>
                     </div>`;
