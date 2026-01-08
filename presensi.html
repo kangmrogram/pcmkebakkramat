@@ -4,16 +4,44 @@
   <meta charset="UTF-8">
   <title>Presensi Kegiatan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     :root { --primary: #0f766e; --bg: #f8fafc; }
-    body { font-family: sans-serif; background: var(--bg); padding-bottom: 80px; }
-    .header-page { background: var(--primary); padding: 20px; color: white; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; display: flex; justify-content: space-between; align-items: center; }
-    .event-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
-    .event-card:active { transform: scale(0.98); border-color: var(--primary); background: #f0fdfa; }
-    .camera-box { background:black; border-radius:15px; overflow:hidden; aspect-ratio:1; margin-bottom:15px; position: relative; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg); padding-bottom: 80px; }
+    
+    .header-page { background: var(--primary); padding: 20px 20px 60px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; display: flex; justify-content: space-between; align-items: flex-start; }
+    
+    /* SUMMARY CARD */
+    .summary-card { 
+        background: white; border-radius: 20px; padding: 20px; margin: -40px 20px 20px; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; text-align: center; justify-content: space-around;
+    }
+    .sum-item label { font-size: 0.7rem; color: #64748b; display: block; margin-bottom: 2px; }
+    .sum-item span { font-size: 1.2rem; font-weight: 700; color: #334155; }
+    .sum-item.highlight span { color: var(--primary); }
+
+    /* EVENT CARD */
+    .event-card { background: white; padding: 15px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #f1f5f9; position: relative; transition: 0.2s; overflow: hidden; }
+    .event-card.disabled { opacity: 0.8; background: #f8fafc; }
+    .status-pill { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; float: right; }
+    .st-buka { background: #dcfce7; color: #166534; }
+    .st-tutup { background: #fee2e2; color: #991b1b; }
+    .st-future { background: #e0f2fe; color: #075985; }
+    .st-hadir { background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }
+
+    /* CAMERA UI */
+    .camera-box { background:black; border-radius:15px; overflow:hidden; aspect-ratio:1; margin-bottom:15px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    
+    /* PAGINATION */
+    .pagination-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+    .btn-page { background: white; border: 1px solid #e2e8f0; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: 600; transition: 0.2s; }
+    .btn-page.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-page:disabled { opacity: 0.5; cursor: not-allowed; }
+
     #loading { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:999; display:flex; align-items:center; justify-content:center;}
     .hidden { display: none !important; }
   </style>
@@ -23,114 +51,260 @@
 <div id="loading"><div class="spinner-border text-success"></div></div>
 
 <div class="header-page">
-    <h5 class="m-0 fw-bold">Pilih Kegiatan</h5>
-    <a href="index.html" class="btn btn-sm btn-outline-light"><i class="bi bi-house-door-fill"></i> Home</a>
+    <div>
+        <h5 class="m-0 fw-bold">Daftar Kegiatan</h5>
+        <small class="opacity-75">Presensi Pengurus</small>
+    </div>
+    <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3"><i class="bi bi-arrow-left"></i> Home</a>
 </div>
 
-<div class="container mt-3">
-    <div id="eventListContainer">
+<div class="summary-card">
+    <div class="sum-item">
+        <label>TOTAL KEGIATAN</label>
+        <span id="sumTotal">0</span>
+    </div>
+    <div class="sum-item highlight">
+        <label>KEHADIRAN</label>
+        <span id="sumHadir">0</span>
+    </div>
+    <div class="sum-item">
+        <label>PERSENTASE</label>
+        <span id="sumPersen">0%</span>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div id="eventListContainer"></div>
+    
+    <div class="pagination-container" id="paginationControls">
         </div>
 </div>
 
 <div id="modalCam" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:200; display:none; flex-direction:column;">
-    <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-        <h6 class="m-0 fw-bold" id="camTitle">Nama Event</h6>
-        <button class="btn btn-sm btn-light" onclick="closeCam()"><i class="bi bi-x-lg"></i></button>
+    <div class="p-3 border-bottom d-flex justify-content-between align-items-center shadow-sm">
+        <h6 class="m-0 fw-bold text-truncate pe-2" id="camTitle" style="max-width: 80%;">Nama Event</h6>
+        <button class="btn btn-sm btn-light rounded-circle" onclick="closeCam()" style="width:32px;height:32px;"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div class="p-3 flex-grow-1 overflow-auto">
+    <div class="p-3 flex-grow-1 overflow-auto bg-light">
+        <div class="alert alert-info py-2 small mb-3 border-0 shadow-sm">
+            <i class="bi bi-info-circle-fill me-1"></i> Pastikan wajah terlihat jelas.
+        </div>
+        
         <div class="camera-box"><video id="camera" autoplay playsinline></video></div>
         <canvas id="canvas" class="hidden"></canvas>
-        <div id="gpsStatus" class="alert alert-warning py-2 small mb-3">Mencari GPS...</div>
+        
+        <div id="gpsStatusBox" class="card border-0 shadow-sm mb-3 p-3 text-center">
+            <small class="text-muted d-block mb-1">JARAK DARI LOKASI</small>
+            <h4 class="m-0 fw-bold" id="distDisplay">-- m</h4>
+            <small id="gpsDetail" class="text-muted" style="font-size:0.7rem">Mencari GPS...</small>
+        </div>
+
         <input type="hidden" id="targetId">
         <input type="hidden" id="targetName">
-        <button id="btnKirim" class="btn btn-primary w-100 py-3 fw-bold" onclick="kirimPresensi()" disabled>AMBIL FOTO & HADIR</button>
+        <input type="hidden" id="tLat">
+        <input type="hidden" id="tLng">
+        <input type="hidden" id="tRad">
+
+        <button id="btnKirim" class="btn btn-primary w-100 py-3 fw-bold rounded-4 shadow" onclick="kirimPresensi()" disabled>
+            <i class="bi bi-camera-fill me-2"></i> AMBIL FOTO & HADIR
+        </button>
     </div>
 </div>
 
 <script>
-    // --- PASTE SCRIPT URL ANDA DISINI ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcF8X2nr_izrR5uozDj2750FGlaT3CHHiewaBMlhgwJ7szExUY5FqeTlpdTNoySFJmUg/exec"; 
+    // --- GANTI URL INI DENGAN DEPLOYMENT TERBARU ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8IjHeYF21Cmbi3Gb4eYdy-EIlfvvuNcfW_JcwKoCa9LLYksGT6VzwOdq-a3GVdAytgQ/exec"; 
 
     var USER = JSON.parse(localStorage.getItem("PCM_USER"));
     var latUser=0, lngUser=0;
+    
+    // VARIABEL UNTUK DATA & PAGINASI
+    var allEvents = [];
+    var currentPage = 1;
+    var itemsPerPage = 5; // Tampilkan 5 kegiatan per halaman
 
     window.onload = function() {
         if(!USER) window.location.href = "index.html";
-        loadActiveEvents();
+        loadEvents();
     };
 
-    async function loadActiveEvents() {
+    async function loadEvents() {
         try {
-            // Kirim USER agar backend bisa cek sudah absen/belum
+            // Ambil semua data (Backend sudah tidak memfilter untuk pengurus, tapi memberi status)
             let res = await fetch(SCRIPT_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ action: 'getEvents', role: 'pengurus', user: USER }) 
             });
             let data = await res.json();
+            
             document.getElementById('loading').classList.add('hidden');
             
-            let html = '';
-            if(data.data.length === 0) html = '<div class="text-center text-muted mt-5">Tidak ada kegiatan aktif.</div>';
-            else {
-                data.data.forEach(e => {
-                    let btnHTML = '';
-                    let cardClass = 'event-card';
-                    let clickAction = `onclick="openCam('${e.id}', '${e.nama}')"`;
-
-                    if (e.alreadyAttended) {
-                        // SUDAH HADIR
-                        btnHTML = `<span class="badge bg-secondary"><i class="bi bi-check-circle"></i> Sudah Hadir</span>`;
-                        cardClass += ' bg-light text-muted border-success'; 
-                        clickAction = ''; // Matikan klik
-                    } else if (e.statusCode === 'future') {
-                        // AKAN DATANG
-                        btnHTML = `<span class="badge bg-info text-dark">Belum Dimulai</span>`;
-                        clickAction = ''; // Matikan klik
-                    } else if (e.statusCode === 'tutup') {
-                        // TUTUP / SELESAI
-                        btnHTML = `<span class="badge bg-danger">Ditutup</span>`;
-                        clickAction = ''; // Matikan klik
-                        cardClass += ' bg-light text-muted';
-                    } else {
-                        // BUKA (NORMAL)
-                        btnHTML = `<span class="badge bg-success">Klik untuk Presensi</span>`;
-                    }
-
-                    html += `
-                    <div class="${cardClass}" ${clickAction}>
-                        <div class="fw-bold text-dark">${e.nama}</div>
-                        <div class="small text-muted"><i class="bi bi-calendar-event"></i> ${e.tanggal}</div>
-                        <div class="small text-muted"><i class="bi bi-clock"></i> ${e.jam}</div>
-                        <div class="small text-muted"><i class="bi bi-geo-alt"></i> ${e.lokasi}</div>
-                        <div class="text-end mt-2">${btnHTML}</div>
-                    </div>`;
-                });
+            // Update Summary
+            if(data.stats) {
+                document.getElementById('sumTotal').innerText = data.stats.total;
+                document.getElementById('sumHadir').innerText = data.stats.hadir;
+                document.getElementById('sumPersen').innerText = data.stats.persen + "%";
             }
-            document.getElementById('eventListContainer').innerHTML = html;
+
+            // Simpan data global & render halaman 1
+            allEvents = data.data;
+            renderPagination();
+            
         } catch(e) { alert("Gagal memuat data: " + e); }
     }
 
-    function openCam(id, nama) {
+    function renderPagination() {
+        var container = document.getElementById('eventListContainer');
+        var controls = document.getElementById('paginationControls');
+        container.innerHTML = "";
+        controls.innerHTML = "";
+
+        if (allEvents.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted mt-5 py-5">Belum ada kegiatan.</div>';
+            return;
+        }
+
+        // Hitung Slice Data
+        var start = (currentPage - 1) * itemsPerPage;
+        var end = start + itemsPerPage;
+        var pageData = allEvents.slice(start, end);
+        var totalPages = Math.ceil(allEvents.length / itemsPerPage);
+
+        // RENDER LIST ITEM
+        pageData.forEach(e => {
+            let badgeHTML = '';
+            let btnDisabled = false;
+            let cardClass = '';
+            let clickAction = `onclick="openCam('${e.id}', '${e.nama}', ${e.targetLat}, ${e.targetLng}, ${e.radius})"`;
+
+            // Logika Tampilan Berdasarkan Status
+            if (e.alreadyAttended) {
+                badgeHTML = `<span class="status-pill st-hadir"><i class="bi bi-check-circle-fill"></i> Hadir</span>`;
+                btnDisabled = true;
+                cardClass = 'disabled';
+                clickAction = ''; 
+            } else if (e.statusCode === 'tutup' || e.statusCode === 'selesai') {
+                badgeHTML = `<span class="status-pill st-tutup">${e.statusLabel}</span>`;
+                btnDisabled = true;
+                cardClass = 'disabled';
+                clickAction = '';
+            } else if (e.statusCode === 'future') {
+                badgeHTML = `<span class="status-pill st-future"><i class="bi bi-clock"></i> Belum Mulai</span>`;
+                btnDisabled = true;
+                cardClass = 'disabled';
+                clickAction = '';
+            } else {
+                // STATUS BUKA / SEDANG BERLANGSUNG
+                badgeHTML = `<span class="status-pill st-buka">Buka</span>`;
+            }
+
+            // Tombol di dalam card
+            let buttonHTML = '';
+            if (!btnDisabled) {
+                buttonHTML = `<button class="btn btn-sm btn-primary w-100 mt-2 rounded-3 fw-bold">Presensi Sekarang</button>`;
+            } else if (e.alreadyAttended) {
+                buttonHTML = `<button class="btn btn-sm btn-outline-secondary w-100 mt-2 rounded-3" disabled>Anda Sudah Hadir</button>`;
+            } else {
+                buttonHTML = `<button class="btn btn-sm btn-light w-100 mt-2 rounded-3 text-muted" disabled>Tidak Aktif</button>`;
+            }
+
+            let html = `
+            <div class="event-card ${cardClass}" ${clickAction}>
+                <div class="mb-2 clearfix">
+                    <span class="fw-bold text-dark float-start text-truncate" style="max-width: 65%;">${e.nama}</span>
+                    ${badgeHTML}
+                </div>
+                <div class="small text-muted mb-1"><i class="bi bi-calendar-event me-1"></i> ${e.tanggal} | ${e.jam}</div>
+                <div class="small text-muted mb-2"><i class="bi bi-geo-alt me-1"></i> ${e.lokasi}</div>
+                ${buttonHTML}
+            </div>`;
+            container.innerHTML += html;
+        });
+
+        // RENDER TOMBOL PAGINASI (Prev - Next)
+        if (totalPages > 1) {
+            let prevDisabled = (currentPage === 1) ? 'disabled' : '';
+            let nextDisabled = (currentPage === totalPages) ? 'disabled' : '';
+
+            controls.innerHTML += `
+                <button class="btn-page" ${prevDisabled} onclick="changePage(${currentPage - 1})"><i class="bi bi-chevron-left"></i></button>
+                <span class="d-flex align-items-center px-2 small text-muted">Halaman ${currentPage} dari ${totalPages}</span>
+                <button class="btn-page" ${nextDisabled} onclick="changePage(${currentPage + 1})"><i class="bi bi-chevron-right"></i></button>
+            `;
+        }
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        renderPagination();
+        window.scrollTo(0, 0); // Scroll ke atas saat ganti halaman
+    }
+
+    // --- KAMERA & GPS LOGIC ---
+    var watchID = null;
+
+    function openCam(id, nama, lat, lng, rad) {
         document.getElementById('targetId').value = id;
         document.getElementById('targetName').value = nama;
+        document.getElementById('tLat').value = lat;
+        document.getElementById('tLng').value = lng;
+        document.getElementById('tRad').value = rad;
+        
         document.getElementById('camTitle').innerText = nama;
         document.getElementById('modalCam').style.display = 'flex';
         
-        navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
-        navigator.geolocation.watchPosition(pos => {
-            latUser = pos.coords.latitude; lngUser = pos.coords.longitude;
-            document.getElementById('gpsStatus').className = 'alert alert-success py-2 small mb-3';
-            document.getElementById('gpsStatus').innerHTML = '<i class="bi bi-geo-alt-fill"></i> Lokasi Terkunci';
-            document.getElementById('btnKirim').disabled = false;
-        }, err => {
-            document.getElementById('gpsStatus').innerText = "GPS Error: Aktifkan Lokasi!";
-        }, {enableHighAccuracy:true});
+        // Start Kamera
+        if (navigator.mediaDevices) {
+            navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s => document.getElementById('camera').srcObject=s);
+        }
+
+        // Start Tracking GPS Realtime
+        if (navigator.geolocation) {
+            watchID = navigator.geolocation.watchPosition(updateDistanceUI, err => {
+                document.getElementById('gpsDetail').innerText = "Gagal deteksi lokasi.";
+            }, {enableHighAccuracy: true});
+        }
+    }
+
+    function updateDistanceUI(pos) {
+        latUser = pos.coords.latitude; 
+        lngUser = pos.coords.longitude;
+        
+        var tLat = parseFloat(document.getElementById('tLat').value);
+        var tLng = parseFloat(document.getElementById('tLng').value);
+        var tRad = parseFloat(document.getElementById('tRad').value);
+
+        // Hitung Jarak (Haversine)
+        var dist = calcDist(latUser, lngUser, tLat, tLng);
+        dist = Math.round(dist);
+
+        // Update UI
+        document.getElementById('distDisplay').innerText = dist + " m";
+        
+        var statusBox = document.getElementById('gpsStatusBox');
+        var btn = document.getElementById('btnKirim');
+        var detail = document.getElementById('gpsDetail');
+
+        if (dist <= tRad) {
+            // Dalam Jangkauan
+            statusBox.className = "card border-0 shadow-sm mb-3 p-3 text-center bg-success text-white";
+            detail.innerText = `OK! Di dalam radius (${tRad}m)`;
+            detail.className = "text-white opacity-75";
+            btn.disabled = false;
+        } else {
+            // Kejauhan
+            statusBox.className = "card border-0 shadow-sm mb-3 p-3 text-center bg-danger text-white";
+            detail.innerText = `Terlalu jauh! (Max ${tRad}m)`;
+            detail.className = "text-white opacity-75";
+            btn.disabled = true;
+        }
     }
 
     function closeCam() {
         document.getElementById('modalCam').style.display = 'none';
         let stream = document.getElementById('camera').srcObject;
         if(stream) stream.getTracks().forEach(t => t.stop());
+        if(watchID) navigator.geolocation.clearWatch(watchID); // Stop GPS
     }
 
     async function kirimPresensi() {
@@ -160,12 +334,27 @@
             });
             let r = await res.json();
             document.getElementById('loading').classList.add('hidden');
-            alert(r.message);
-            if(r.status === 'success') { closeCam(); window.location.href="index.html"; }
+            
+            if(r.status === 'success') { 
+                alert(r.message);
+                closeCam(); 
+                loadEvents(); // Reload untuk update status tombol jadi "Sudah Hadir"
+            } else {
+                alert("Gagal: " + r.message);
+            }
         } catch(e) {
             document.getElementById('loading').classList.add('hidden');
             alert("Error: " + e);
         }
+    }
+
+    // Helper Hitung Jarak
+    function calcDist(lat1, lon1, lat2, lon2) {
+        var R = 6371000; 
+        var dLat = (lat2-lat1)*Math.PI/180; 
+        var dLon = (lon2-lon1)*Math.PI/180; 
+        var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)*Math.sin(dLon/2); 
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 </script>
 </body>
