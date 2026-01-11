@@ -321,25 +321,26 @@
 
 <script>
   // --- KONFIGURASI: PASTIKAN INI URL TERBARU ANDA ---
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4FaS6MP7um3a3FvBISVIbeY1490jTeFa3J_mftuFYAgus994IFvc1zJJlMtCWL2BHBQ/exec"; 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nnZTluEuE9-xLjlUrJurRyTQB6jYpJAMkF6IyXEfm2vx_ff40vKErdXbocVWPukbmQ/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
-     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984 },
-    { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768 },
-    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423 },
-    { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774 },
-    { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412 },
-    { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591 },
-    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902 },
+     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984, start: 600, end: 730 },
+    { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768, start: 600, end: 730 },
+    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423, start: 600, end: 730 },
+    { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774, start: 600, end: 730 },
+    { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412, start: 730, end: 830 },
+    { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591, start: 600, end: 730 },
+    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902, start: 600, end: 730 },
     // LOKASI BARU
-    { nama: "Catering Pandu", lat: -7.500030621538215, lng: 110.90614961162527 },
-    { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742 },
+    { nama: "Catering Pandu", lat: -7.500030621538215, lng: 110.90614961162527, start: 600, end: 730 },
+    { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742, start: 600, end: 730 },
     //tambah lokasi baru , , 
-    { nama: "Masjid Al Ikhlas Botok, Kerjo, Karanganyar", lat: -7.518997596395203, lng: 111.04124429999999 },
-    { nama: "SMP Muhammadiyah 3 Karangpandan", lat: -7.6205906058938355, lng: 111.06234704232911 },
-    { nama: "SMP Muhammadiyah 10 Surakarta", lat: -7.552680549665942, lng: 110.78133119965328 },
-    { nama: "Masjid Yamp - Jumapolo, Karanganyar", lat: -7.7049863364494815, lng: 111.00101258835446},
-    { nama: "PPM Imam Syuhodo, Polokarto, Sukoharjo", lat: -7.622615604552016, lng: 110.89220351349366}
+    { nama: "Masjid Al Ikhlas Botok, Kerjo, Karanganyar", lat: -7.518997596395203, lng: 111.04124429999999, start: 600, end: 730 },
+    { nama: "SMP Muhammadiyah 3 Karangpandan", lat: -7.6205906058938355, lng: 111.06234704232911, start: 600, end: 730 },
+    { nama: "SMP Muhammadiyah 10 Surakarta", lat: -7.552680549665942, lng: 110.78133119965328, start: 600, end: 730 },
+    { nama: "Masjid Yamp - Jumapolo, Karanganyar", lat: -7.7049863364494815, lng: 111.00101258835446, start: 600, end: 730},
+    { nama: "PPM Imam Syuhodo, Polokarto, Sukoharjo", lat: -7.622615604552016, lng: 110.89220351349366, start: 600, end: 730},
+    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.599104240456491, lng: 110.95243712436272, start: 600, end: 730}
   ];
 
   var CURRENT_USER = null; 
@@ -349,6 +350,11 @@
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
   var gpsErrorMsg = "";
+
+  // --- TAMBAHAN BARU ---
+  var activeStartTime = 600; // Default 06:00
+  var activeEndTime = 730;   // Default 07:30
+  // ---------------------
 
   window.onload = function() {
     try {
@@ -481,19 +487,45 @@
   function validateButtonState() {
     if(!CURRENT_USER) return;
     var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
-    if (day === 0 && timeVal >= 600 && timeVal <= 730) isTimeValid = true; else isTimeValid = false;
     
-    // Uncomment for testing
-    // isTimeValid = true;
+    // CEK WAKTU DINAMIS SESUAI LOKASI
+    if (day === 0 && timeVal >= activeStartTime && timeVal <= activeEndTime) {
+        isTimeValid = true; 
+    } else {
+        isTimeValid = false;
+    }
+    
+    // Format Tampilan Jam untuk Pesan Error (Misal: 600 -> 06:00)
+    var formatTime = (num) => {
+        var s = num.toString().padStart(3, '0'); // 630 -> 0630
+        if(num < 1000) s = "0" + num; // Handle jam pagi
+        return s.substring(0, 2) + ":" + s.substring(2);
+    };
 
     var btn = document.getElementById('btnStartAbsen'); var msg = document.getElementById('dashboardMsg');
     btn.classList.remove('btn-primary', 'btn-secondary'); btn.classList.remove('btn-danger'); msg.style.display = 'none'; msg.className = "";
-    if (isAlreadyPresent) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary'); }
-    else if (!isTimeValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Jadwal:</b> Ahad 06:00 - 07:30 WIB."; msg.style.display = 'block'; }
-    else if (gpsErrorMsg !== "") { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS"; btn.classList.add('btn-secondary'); msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi.`; msg.style.display = 'block'; msg.classList.add('msg-danger'); }
-    else if (latUser === 0 && lngUser === 0) { btn.disabled = true; btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS..."; btn.classList.add('btn-secondary'); }
-    else if (!isLocationValid) { btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat."; msg.style.display = 'block'; }
-    else { btn.disabled = false; btn.innerHTML = '<i class="bi bi-fingerprint" style="font-size:1.2rem;"></i> PRESENSI KAJIAN'; btn.classList.add('btn-primary'); }
+    
+    if (isAlreadyPresent) { 
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-check2-circle'></i> SUDAH PRESENSI"; btn.classList.add('btn-secondary'); 
+    }
+    else if (!isTimeValid) { 
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary'); 
+        // PESAN ERROR JADWAL SPESIFIK
+        msg.innerHTML = `<b>Jadwal Kajian Di Sini:</b><br>Ahad ${formatTime(activeStartTime)} - ${formatTime(activeEndTime)} WIB.`; 
+        msg.style.display = 'block'; 
+    }
+    else if (gpsErrorMsg !== "") { 
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> AKTIFKAN GPS"; btn.classList.add('btn-secondary'); msg.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <b>${gpsErrorMsg}</b><br>Mohon aktifkan lokasi.`; msg.style.display = 'block'; msg.classList.add('msg-danger'); 
+    }
+    else if (latUser === 0 && lngUser === 0) { 
+        btn.disabled = true; btn.innerHTML = "<div class='spinner-border spinner-border-sm'></div> Mencari GPS..."; btn.classList.add('btn-secondary'); 
+    }
+    else if (!isLocationValid) { 
+        btn.disabled = true; btn.innerHTML = "<i class='bi bi-geo-alt'></i> LOKASI TIDAK SESUAI"; btn.classList.add('btn-secondary'); msg.innerHTML = "<b>Anda jauh dari lokasi kajian.</b><br>Silakan mendekat."; msg.style.display = 'block'; 
+    }
+    else { 
+        btn.disabled = false; btn.innerHTML = '<i class="bi bi-fingerprint" style="font-size:1.2rem;"></i> PRESENSI KAJIAN'; btn.classList.add('btn-primary'); 
+    }
   }
 
   async function loadDashboardData() {
@@ -675,13 +707,39 @@
   function updatePosisi(pos) {
     gpsErrorMsg = ""; 
     latUser = pos.coords.latitude; lngUser = pos.coords.longitude; lokasiString = latUser+","+lngUser;
-    var closest=Infinity, name="";
-    DAFTAR_LOKASI.forEach(l => { var d=calcDist(latUser,lngUser,l.lat,l.lng); if(d<closest){closest=d;name=l.nama;} });
-    jarakUser=Math.round(closest); namaLokasiTerdekat=name;
+    
+    var closest=Infinity, locObj=null;
+    
+    // Cari Lokasi Terdekat & Ambil Objeknya
+    DAFTAR_LOKASI.forEach(l => { 
+        var d = calcDist(latUser, lngUser, l.lat, l.lng); 
+        if(d < closest) { closest = d; locObj = l; } 
+    });
+    
+    jarakUser = Math.round(closest); 
+    
+    if (locObj) {
+        namaLokasiTerdekat = locObj.nama;
+        // SET WAKTU AKTIF SESUAI LOKASI TERDEKAT
+        activeStartTime = locObj.start;
+        activeEndTime = locObj.end;
+    }
+
     isLocationValid = (jarakUser <= MAX_RADIUS);
+    
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
-    if(isLocationValid){ btnKirim.disabled=false; statBox.className = "alert alert-success py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${name} (${jarakUser}m)`; } 
-    else { btnKirim.disabled=true; statBox.className = "alert alert-danger py-2 small mb-3"; statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`; }
+    
+    // Update Tampilan Pesan di Kamera
+    if(isLocationValid){ 
+        btnKirim.disabled=false; 
+        statBox.className = "alert alert-success py-2 small mb-3"; 
+        statBox.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${namaLokasiTerdekat} (${jarakUser}m)`; 
+    } else { 
+        btnKirim.disabled=true; 
+        statBox.className = "alert alert-danger py-2 small mb-3"; 
+        statBox.innerHTML = `<i class="bi bi-x-circle"></i> Kejauhan: ${jarakUser}m`; 
+    }
+    
     validateButtonState();
   }
   function calcDist(lat1,lon1,lat2,lon2) { var R=6371000, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); }
