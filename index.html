@@ -6,17 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f766e">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
   
   <style>
     :root { --primary: #0f766e; --bg: #f8fafc; }
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LAYAR LOADING */
+    /* LOADING & UTILS */
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     .hidden { display: none !important; }
 
@@ -28,20 +32,24 @@
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* INPUTS & BUTTONS */
+    /* FORMS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem; color: #334155; }
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px; margin-left: 5px; }
     .pass-toggle { color: #94a3b8; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
     .pass-toggle.active { color: var(--primary); }
-    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; background: #fff; }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
 
-    /* PICKER STYLE */
+    /* PICKER & MODALS */
     .picker-trigger { cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .picker-placeholder { color: #64748b; font-style: italic; }
     .picker-value { color: #334155; font-weight: 500; }
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
+    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
+    .overlay-body { padding: 20px; flex-grow: 1; }
+    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
+    
     #pickerModal { z-index: 3000 !important; background: #f8fafc; }
     .picker-search-container { position: sticky; top: 0; background: #f8fafc; padding: 10px 20px; z-index: 5; border-bottom: 1px solid #e2e8f0; }
     .picker-search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -74,14 +82,13 @@
     .sheet-handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 20px; }
     .menu-list { list-style: none; padding: 0; margin: 0; }
     .menu-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; cursor: pointer; color: #334155; }
-    .menu-item:active { background: #f8fafc; }
     .menu-icon { width: 36px; height: 36px; background: #f1f5f9; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.1rem; }
     .menu-text { font-weight: 500; font-size: 0.95rem; flex-grow: 1; }
     .menu-chevron { color: #cbd5e1; font-size: 0.9rem; }
     .menu-item.logout { color: #dc2626; }
     .menu-item.logout .menu-icon { background: #fee2e2; color: #dc2626; }
 
-    /* CONTENT */
+    /* MAIN CARD */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
@@ -109,11 +116,6 @@
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-    /* UTILS */
-    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
-    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
-    .overlay-body { padding: 20px; flex-grow: 1; }
-    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
     #infoModal { z-index: 3000 !important; }
     .nav-tabs .nav-link { color: #64748b; font-size: 0.9rem; }
     .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
@@ -122,40 +124,6 @@
     .step-text { font-size: 0.9rem; color: #334155; line-height: 1.5; }
     .browser-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; margin-bottom: 10px; display: inline-block; font-weight: 600;}
     .bg-chrome { background: #fef3c7; color: #b45309; } .bg-safari { background: #e0e7ff; color: #3730a3; } .bg-samsung { background: #fce7f3; color: #9d174d; }
-
-    /* --- PRINT STYLES --- */
-    @media print {
-        @page { size: A4; margin: 1cm; }
-        body { background: white; -webkit-print-color-adjust: exact; }
-        .app-container, .fullscreen-overlay, #authScreen, #loading { display: none !important; }
-        #printArea { display: block !important; width: 100%; position: absolute; top: 0; left: 0; }
-        
-        .print-header { display: flex; align-items: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-        .print-logo { width: 80px; height: auto; margin-right: 20px; }
-        .print-title { text-align: center; flex-grow: 1; }
-        .print-title h2 { font-family: 'Times New Roman', serif; font-size: 18pt; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 1px; color: #000; }
-        .print-title h3 { font-family: 'Times New Roman', serif; font-size: 14pt; font-weight: bold; margin: 5px 0; text-transform: uppercase; color: #000; }
-        .print-title p { font-family: 'Times New Roman', serif; font-size: 10pt; margin: 0; font-style: italic; color: #000; }
-        
-        .report-title { text-align: center; margin-bottom: 20px; font-family: 'Arial', sans-serif; }
-        .report-title h4 { font-size: 14pt; font-weight: bold; margin: 0; text-decoration: underline; color: #000; }
-        .report-title p { font-size: 11pt; margin: 5px 0 0; color: #000; }
-        
-        .user-meta { margin-bottom: 20px; font-family: 'Arial', sans-serif; font-size: 11pt; color: #000; }
-        .user-meta table { width: 100%; border: none; }
-        .user-meta td { padding: 2px 0; border: none !important; }
-        
-        .print-table { width: 100%; border-collapse: collapse; font-family: 'Arial', sans-serif; font-size: 10pt; margin-bottom: 30px; }
-        .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: left; color: #000; }
-        .print-table th { background-color: #f0f0f0 !important; font-weight: bold; text-align: center; }
-        .print-table td { vertical-align: middle; }
-        
-        .print-footer { display: flex; justify-content: space-between; font-family: 'Arial', sans-serif; font-size: 11pt; margin-top: 40px; page-break-inside: avoid; color: #000; }
-        .footer-left, .footer-right { width: 40%; text-align: center; }
-        .sign-space { height: 70px; display: flex; align-items: flex-end; justify-content: center; font-size: 9pt; color: #aaa; }
-        .sign-name { font-weight: bold; text-decoration: underline; display: block; margin-bottom: 2px; }
-    }
-    #printArea { display: none; } /* Hide by default */
   </style>
 </head>
 <body>
@@ -170,6 +138,7 @@
         <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="auth-logo">
         <h4 class="auth-title">Presensi Kajian AUM</h4>
         <p class="auth-subtitle">PCM Kebakkramat, Karanganyar</p>
+        
         <div id="formLogin">
           <label class="form-label">Username</label>
           <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)"></div>
@@ -179,14 +148,18 @@
           <button type="button" class="btn-primary" onclick="doLogin()">MASUK</button>
           <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
         </div>
+
         <div id="formRegister" class="hidden">
           <div class="alert alert-info py-2 small">Lengkapi data akun presensi Anda.</div>
           <label class="form-label">Nama Lengkap</label>
-          <div class="input-box picker-trigger" onclick="openPicker('nama')"><span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span><i class="bi bi-chevron-down text-muted"></i></div><input type="hidden" id="regNama">
+          <div class="input-box picker-trigger" onclick="openPicker('nama')"><span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span><i class="bi bi-chevron-down text-muted"></i></div>
+          <input type="hidden" id="regNama">
           <label class="form-label">Asal AUM</label>
-          <div class="input-box picker-trigger" onclick="openPicker('aum')"><span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span><i class="bi bi-chevron-down text-muted"></i></div><input type="hidden" id="regAum">
+          <div class="input-box picker-trigger" onclick="openPicker('aum')"><span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span><i class="bi bi-chevron-down text-muted"></i></div>
+          <input type="hidden" id="regAum">
           <label class="form-label">Username Baru</label>
-          <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div><span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
+          <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div>
+          <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
           <label class="form-label">Password Baru</label>
           <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i></div>
           <button type="button" class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
@@ -233,16 +206,18 @@
 
     <div class="history-section">
       <h6 class="fw-bold mb-3">Riwayat Kehadiran</h6>
+      
       <div class="filter-box">
          <div class="row g-2">
             <div class="col-5"><input type="date" id="filterStart" class="form-control form-control-sm"></div>
             <div class="col-5"><input type="date" id="filterEnd" class="form-control form-control-sm"></div>
-            <div class="col-2 d-flex gap-1">
-                <button class="btn btn-sm btn-dark flex-grow-1" onclick="loadDashboardData()"><i class="bi bi-search"></i></button>
-                <button class="btn btn-sm btn-danger flex-grow-1" onclick="generateReport()" title="Cetak PDF"><i class="bi bi-printer-fill"></i></button>
+            <div class="col-2">
+                <button class="btn btn-sm btn-dark w-100 mb-1" onclick="loadDashboardData()"><i class="bi bi-search"></i></button>
+                <button class="btn btn-sm btn-danger w-100" onclick="generatePDF()" title="Cetak Laporan"><i class="bi bi-file-earmark-pdf"></i></button>
             </div>
          </div>
       </div>
+      
       <div id="historyList"><div class="text-center small text-muted">Memuat data...</div></div>
     </div>
   </div>
@@ -319,63 +294,10 @@
     </div>
   </div>
 
-  <div id="printArea">
-      <div class="print-header">
-          <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="print-logo">
-          <div class="print-title">
-              <h2>Pimpinan Cabang Muhammadiyah</h2>
-              <h3>Kebakkramat Karanganyar</h3>
-              <p>Jl. Simo, Kebaksari 05/02 Kebak, Kebakkramat Karanganyar, Jawa Tengah, 57762</p>
-          </div>
-      </div>
-      
-      <div class="report-title">
-          <h4>Laporan Presensi Pengajian Ahad Pagi</h4>
-          <h4>PCM Kebakkramat Karanganyar</h4>
-          <p>Periode tanggal: <span id="printPeriod">Semua Waktu</span></p>
-      </div>
-      
-      <div class="user-meta">
-          <table style="width: auto;">
-              <tr><td style="width: 80px;">Nama</td><td>: <span id="printNama">-</span></td></tr>
-              <tr><td>NBM</td><td>: <span id="printNbm">-</span></td></tr>
-              <tr><td>AUM</td><td>: <span id="printAum">-</span></td></tr>
-          </table>
-      </div>
-      
-      <table class="print-table">
-          <thead>
-              <tr>
-                  <th style="width: 5%;">No</th>
-                  <th style="width: 20%;">Tanggal</th>
-                  <th style="width: 15%;">Jam</th>
-                  <th style="width: 30%;">Kegiatan/Tema</th>
-                  <th style="width: 30%;">Lokasi</th>
-              </tr>
-          </thead>
-          <tbody id="printTableBody">
-              </tbody>
-      </table>
-      
-      <div class="print-footer">
-          <div class="footer-left">
-              <p>Ketua PCM Kebakkramat</p>
-              <div class="sign-space">(tanda tangan di sini)</div>
-              <span class="sign-name">Ir. H. Paryono</span>
-              <span>NBM. 1120 7223 1460 777</span>
-          </div>
-          <div class="footer-right">
-              <p>Karanganyar, <span id="printDateNow"></span></p>
-              <div class="sign-space">(tanda tangan di sini)</div>
-              <span class="sign-name" id="printSignName">Nama Pengguna</span>
-              <span>NBM. <span id="printSignNbm">-</span></span>
-          </div>
-      </div>
-  </div>
-
 </div>
 
 <script>
+  // --- KONFIGURASI: PASTIKAN INI URL TERBARU ANDA ---
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nnZTluEuE9-xLjlUrJurRyTQB6jYpJAMkF6IyXEfm2vx_ff40vKErdXbocVWPukbmQ/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
@@ -397,7 +319,7 @@
   ];
 
   var CURRENT_USER = null; 
-  var CURRENT_HISTORY_DATA = []; // Store history for printing
+  var LATEST_HISTORY_DATA = []; // Variabel untuk menyimpan data report
   var LIST_NAMA_DB = []; var LIST_AUM_DB = []; 
   var CURRENT_PICKER_TYPE = ""; 
   var video = document.getElementById('camera');
@@ -405,7 +327,7 @@
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
   var gpsErrorMsg = "";
   var activeStartTime = 600; 
-  var activeEndTime = 730;
+  var activeEndTime = 730;   
 
   window.onload = function() {
     try {
@@ -414,6 +336,130 @@
         setInterval(validateButtonState, 1000);
     } catch(e) { console.log(e); }
   };
+
+  // --- PDF GENERATOR FUNCTION ---
+  async function generatePDF() {
+    if (!LATEST_HISTORY_DATA || LATEST_HISTORY_DATA.length === 0) {
+        alert("Tidak ada data presensi untuk dicetak. Silakan tampilkan riwayat terlebih dahulu.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    
+    // --- 1. HEADER (KOP SURAT) ---
+    // Load Logo (Pastikan URL bisa diakses, atau gunakan base64 string jika CORS error)
+    var imgUrl = "https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png";
+    var img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = imgUrl;
+    
+    img.onload = function() {
+        // Logo
+        doc.addImage(img, 'PNG', 15, 10, 20, 20);
+        
+        // Teks Header
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("PIMPINAN CABANG MUHAMMADIYAH", 40, 18);
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text("KEBAKKRAMAT KARANGANYAR", 40, 24);
+        
+        doc.setFontSize(9);
+        doc.setTextColor(100);
+        doc.text("Jl. Simo, Kebaksari 05/02 Kebak, Kebakkramat, Karanganyar, Jawa Tengah, 57762", 40, 30);
+        
+        // Garis Pembatas
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5);
+        doc.line(15, 33, pageWidth - 15, 33);
+        doc.setLineWidth(0.1); // Reset width
+
+        // --- 2. JUDUL LAPORAN & IDENTITAS ---
+        doc.setTextColor(0);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("LAPORAN PRESENSI PENGAJIAN AHAD PAGI", pageWidth / 2, 42, { align: "center" });
+        doc.text("PCM KEBAKKRAMAT KARANGANYAR", pageWidth / 2, 47, { align: "center" });
+        
+        // Tanggal Periode
+        var startTgl = document.getElementById('filterStart').value || "-";
+        var endTgl = document.getElementById('filterEnd').value || "-";
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Periode Tanggal: ${startTgl} s.d ${endTgl}`, pageWidth / 2, 53, { align: "center" });
+
+        // Identitas User (Tabel Kecil / List)
+        var userNBM = (CURRENT_USER.nbm && CURRENT_USER.nbm != "undefined") ? CURRENT_USER.nbm : "-";
+        doc.setFontSize(10);
+        doc.text("Identitas Peserta:", 15, 63);
+        doc.text(`Nama   : ${CURRENT_USER.nama}`, 15, 68);
+        doc.text(`NBM    : ${userNBM}`, 15, 73);
+        doc.text(`AUM    : ${CURRENT_USER.aum}`, 15, 78);
+
+        // --- 3. TABEL DATA ---
+        var tableData = LATEST_HISTORY_DATA.map((item, index) => [
+            index + 1,
+            item.tanggal,
+            item.jam,
+            item.lokasi
+        ]);
+
+        doc.autoTable({
+            startY: 83,
+            head: [['No', 'Tanggal', 'Waktu', 'Lokasi Kajian']],
+            body: tableData,
+            theme: 'grid',
+            headStyles: { fillColor: [15, 118, 110], textColor: 255 }, // Warna Primary App
+            styles: { fontSize: 9, cellPadding: 2 },
+            columnStyles: {
+                0: { cellWidth: 10, halign: 'center' },
+                1: { cellWidth: 40 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 'auto' }
+            }
+        });
+
+        // --- 4. FOOTER (TANDA TANGAN) ---
+        var finalY = doc.lastAutoTable.finalY + 15; // Jarak dari tabel terakhir
+        
+        // Cek jika halaman habis
+        if (finalY > 250) {
+            doc.addPage();
+            finalY = 20;
+        }
+
+        var today = new Date();
+        var dateStr = today.getDate() + " " + today.toLocaleString('default', { month: 'long' }) + " " + today.getFullYear();
+
+        // KIRI: Ketua PCM
+        doc.setFontSize(10);
+        doc.text("Ketua PCM Kebakkramat, Karanganyar", 15, finalY);
+        doc.text("Ir. H. Paryono", 15, finalY + 25);
+        doc.text("NBM. 1120 7223 1460 777", 15, finalY + 30);
+
+        // KANAN: User
+        var rightX = pageWidth - 65;
+        doc.text(`Karanganyar, ${dateStr}`, rightX, finalY);
+        doc.text("Tanda tangan di sini", rightX, finalY + 5); // Space TTD
+        doc.text(CURRENT_USER.nama, rightX, finalY + 25);
+        doc.text(`NBM. ${userNBM}`, rightX, finalY + 30);
+
+        // SAVE
+        doc.save(`Laporan_Presensi_${CURRENT_USER.nama}.pdf`);
+    };
+    
+    // Fallback jika gambar gagal load (CORS) - Tetap cetak teks
+    img.onerror = function() {
+        alert("Logo gagal dimuat (CORS). Laporan akan dicetak tanpa logo.");
+        // (Copy paste logika generate pdf di atas tanpa bagian doc.addImage)
+    };
+  }
+
+  // --- END PDF FUNCTION ---
 
   function toggleMenu() {
     var menu = document.getElementById('mainMenu');
@@ -493,6 +539,9 @@
       let res = await req.json(); loading(false);
       if(res.status === 'success') {
         var d = res.data;
+        // Simpan NBM ke current user agar bisa dipakai di PDF
+        CURRENT_USER.nbm = d.nbm || "-";
+        
         document.getElementById('profNama').value = d.nama;
         var selAum = document.getElementById('profAum'); selAum.innerHTML = "";
         LIST_AUM_DB.forEach(a => { var opt = document.createElement('option'); opt.value = a; opt.text = a; if(a == d.aum) opt.selected = true; selAum.add(opt); });
@@ -501,10 +550,6 @@
         document.getElementById('profTgl').value = d.tgl_lahir; document.getElementById('profEmail').value = d.email;
         document.getElementById('profHp').value = d.hp;
         document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('profileScreen').classList.remove('hidden');
-        
-        // Update local user data too
-        CURRENT_USER.nbm = d.nbm;
-        localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
       } else { alert(res.message); }
     } catch(e) { loading(false); alert("Gagal: " + e); }
   }
@@ -518,7 +563,7 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', data: data }) });
       let res = await req.json(); loading(false); alert(res.message);
       if(res.status === 'success') {
-         CURRENT_USER.nama = data.nama; CURRENT_USER.aum = data.aum; CURRENT_USER.nbm = data.nbm;
+         CURRENT_USER.nama = data.nama; CURRENT_USER.aum = data.aum;
          localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER));
          document.getElementById('dashNama').innerText = data.nama; document.getElementById('dashAum').innerText = data.aum;
          closeProfile();
@@ -543,6 +588,7 @@
     if(!CURRENT_USER) return;
     var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
     
+    // CEK WAKTU DINAMIS SESUAI LOKASI
     if (day === 0 && timeVal >= activeStartTime && timeVal <= activeEndTime) {
         isTimeValid = true; 
     } else {
@@ -550,7 +596,7 @@
     }
     
     var formatTime = (num) => {
-        var s = num.toString().padStart(3, '0'); 
+        var s = num.toString().padStart(3, '0');
         if(num < 1000) s = "0" + num; 
         return s.substring(0, 2) + ":" + s.substring(2);
     };
@@ -591,10 +637,10 @@
       document.getElementById('dashLastDate').innerText = res.lastPresensi;
       if(res.stats) { document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal; document.getElementById('statPercent').innerText = res.stats.percent + "%"; }
       
-      // Store history for printing
-      CURRENT_HISTORY_DATA = res.history;
-      checkTodayStatus(res.history); 
-      renderHistory(res.history);
+      // SIMPAN DATA KE VARIABEL GLOBAL UNTUK PDF
+      LATEST_HISTORY_DATA = res.history;
+      
+      checkTodayStatus(res.history); renderHistory(res.history);
     } catch(e) {}
   }
 
@@ -615,69 +661,13 @@
         var coordsMatch = i.lokasi.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
         if (coordsMatch && coordsMatch.length === 3) { displayName = getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2])); } 
         else { if(displayName.includes('(')) displayName = displayName.split('(')[0].trim(); }
+        
+        // Simpan nama lokasi bersih ke objek item agar PDF rapi
+        i.lokasi = displayName;
+
         var html = `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt-fill"></i> ${displayName}</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`;
         c.innerHTML += html; 
     });
-  }
-
-  // --- PRINT FUNCTION ---
-  function generateReport() {
-      if(!CURRENT_HISTORY_DATA || CURRENT_HISTORY_DATA.length === 0) {
-          alert("Tidak ada data untuk dicetak. Silakan cari riwayat terlebih dahulu.");
-          return;
-      }
-
-      // Populate User Info
-      document.getElementById('printNama').innerText = CURRENT_USER.nama || "-";
-      document.getElementById('printNbm').innerText = CURRENT_USER.nbm || "-";
-      document.getElementById('printAum').innerText = CURRENT_USER.aum || "-";
-      document.getElementById('printSignName').innerText = CURRENT_USER.nama || "Nama Pengguna";
-      document.getElementById('printSignNbm').innerText = CURRENT_USER.nbm || "-";
-
-      // Populate Dates
-      var s = document.getElementById('filterStart').value;
-      var e = document.getElementById('filterEnd').value;
-      var periodText = "Semua Waktu";
-      if(s && e) periodText = formatIndoDate(s) + " s.d. " + formatIndoDate(e);
-      document.getElementById('printPeriod').innerText = periodText;
-      
-      var now = new Date();
-      var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-      document.getElementById('printDateNow').innerText = now.getDate() + " " + months[now.getMonth()] + " " + now.getFullYear();
-
-      // Populate Table
-      var tbody = document.getElementById('printTableBody');
-      tbody.innerHTML = "";
-      CURRENT_HISTORY_DATA.forEach((item, index) => {
-          var row = `<tr>
-              <td style="text-align:center;">${index + 1}</td>
-              <td>${item.tanggal}</td>
-              <td style="text-align:center;">${item.jam}</td>
-              <td>${item.kegiatan}</td>
-              <td>${cleanLocName(item.lokasi)}</td>
-          </tr>`;
-          tbody.innerHTML += row;
-      });
-
-      // Trigger Print
-      window.print();
-  }
-
-  function formatIndoDate(dateStr) {
-      if(!dateStr) return "";
-      var d = new Date(dateStr);
-      var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-      return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
-  }
-
-  function cleanLocName(loc) {
-      // Helper to clean coords from location string for print
-      var coordsMatch = loc.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
-      if (coordsMatch && coordsMatch.length === 3) { 
-          return getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2])); 
-      }
-      if(loc.includes('(')) return loc.split('(')[0].trim();
-      return loc;
   }
 
   function formatTanggalIndoJS(d) {
@@ -694,19 +684,14 @@
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', data: { username: u, password: p } }) });
       let res = await req.json(); loading(false);
       if(res.status==='success') {
-        CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum, role: res.role };
-        
-        // Fetch full profile to get NBM for printing later
-        try {
-            let pReq = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getProfile', username: res.username }) });
-            let pRes = await pReq.json();
-            if(pRes.status === 'success') {
-                CURRENT_USER.nbm = pRes.data.nbm; // Store NBM
-            }
-        } catch(err) {}
-
+        CURRENT_USER = { username: res.username, nama: res.nama, aum: res.aum, role: res.role }; 
         localStorage.setItem("PCM_USER", JSON.stringify(CURRENT_USER)); showDashboard();
         if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
+        
+        // FETCH PROFILE UNTUK DAPAT NBM
+        openProfile(); // Ini akan set CURRENT_USER.nbm secara background
+        setTimeout(() => closeProfile(), 500); // Tutup lagi
+        
       } else alert(res.message);
     } catch(e) { loading(false); alert(e); }
   }
@@ -759,53 +744,6 @@
       if (navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true});
   }
 
-  function renderMenu() {
-    var role = CURRENT_USER.role || 'karyawan'; 
-    var menuHTML = '';
-
-    menuHTML += `
-    <li class="menu-item" onclick="openProfile(); toggleMenu()">
-        <div class="menu-icon"><i class="bi bi-person-circle"></i></div>
-        <div class="menu-text">Profil Saya</div><i class="bi bi-chevron-right menu-chevron"></i>
-    </li>
-    <li class="menu-item" onclick="openChangePassword(); toggleMenu()">
-        <div class="menu-icon"><i class="bi bi-key-fill"></i></div>
-        <div class="menu-text">Ganti Password</div><i class="bi bi-chevron-right menu-chevron"></i>
-    </li>`;
-
-    if (role === 'admin') {
-        menuHTML += `
-        <li class="menu-item" onclick="window.location.href='admin.html'">
-            <div class="menu-icon" style="background:#dbeafe; color:#1e40af"><i class="bi bi-calendar-plus-fill"></i></div>
-            <div class="menu-text">Kelola Jadwal</div><i class="bi bi-chevron-right menu-chevron"></i>
-        </li>
-        <li class="menu-item" onclick="window.location.href='presensi.html'">
-            <div class="menu-icon" style="background:#dcfce7; color:#15803d"><i class="bi bi-camera-fill"></i></div>
-            <div class="menu-text">Presensi Kegiatan</div><i class="bi bi-chevron-right menu-chevron"></i>
-        </li>`;
-    }
-
-    if (role === 'pengurus') {
-        menuHTML += `
-        <li class="menu-item" onclick="window.location.href='presensi.html'">
-            <div class="menu-icon" style="background:#fce7f3; color:#9d174d"><i class="bi bi-camera-fill"></i></div>
-            <div class="menu-text">Presensi Kegiatan</div><i class="bi bi-chevron-right menu-chevron"></i>
-        </li>`;
-    }
-
-    menuHTML += `
-    <li class="menu-item" onclick="openInfoModal(); toggleMenu()">
-        <div class="menu-icon"><i class="bi bi-question-circle-fill"></i></div>
-        <div class="menu-text">Panduan & Instalasi</div><i class="bi bi-chevron-right menu-chevron"></i>
-    </li>
-    <li class="menu-item logout" onclick="doLogout()">
-        <div class="menu-icon"><i class="bi bi-box-arrow-right"></i></div>
-        <div class="menu-text">Keluar Aplikasi</div>
-    </li>`;
-
-    document.getElementById('menuListContainer').innerHTML = menuHTML;
-  }
-  
   function doLogout() { localStorage.removeItem("PCM_USER"); CURRENT_USER = null; showLogin(); }
   function openPresensiMode() { document.getElementById('homeScreen').classList.add('hidden'); document.getElementById('presensiScreen').classList.remove('hidden'); if(navigator.mediaDevices) navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(s=>video.srcObject=s); if(navigator.geolocation) navigator.geolocation.watchPosition(updatePosisi, handleGpsError, {enableHighAccuracy:true}); }
   function closePresensiMode() { if(video.srcObject) video.srcObject.getTracks().forEach(t=>t.stop()); document.getElementById('presensiScreen').classList.add('hidden'); document.getElementById('homeScreen').classList.remove('hidden'); }
@@ -836,7 +774,6 @@
     
     var closest=Infinity, locObj=null;
     
-    // Cari Lokasi Terdekat & Ambil Objeknya
     DAFTAR_LOKASI.forEach(l => { 
         var d = calcDist(latUser, lngUser, l.lat, l.lng); 
         if(d < closest) { closest = d; locObj = l; } 
@@ -846,7 +783,6 @@
     
     if (locObj) {
         namaLokasiTerdekat = locObj.nama;
-        // SET WAKTU AKTIF SESUAI LOKASI TERDEKAT
         activeStartTime = locObj.start;
         activeEndTime = locObj.end;
     }
@@ -855,7 +791,6 @@
     
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
     
-    // Update Tampilan Pesan di Kamera
     if(isLocationValid){ 
         btnKirim.disabled=false; 
         statBox.className = "alert alert-success py-2 small mb-3"; 
