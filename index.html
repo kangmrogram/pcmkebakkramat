@@ -366,14 +366,14 @@
         doc.addImage(imgLogo, 'PNG', 15, 10, 20, 20); // x, y, w, h
         
         // Teks Kop Surat
-        doc.setFont("times", "bold");
+        doc.setFont("Helvetica", "bold");
         doc.setFontSize(14);
         doc.text("PIMPINAN CABANG MUHAMMADIYAH", 40, 18);
         doc.setFontSize(12);
-        doc.text("KEBAKKRAMAT KARANGANYAR", 40, 24);
+        doc.text("KEBAKKRAMAT, KARANGANYAR", 40, 24);
         
         // Alamat (Font Normal)
-        doc.setFont("times", "normal");
+        doc.setFont("Helvetica", "normal");
         doc.setFontSize(9);
         doc.text("Jl. Simo, Kebaksari 05/02 Kebak, Kebakkramat, Karanganyar, Jawa Tengah, 57762", 40, 30);
         
@@ -382,7 +382,7 @@
         doc.line(15, 35, pageWidth - 15, 35);
         
         // 2. JUDUL LAPORAN & PERIODE
-        doc.setFont("times", "bold");
+        doc.setFont("Helvetica", "bold");
         doc.setFontSize(12);
         doc.text("LAPORAN PRESENSI PENGAJIAN AHAD PAGI", pageWidth / 2, 45, { align: "center" });
         doc.text("PCM KEBAKKRAMAT KARANGANYAR", pageWidth / 2, 51, { align: "center" });
@@ -400,7 +400,7 @@
             periodeStr = formatTanggalIndoSimple(firstDay) + " s.d. " + formatTanggalIndoSimple(today);
         }
         
-        doc.setFont("times", "normal");
+        doc.setFont("Helvetica", "normal");
         doc.setFontSize(10);
         doc.text("Periode: " + periodeStr, pageWidth / 2, 57, { align: "center" });
         
@@ -459,7 +459,7 @@
         
         // Kanan: User
         doc.text(tglCetak, pageWidth - 60, finalY);
-        doc.text("Pembuat Laporan,", pageWidth - 60, finalY + 5);
+        doc.text("Pembuat,", pageWidth - 60, finalY + 5);
         
         // Space Tanda Tangan
         doc.text("Ir. H. Paryono", 15, finalY + 30);
