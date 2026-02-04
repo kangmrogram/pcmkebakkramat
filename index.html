@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <style>
@@ -16,51 +20,32 @@
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LAYAR LOADING (Z-Index Tertinggi) */
+    /* LOADING & UTILS */
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     .hidden { display: none !important; }
 
-    /* AUTH SCREEN (Login) - Z-Index Tinggi agar tidak tertutup */
-    #authScreen { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: white; z-index: 2000; 
-        display: flex; flex-direction: column; overflow-y: auto; 
-    }
-    
-    .auth-help-btn { 
-        position: absolute; top: 20px; right: 20px; 
-        background: #f1f5f9; color: var(--primary); border: none; 
-        width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; 
-        display: flex; align-items: center; justify-content: center; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 2010; 
-    }
-    
-    /* UTILITIES */
-    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
-    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
-    .overlay-body { padding: 20px; flex-grow: 1; }
-    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
-
+    /* AUTH SCREEN */
+    #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: flex; flex-direction: column; overflow-y: auto; }
+    .auth-help-btn { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: var(--primary); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 2010; }
     .auth-logo { width: 90px; display: block; margin: 0 auto 15px; }
     .auth-title { text-align: center; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-size: 1.4rem; line-height: 1.2; }
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* INPUTS & BUTTONS */
+    /* INPUTS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem; color: #334155; }
     .form-label { font-size: 0.75rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px; margin-left: 5px; }
     .pass-toggle { color: #94a3b8; cursor: pointer; font-size: 1.2rem; margin-left: 8px; }
     .pass-toggle.active { color: var(--primary); }
-    .filter-input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; background: #fff; }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
 
-    /* PICKER STYLE */
+    /* PICKER */
     .picker-trigger { cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .picker-placeholder { color: #64748b; font-style: italic; }
     .picker-value { color: #334155; font-weight: 500; }
-    #pickerModal { z-index: 3000 !important; background: #f8fafc; } /* Diatas auth screen */
+    #pickerModal { z-index: 3000 !important; background: #f8fafc; }
     .picker-search-container { position: sticky; top: 0; background: #f8fafc; padding: 10px 20px; z-index: 5; border-bottom: 1px solid #e2e8f0; }
     .picker-search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #cbd5e1; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .picker-list { padding: 10px 20px; padding-bottom: 50px; }
@@ -85,7 +70,6 @@
     .user-info-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 16px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
     .u-text h5 { margin: 0; font-size: 0.95rem; font-weight: 600; }
     .u-text p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
-    .btn-detail-profile { background: white; color: var(--primary); border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
     /* MENU BOTTOM SHEET */
     .menu-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1200; opacity: 0; visibility: hidden; transition: 0.3s; }
@@ -102,7 +86,7 @@
     .menu-item.logout { color: #dc2626; }
     .menu-item.logout .menu-icon { background: #fee2e2; color: #dc2626; }
 
-    /* CONTENT */
+    /* CARD & STATS */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
@@ -130,6 +114,12 @@
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
+    /* OVERLAYS */
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
+    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
+    .overlay-body { padding: 20px; flex-grow: 1; }
+    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
+
     #infoModal { z-index: 3000 !important; }
     .nav-tabs .nav-link { color: #64748b; font-size: 0.9rem; }
     .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
@@ -148,10 +138,8 @@
 
   <div id="authScreen">
     <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
-        
         <button type="button" class="auth-help-btn" onclick="openInfoModal()" title="Panduan & Instalasi"><i class="bi bi-question-lg"></i></button>
-
-        <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="auth-logo">
+        <img src="https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png" class="auth-logo">
         <h4 class="auth-title">Presensi Kajian AUM</h4>
         <p class="auth-subtitle">PCM Kebakkramat, Karanganyar</p>
         
@@ -159,36 +147,25 @@
           <label class="form-label">Username</label>
           <div class="input-box"><input type="text" id="loginUser" class="form-control-plain" placeholder="Username / Email / No.HP" oninput="validateUsername(this)"></div>
           <span id="loginUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
-          
           <label class="form-label">Password</label>
           <div class="input-box"><input type="password" id="loginPass" class="form-control-plain" placeholder="Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('loginPass', this)"></i></div>
-          
           <button type="button" class="btn-primary" onclick="doLogin()">MASUK</button>
           <div class="toggle-link" onclick="showRegister()">Klaim Nama / Daftar Akun</div>
         </div>
 
         <div id="formRegister" class="hidden">
           <div class="alert alert-info py-2 small">Lengkapi data akun presensi Anda.</div>
-          
           <label class="form-label">Nama Lengkap</label>
-          <div class="input-box picker-trigger" onclick="openPicker('nama')">
-             <span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span><i class="bi bi-chevron-down text-muted"></i>
-          </div>
+          <div class="input-box picker-trigger" onclick="openPicker('nama')"><span id="textRegNama" class="picker-placeholder">-- Pilih Nama --</span><i class="bi bi-chevron-down text-muted"></i></div>
           <input type="hidden" id="regNama">
-          
           <label class="form-label">Asal AUM</label>
-          <div class="input-box picker-trigger" onclick="openPicker('aum')">
-             <span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span><i class="bi bi-chevron-down text-muted"></i>
-          </div>
+          <div class="input-box picker-trigger" onclick="openPicker('aum')"><span id="textRegAum" class="picker-placeholder">-- Pilih AUM --</span><i class="bi bi-chevron-down text-muted"></i></div>
           <input type="hidden" id="regAum">
-          
           <label class="form-label">Username Baru</label>
           <div class="input-box"><input type="text" id="regUser" class="form-control-plain" placeholder="Buat Username" oninput="validateUsername(this)"></div>
           <span id="regUserError" class="error-text hidden">Tidak boleh ada spasi!</span>
-          
           <label class="form-label">Password Baru</label>
           <div class="input-box"><input type="password" id="regPass" class="form-control-plain" placeholder="Buat Password"><i class="bi bi-eye-slash pass-toggle" onclick="togglePassword('regPass', this)"></i></div>
-          
           <button type="button" class="btn-primary" onclick="doRegister()">DAFTAR AKUN</button>
           <div class="toggle-link" onclick="showLogin()">Sudah punya akun? Login</div>
         </div>
@@ -199,7 +176,7 @@
     <div class="dashboard-header">
       <div class="header-top">
         <div class="header-brand">
-            <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png'">
+            <img src="icon-512.png" class="header-logo-img" alt="Logo" onerror="this.src='https://www.freepnglogos.com/uploads/logo-muhammadiyah-png/hq-free-logo-muhammadiyah-png-download-16.png'">
             <div class="header-title"><h1>Presensi Kajian AUM</h1><p>PCM Kebakkramat, Karanganyar</p></div>
         </div>
         <button class="btn-menu-toggle" onclick="toggleMenu()"><i class="bi bi-list"></i></button>
@@ -213,8 +190,7 @@
     <div class="bottom-sheet" id="mainMenu">
         <div class="sheet-handle"></div>
         <h6 class="fw-bold mb-3 ps-2 text-dark">Menu Aplikasi</h6>
-        <ul class="menu-list" id="menuListContainer">
-            </ul>
+        <ul class="menu-list" id="menuListContainer"></ul>
     </div>
 
     <div class="main-card">
@@ -238,7 +214,14 @@
          <div class="row g-2">
             <div class="col-5"><input type="date" id="filterStart" class="form-control form-control-sm"></div>
             <div class="col-5"><input type="date" id="filterEnd" class="form-control form-control-sm"></div>
-            <div class="col-2"><button class="btn btn-sm btn-dark w-100" onclick="loadDashboardData()"><i class="bi bi-search"></i></button></div>
+            <div class="col-2">
+                <button class="btn btn-sm btn-dark w-100" onclick="loadDashboardData()"><i class="bi bi-search"></i></button>
+            </div>
+         </div>
+         <div class="mt-2">
+             <button class="btn btn-sm btn-outline-danger w-100 fw-bold" onclick="downloadPDF()">
+                 <i class="bi bi-file-earmark-pdf-fill"></i> Download Laporan (PDF)
+             </button>
          </div>
       </div>
       <div id="historyList"><div class="text-center small text-muted">Memuat data...</div></div>
@@ -320,27 +303,20 @@
 </div>
 
 <script>
-  // --- KONFIGURASI: PASTIKAN INI URL TERBARU ANDA ---
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nnZTluEuE9-xLjlUrJurRyTQB6jYpJAMkF6IyXEfm2vx_ff40vKErdXbocVWPukbmQ/exec"; 
+  // --- KONFIGURASI ---
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nnZTluEuE9-xLjlUrJurRyTQB6jYpJAMkF6IyXEfm2vx_ff40vKErdXbocVWPukbmQ/exec";
+  //const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2vdsRDYW9PV4-5sjABSgdZe8065gndHTc__K0BStZsf6rui-2I0ru0YM9tXM_onfnFg/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
-     { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984, start: 600, end: 730 },
+    { nama: "Masjid Abdul Aziz (SMP Muhammadiyah 8 Kebakkramat)", lat: -7.520470615403366, lng: 110.9065007512984, start: 600, end: 730 },
     { nama: "Gedung Dakwah PDM Karanganyar", lat: -7.586223863399417, lng: 110.91830297060768, start: 600, end: 730 },
     { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.5991158597467505, lng: 110.95277542273423, start: 600, end: 730 },
     { nama: "SMP Muhammadiyah 2 Karanganyar", lat: -7.59240065605104, lng: 110.95609234835774, start: 600, end: 730 },
     { nama: "Masjid Raya Al Falah Sragen", lat: -7.42851997638584, lng: 111.01776973992412, start: 730, end: 830 },
     { nama: "Kantor Desa Ngadiluwih, Matesih, Karanganyar", lat: -7.633272545502858, lng: 110.99996825526591, start: 600, end: 730 },
-    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902, start: 600, end: 730 },
-    // LOKASI BARU
+    { nama: "Lokasi Testing", lat: -7.716564379562363, lng: 110.59027731779902, start: 0, end: 2359 },
     { nama: "Catering Pandu", lat: -7.500030621538215, lng: 110.90614961162527, start: 600, end: 730 },
-    { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742, start: 600, end: 730 },
-    //tambah lokasi baru , , 
-    { nama: "Masjid Al Ikhlas Botok, Kerjo, Karanganyar", lat: -7.518997596395203, lng: 111.04124429999999, start: 600, end: 730 },
-    { nama: "SMP Muhammadiyah 3 Karangpandan", lat: -7.6205906058938355, lng: 111.06234704232911, start: 600, end: 730 },
-    { nama: "SMP Muhammadiyah 10 Surakarta", lat: -7.552680549665942, lng: 110.78133119965328, start: 600, end: 730 },
-    { nama: "Masjid Yamp - Jumapolo, Karanganyar", lat: -7.7049863364494815, lng: 111.00101258835446, start: 600, end: 730},
-    { nama: "PPM Imam Syuhodo, Polokarto, Sukoharjo", lat: -7.622615604552016, lng: 110.89220351349366, start: 600, end: 730},
-    { nama: "Masjid Al Mukarromah, Karanganyar", lat: -7.599104240456491, lng: 110.95243712436272, start: 600, end: 730}
+    { nama: "Hapsari Handayani", lat: -7.5137745006634935, lng: 110.912900811742, start: 600, end: 730 }
   ];
 
   var CURRENT_USER = null; 
@@ -350,11 +326,12 @@
   var latUser=0, lngUser=0, lokasiString="", jarakUser=0, namaLokasiTerdekat="";
   var isAlreadyPresent=false, isTimeValid=false, isLocationValid=false;
   var gpsErrorMsg = "";
-
-  // --- TAMBAHAN BARU ---
-  var activeStartTime = 600; // Default 06:00
-  var activeEndTime = 730;   // Default 07:30
-  // ---------------------
+  
+  var activeStartTime = 600; 
+  var activeEndTime = 730;   
+  
+  // VARIABLE DATA RIWAYAT UNTUK PDF
+  var CURRENT_HISTORY_DATA = [];
 
   window.onload = function() {
     try {
@@ -363,6 +340,72 @@
         setInterval(validateButtonState, 1000);
     } catch(e) { console.log(e); }
   };
+
+  // --- FUNGSI DOWNLOAD PDF ---
+  async function downloadPDF() {
+      if(!CURRENT_HISTORY_DATA || CURRENT_HISTORY_DATA.length === 0) {
+          alert("Tidak ada data untuk dicetak. Silakan filter tanggal terlebih dahulu.");
+          return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // HEADER
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("LAPORAN PRESENSI KAJIAN AUM", 105, 20, null, null, "center");
+      doc.setFontSize(12);
+      doc.text("PCM KEBAKKRAMAT, KARANGANYAR", 105, 28, null, null, "center");
+      doc.setLineWidth(0.5);
+      doc.line(14, 32, 196, 32);
+
+      // INFO USER
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Nama : ${CURRENT_USER.nama}`, 14, 40);
+      doc.text(`AUM  : ${CURRENT_USER.aum}`, 14, 45);
+      
+      // TABEL DATA
+      // Ambil data dari variabel global CURRENT_HISTORY_DATA
+      const headers = [["No", "Tanggal", "Jam", "Kegiatan", "Lokasi"]];
+      const data = CURRENT_HISTORY_DATA.map((row, index) => [
+          index + 1,
+          row.tanggal,
+          row.jam,
+          row.kegiatan,
+          row.lokasi
+      ]);
+
+      doc.autoTable({
+          head: headers,
+          body: data,
+          startY: 50,
+          theme: 'grid',
+          styles: { fontSize: 8, cellPadding: 2 },
+          headStyles: { fillColor: [15, 118, 110], textColor: 255, fontStyle: 'bold' } // Warna Primary
+      });
+
+      // FOOTER & TANDA TANGAN
+      const finalY = doc.lastAutoTable.finalY + 20; // Posisi Y setelah tabel
+      const dateStr = new Date().toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
+
+      // Tanda Tangan Kanan (User)
+      doc.text(`Karanganyar, ${dateStr}`, 140, finalY);
+      doc.text("Dicetak Oleh,", 140, finalY + 6);
+      doc.setFont("helvetica", "bold");
+      doc.text(CURRENT_USER.nama, 140, finalY + 25);
+      doc.setFont("helvetica", "normal");
+
+      // Tanda Tangan Kiri (Ketua PCM)
+      doc.text("Mengetahui,", 14, finalY + 6);
+      doc.text("Ketua PCM Kebakkramat", 14, finalY + 11);
+      doc.setFont("helvetica", "bold");
+      doc.text("Ir. H. Paryono", 14, finalY + 25);
+
+      // Simpan File
+      doc.save(`Laporan_Presensi_${CURRENT_USER.nama}.pdf`);
+  }
 
   function toggleMenu() {
     var menu = document.getElementById('mainMenu');
@@ -488,17 +531,15 @@
     if(!CURRENT_USER) return;
     var now = new Date(); var day = now.getDay(); var h = now.getHours(); var m = now.getMinutes(); var timeVal = h * 100 + m;
     
-    // CEK WAKTU DINAMIS SESUAI LOKASI
     if (day === 0 && timeVal >= activeStartTime && timeVal <= activeEndTime) {
         isTimeValid = true; 
     } else {
         isTimeValid = false;
     }
     
-    // Format Tampilan Jam untuk Pesan Error (Misal: 600 -> 06:00)
     var formatTime = (num) => {
-        var s = num.toString().padStart(3, '0'); // 630 -> 0630
-        if(num < 1000) s = "0" + num; // Handle jam pagi
+        var s = num.toString().padStart(3, '0');
+        if(num < 1000) s = "0" + num;
         return s.substring(0, 2) + ":" + s.substring(2);
     };
 
@@ -510,7 +551,6 @@
     }
     else if (!isTimeValid) { 
         btn.disabled = true; btn.innerHTML = "<i class='bi bi-clock-history'></i> PRESENSI DITUTUP"; btn.classList.add('btn-secondary'); 
-        // PESAN ERROR JADWAL SPESIFIK
         msg.innerHTML = `<b>Jadwal Kajian Di Sini:</b><br>Ahad ${formatTime(activeStartTime)} - ${formatTime(activeEndTime)} WIB.`; 
         msg.style.display = 'block'; 
     }
@@ -534,6 +574,12 @@
     try {
       let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getReport', nama: CURRENT_USER.nama, start: start, end: end })});
       let res = await req.json();
+      
+      // SIMPAN DATA KE VARIABLE GLOBAL UNTUK PDF
+      if(res.history) {
+          CURRENT_HISTORY_DATA = res.history; 
+      }
+
       if(res.fotoTerbaru) { document.getElementById('dashFoto').src = "data:image/png;base64," + res.fotoTerbaru; document.getElementById('dashFoto').classList.remove('hidden'); document.getElementById('photoContainer').classList.add('hidden'); } 
       else { document.getElementById('photoContainer').innerHTML = "Belum Ada Foto"; }
       document.getElementById('dashLastDate').innerText = res.lastPresensi;
@@ -710,7 +756,6 @@
     
     var closest=Infinity, locObj=null;
     
-    // Cari Lokasi Terdekat & Ambil Objeknya
     DAFTAR_LOKASI.forEach(l => { 
         var d = calcDist(latUser, lngUser, l.lat, l.lng); 
         if(d < closest) { closest = d; locObj = l; } 
@@ -720,7 +765,6 @@
     
     if (locObj) {
         namaLokasiTerdekat = locObj.nama;
-        // SET WAKTU AKTIF SESUAI LOKASI TERDEKAT
         activeStartTime = locObj.start;
         activeEndTime = locObj.end;
     }
@@ -729,7 +773,6 @@
     
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
     
-    // Update Tampilan Pesan di Kamera
     if(isLocationValid){ 
         btnKirim.disabled=false; 
         statBox.className = "alert alert-success py-2 small mb-3"; 
