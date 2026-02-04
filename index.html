@@ -6,45 +6,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f766e">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
   <style>
     :root { --primary: #0f766e; --bg: #f8fafc; }
     body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; -webkit-tap-highlight-color: transparent;}
     .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
     
-    /* LAYAR LOADING (Z-Index Tertinggi) */
+    /* LOADING & UTILS */
     #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     .hidden { display: none !important; }
-
-    /* AUTH SCREEN (Login) */
-    #authScreen { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: white; z-index: 2000; 
-        display: flex; flex-direction: column; overflow-y: auto; 
-    }
     
-    .auth-help-btn { 
-        position: absolute; top: 20px; right: 20px; 
-        background: #f1f5f9; color: var(--primary); border: none; 
-        width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; 
-        display: flex; align-items: center; justify-content: center; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 2010; 
-    }
-    
+    /* AUTH SCREEN */
+    #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: flex; flex-direction: column; overflow-y: auto; }
+    .auth-help-btn { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: var(--primary); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 2010; }
     .auth-logo { width: 90px; display: block; margin: 0 auto 15px; }
     .auth-title { text-align: center; font-weight: 800; color: var(--primary); margin-bottom: 5px; font-size: 1.4rem; line-height: 1.2; }
     .auth-subtitle { text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 30px; font-weight: 500; }
     .toggle-link { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; cursor: pointer; text-decoration: underline; }
     
-    /* INPUTS & BUTTONS */
+    /* FORMS */
     .input-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; }
     .input-box.error { border-color: #ef4444; background: #fef2f2; }
     .form-control-plain { border: none; background: transparent; width: 100%; outline: none; font-size: 0.95rem; color: #334155; }
@@ -53,7 +41,11 @@
     .pass-toggle.active { color: var(--primary); }
     .error-text { color: #ef4444; font-size: 0.75rem; margin-top: -10px; margin-bottom: 10px; display: block; margin-left: 5px; font-weight: 500;}
 
-    /* PICKER STYLE */
+    /* PICKER & MODALS */
+    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
+    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
+    .overlay-body { padding: 20px; flex-grow: 1; }
+    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
     .picker-trigger { cursor: pointer; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .picker-placeholder { color: #64748b; font-style: italic; }
     .picker-value { color: #334155; font-weight: 500; }
@@ -75,15 +67,13 @@
     .header-logo-img { width: 45px; height: 45px; border-radius: 10px; background: rgba(255,255,255,0.2); padding: 5px; backdrop-filter: blur(5px); }
     .header-title h1 { font-size: 1.1rem; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: 0.5px; }
     .header-title p { font-size: 0.75rem; margin: 0; opacity: 0.85; font-weight: 400; }
-    
     .btn-menu-toggle { background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); font-size: 1.4rem; transition: 0.2s; }
     .btn-menu-toggle:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
-
     .user-info-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 16px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
     .u-text h5 { margin: 0; font-size: 0.95rem; font-weight: 600; }
     .u-text p { margin: 0; font-size: 0.75rem; opacity: 0.8; }
 
-    /* MENU BOTTOM SHEET */
+    /* MENU */
     .menu-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1200; opacity: 0; visibility: hidden; transition: 0.3s; }
     .menu-backdrop.show { opacity: 1; visibility: visible; }
     .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 25px; border-top-right-radius: 25px; z-index: 1210; padding: 25px 20px; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 -5px 30px rgba(0,0,0,0.15); max-width: 480px; margin: 0 auto; right: 0; }
@@ -98,7 +88,7 @@
     .menu-item.logout { color: #dc2626; }
     .menu-item.logout .menu-icon { background: #fee2e2; color: #dc2626; }
 
-    /* CONTENT */
+    /* CONTENT BODY */
     .main-card { background: white; margin: -60px 20px 20px; border-radius: 24px; padding: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); position: relative; z-index: 10; }
     .photo-display { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; background: #f1f5f9; margin-bottom: 15px; display: block; }
     .photo-loading { display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #64748b; font-size: 0.9rem; font-weight: 500; height: 200px; border-radius: 16px; margin-bottom: 15px;}
@@ -126,11 +116,6 @@
     .camera-container { width: 100%; aspect-ratio: 1; background: black; position: relative; overflow: hidden; border-radius: 16px; }
     #camera { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-    /* UTILITIES */
-    .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
-    .overlay-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: white; position: sticky; top:0; z-index:10;}
-    .overlay-body { padding: 20px; flex-grow: 1; }
-    .btn-close-custom { background: none; border: none; font-size: 1.5rem; color: #334155; }
     #infoModal { z-index: 3000 !important; }
     .nav-tabs .nav-link { color: #64748b; font-size: 0.9rem; }
     .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
@@ -139,6 +124,43 @@
     .step-text { font-size: 0.9rem; color: #334155; line-height: 1.5; }
     .browser-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; margin-bottom: 10px; display: inline-block; font-weight: 600;}
     .bg-chrome { background: #fef3c7; color: #b45309; } .bg-safari { background: #e0e7ff; color: #3730a3; } .bg-samsung { background: #fce7f3; color: #9d174d; }
+
+    /* === REPORT PRINT STYLE === */
+    /* Hidden by default, only shown when generating PDF */
+    #reportTemplate {
+        width: 100%;
+        max-width: 800px;
+        background: white;
+        padding: 40px;
+        font-family: 'Times New Roman', serif;
+        color: #000;
+        display: none; /* Penting! */
+    }
+    .rep-header { display: flex; align-items: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
+    .rep-logo { width: 80px; height: 80px; margin-right: 20px; }
+    .rep-head-text { flex-grow: 1; text-align: center; }
+    .rep-head-text h2 { margin: 0; font-size: 18pt; font-weight: bold; text-transform: uppercase; line-height: 1.2; }
+    .rep-head-text h3 { margin: 0; font-size: 14pt; font-weight: bold; margin-bottom: 5px; }
+    .rep-head-text p { margin: 0; font-size: 10pt; font-style: italic; }
+    
+    .rep-title { text-align: center; margin-bottom: 25px; }
+    .rep-title h4 { margin: 0; font-size: 14pt; font-weight: bold; text-decoration: underline; margin-bottom: 5px; }
+    .rep-title p { margin: 0; font-size: 11pt; }
+
+    .rep-info { margin-bottom: 20px; font-size: 11pt; }
+    .rep-info table { width: 100%; border: none; }
+    .rep-info td { padding: 2px 5px; vertical-align: top; }
+    .rep-info td:first-child { width: 120px; font-weight: bold; }
+
+    .rep-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 10pt; }
+    .rep-table th, .rep-table td { border: 1px solid #000; padding: 6px 8px; }
+    .rep-table th { background: #f0f0f0; text-align: center; font-weight: bold; }
+    .rep-table td { vertical-align: middle; }
+    
+    .rep-footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 11pt; }
+    .rep-sign { text-align: center; width: 40%; }
+    .rep-sign-space { height: 70px; }
+    .rep-sign strong { display: block; text-decoration: underline; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -147,10 +169,63 @@
 
 <div class="app-container">
 
+  <div id="reportTemplate">
+      <div class="rep-header">
+          <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="rep-logo" crossorigin="anonymous">
+          <div class="rep-head-text">
+              <h2>PIMPINAN CABANG MUHAMMADIYAH</h2>
+              <h3>KEBAKKRAMAT KARANGANYAR</h3>
+              <p>Jl. Simo, Kebaksari 05/02 Kebak, Kebakkramat, Karanganyar, Jawa Tengah, 57762</p>
+          </div>
+      </div>
+      
+      <div class="rep-title">
+          <h4>Laporan Presensi Pengajian Ahad Pagi</h4>
+          <p>PCM Kebakkramat Karanganyar</p>
+          <p id="repPeriode">Periode: -</p>
+      </div>
+
+      <div class="rep-info">
+          <table>
+              <tr><td>Nama</td><td>: <span id="repNama">-</span></td></tr>
+              <tr><td>NBM</td><td>: <span id="repNbm">-</span></td></tr>
+              <tr><td>AUM</td><td>: <span id="repAum">-</span></td></tr>
+              <tr><td>Kehadiran</td><td>: <span id="repTotal">-</span></td></tr>
+          </table>
+      </div>
+
+      <table class="rep-table">
+          <thead>
+              <tr>
+                  <th style="width: 5%;">No</th>
+                  <th style="width: 25%;">Hari/Tanggal</th>
+                  <th style="width: 15%;">Jam</th>
+                  <th>Lokasi</th>
+              </tr>
+          </thead>
+          <tbody id="repTableBody">
+              </tbody>
+      </table>
+
+      <div class="rep-footer">
+          <div class="rep-sign">
+              <p>Ketua PCM Kebakkramat,<br>Karanganyar</p>
+              <div class="rep-sign-space"></div>
+              <strong>Ir. H. Paryono</strong>
+              <span>NBM. 1120 7223 1460 777</span>
+          </div>
+          <div class="rep-sign">
+              <p>Karanganyar, <span id="repDateNow"></span><br>Yang Bersangkutan</p>
+              <div class="rep-sign-space"></div>
+              <strong id="repSignName">Nama Pengguna</strong>
+              <span id="repSignNbm">NBM. -</span>
+          </div>
+      </div>
+  </div>
   <div id="authScreen">
     <div style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
         <button type="button" class="auth-help-btn" onclick="openInfoModal()" title="Panduan & Instalasi"><i class="bi bi-question-lg"></i></button>
-        <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="auth-logo" id="logoImage">
+        <img src="https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png" class="auth-logo">
         <h4 class="auth-title">Presensi Kajian AUM</h4>
         <p class="auth-subtitle">PCM Kebakkramat, Karanganyar</p>
         
@@ -226,7 +301,7 @@
             <div class="col-4"><input type="date" id="filterStart" class="form-control form-control-sm"></div>
             <div class="col-4"><input type="date" id="filterEnd" class="form-control form-control-sm"></div>
             <div class="col-2"><button class="btn btn-sm btn-dark w-100" onclick="loadDashboardData()"><i class="bi bi-search"></i></button></div>
-            <div class="col-2"><button class="btn btn-sm btn-danger w-100" onclick="generatePDF()" title="Cetak Laporan"><i class="bi bi-printer"></i></button></div>
+            <div class="col-2"><button class="btn btn-sm btn-success w-100" onclick="downloadPDF()" title="Cetak Laporan"><i class="bi bi-printer-fill"></i></button></div>
          </div>
       </div>
       <div id="historyList"><div class="text-center small text-muted">Memuat data...</div></div>
@@ -308,7 +383,6 @@
 </div>
 
 <script>
-  // --- KONFIGURASI: PASTIKAN INI URL TERBARU ANDA ---
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nnZTluEuE9-xLjlUrJurRyTQB6jYpJAMkF6IyXEfm2vx_ff40vKErdXbocVWPukbmQ/exec"; 
   const MAX_RADIUS = 500; 
   const DAFTAR_LOKASI = [
@@ -330,7 +404,6 @@
   ];
 
   var CURRENT_USER = null; 
-  var GLOBAL_HISTORY = []; // Menyimpan data riwayat untuk PDF
   var LIST_NAMA_DB = []; var LIST_AUM_DB = []; 
   var CURRENT_PICKER_TYPE = ""; 
   var video = document.getElementById('camera');
@@ -339,6 +412,7 @@
   var gpsErrorMsg = "";
   var activeStartTime = 600; 
   var activeEndTime = 730;   
+  var historyData = []; // Variabel global untuk menyimpan data riwayat saat ini
 
   window.onload = function() {
     try {
@@ -348,156 +422,116 @@
     } catch(e) { console.log(e); }
   };
 
-  // --- LOGIKA PDF GENERATOR ---
-  async function generatePDF() {
-    if (!CURRENT_USER || GLOBAL_HISTORY.length === 0) {
-        alert("Tidak ada data untuk dicetak.");
+  // --- FUNGSI CETAK PDF (html2pdf) ---
+  function downloadPDF() {
+    if (!historyData || historyData.length === 0) {
+        alert("Belum ada data untuk dicetak.");
         return;
     }
-    
-    // Ambil detail profil (untuk NBM) jika belum lengkap
-    var userNBM = CURRENT_USER.nbm || "-";
-    if (userNBM === "-" || !userNBM) {
-        try {
-            loading(true);
-            let req = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getProfile', username: CURRENT_USER.username }) });
-            let res = await req.json();
-            if(res.status === 'success') {
-                userNBM = res.data.nbm || "-";
-                // Update local untuk sesi ini
-                CURRENT_USER.nbm = userNBM;
-            }
-            loading(false);
-        } catch(e) { loading(false); }
-    }
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // --- HEADER ---
-    // Logo (Ambil dari URL Github, konversi ke Base64 via Canvas/Fetch)
-    // Untuk simplifikasi dan menghindari CORS, kita gunakan base64 string jika memungkinkan, 
-    // atau fetch blob. Di sini kita coba fetch blob.
-    try {
-        const imgUrl = "https://raw.githubusercontent.com/kangmrogram/pcmkebakkramat/refs/heads/main/icon-512.png";
-        const imgData = await getDataUri(imgUrl);
-        doc.addImage(imgData, 'PNG', 15, 10, 20, 20); // x, y, w, h
-    } catch (err) {
-        console.warn("Logo tidak dapat dimuat", err);
-    }
+    loading(true);
 
-    // Teks Header
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text("PIMPINAN CABANG MUHAMMADIYAH", 40, 18);
-    doc.setFontSize(12);
-    doc.text("KEBAKKRAMAT KARANGANYAR", 40, 24);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text("Jl. Simo, Kebaksari 05/02 Kebak, Kebakkramat, Karanganyar, Jawa Tengah, 57762", 40, 29);
-    
-    // Garis Pemisah
-    doc.setLineWidth(0.5);
-    doc.line(10, 35, 200, 35);
+    // 1. Ambil Profil Tambahan (NBM) jika belum ada
+    fetch(SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'getProfile', username: CURRENT_USER.username }) 
+    })
+    .then(r => r.json())
+    .then(data => {
+        var profile = data.status === 'success' ? data.data : {};
+        var userNBM = profile.nbm || "-";
 
-    // --- JUDUL LAPORAN ---
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.text("Laporan Presensi Pengajian Ahad Pagi", 105, 45, null, null, "center");
-    doc.text("PCM Kebakkramat Karanganyar", 105, 50, null, null, "center");
-    
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    var tglAwal = document.getElementById('filterStart').value || "-";
-    var tglAkhir = document.getElementById('filterEnd').value || "-";
-    doc.text(`Periode tanggal: ${tglAwal} s/d ${tglAkhir}`, 105, 56, null, null, "center");
+        // 2. Isi Template Laporan
+        var tglStart = document.getElementById('filterStart').value;
+        var tglEnd = document.getElementById('filterEnd').value;
+        var periodeStr = "";
+        
+        if (tglStart && tglEnd) {
+            periodeStr = formatTglStr(tglStart) + " s/d " + formatTglStr(tglEnd);
+        } else {
+            var now = new Date();
+            periodeStr = "1 Januari " + now.getFullYear() + " s/d Sekarang";
+        }
 
-    // --- IDENTITAS ---
-    doc.setFontSize(10);
-    doc.text(`Nama : ${CURRENT_USER.nama}`, 15, 65);
-    doc.text(`NBM  : ${userNBM}`, 15, 70);
-    doc.text(`AUM  : ${CURRENT_USER.aum}`, 15, 75);
+        document.getElementById('repPeriode').innerText = "Periode tanggal: " + periodeStr;
+        document.getElementById('repNama').innerText = CURRENT_USER.nama;
+        document.getElementById('repNbm').innerText = userNBM; // Dari fetch profile
+        document.getElementById('repAum').innerText = CURRENT_USER.aum;
+        
+        // Hitung Statistik
+        var totalHadir = historyData.length;
+        // Asumsi jumlah kegiatan global diambil dari dashboard stats terakhir atau hitung manual
+        // Disini kita tampilkan total hadir saja sesuai data yang ada
+        var statsText = totalHadir + " Kali Hadir";
+        var statCountEl = document.getElementById('statCount');
+        if(statCountEl) {
+             // Coba ambil dari tampilan dashboard jika ada
+             var dashText = statCountEl.innerText; // "5 / 10"
+             var parts = dashText.split('/');
+             if(parts.length > 1) {
+                 var percent = document.getElementById('statPercent').innerText;
+                 statsText += " (" + percent + ")";
+             }
+        }
+        document.getElementById('repTotal').innerText = statsText;
 
-    // --- TABEL DATA ---
-    var tableBody = GLOBAL_HISTORY.map((item, index) => [
-        index + 1,
-        item.tanggal, // Hari/Tanggal
-        item.jam,
-        item.kegiatan,
-        item.lokasi
-    ]);
+        // Isi Tabel
+        var tbody = document.getElementById('repTableBody');
+        tbody.innerHTML = "";
+        historyData.forEach((item, index) => {
+            var row = `<tr>
+                <td style="text-align:center;">${index + 1}</td>
+                <td>${item.tanggal}</td>
+                <td style="text-align:center;">${item.jam}</td>
+                <td>${item.lokasi}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
 
-    doc.autoTable({
-        startY: 80,
-        head: [['No', 'Hari/Tanggal', 'Jam', 'Kegiatan', 'Lokasi']],
-        body: tableBody,
-        theme: 'grid',
-        headStyles: { fillColor: [15, 118, 110], textColor: 255 }, // Warna Primary App
-        styles: { fontSize: 9, cellPadding: 2 },
-    });
+        // Footer Tanda Tangan
+        var d = new Date();
+        var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        document.getElementById('repDateNow').innerText = d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+        document.getElementById('repSignName').innerText = CURRENT_USER.nama;
+        document.getElementById('repSignNbm').innerText = "NBM. " + userNBM;
 
-    // --- FOOTER (Tanda Tangan) ---
-    var finalY = doc.lastAutoTable.finalY + 15; // Jarak dari tabel
-    
-    // Cek jika halaman tidak cukup
-    if (finalY > 250) {
-        doc.addPage();
-        finalY = 20;
-    }
+        // 3. Eksekusi html2pdf
+        var element = document.getElementById('reportTemplate');
+        element.style.display = 'block'; // Tampilkan sebentar untuk render
 
-    var today = new Date();
-    var dateStr = today.getDate() + " " + getBulanIndo(today.getMonth()) + " " + today.getFullYear();
-
-    // Kiri: Ketua PCM
-    doc.setFontSize(10);
-    doc.text("Mengetahui,", 15, finalY);
-    doc.text("Ketua PCM Kebakkramat", 15, finalY + 5);
-    
-    doc.text("_______________________", 15, finalY + 30); // Garis TTD
-    doc.setFont("helvetica", "bold");
-    doc.text("Ir. H. Paryono", 15, finalY + 35);
-    doc.setFont("helvetica", "normal");
-    doc.text("NBM. 1120 7223 1460 777", 15, finalY + 40);
-
-    // Kanan: Pengguna
-    doc.text(`Karanganyar, ${dateStr}`, 140, finalY);
-    doc.text("Anggota,", 140, finalY + 5);
-    doc.setFontSize(8);
-    doc.text("(tanda tangan di sini)", 140, finalY + 25);
-    doc.setFontSize(10);
-    
-    doc.text("_______________________", 140, finalY + 30); // Garis TTD
-    doc.setFont("helvetica", "bold");
-    doc.text(CURRENT_USER.nama, 140, finalY + 35);
-    doc.setFont("helvetica", "normal");
-    doc.text(`NBM. ${userNBM}`, 140, finalY + 40);
-
-    // --- SAVE ---
-    doc.save(`Laporan_Presensi_${CURRENT_USER.nama}.pdf`);
-  }
-
-  // Helper untuk Logo
-  function getDataUri(url) {
-    return new Promise((resolve, reject) => {
-        var image = new Image();
-        image.crossOrigin = "Anonymous"; // Penting untuk gambar eksternal
-        image.onload = function () {
-            var canvas = document.createElement('canvas');
-            canvas.width = this.naturalWidth;
-            canvas.height = this.naturalHeight;
-            canvas.getContext('2d').drawImage(this, 0, 0);
-            resolve(canvas.toDataURL('image/png'));
+        var opt = {
+            margin:       10, // mm
+            filename:     'Laporan_Presensi_' + CURRENT_USER.nama.replace(/\s+/g, '_') + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true }, // useCORS penting untuk gambar eksternal
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        image.onerror = (e) => reject(e);
-        image.src = url;
+
+        html2pdf().set(opt).from(element).save().then(function() {
+            element.style.display = 'none'; // Sembunyikan lagi
+            loading(false);
+        }).catch(err => {
+            console.error(err);
+            alert("Gagal membuat PDF. Pastikan koneksi internet stabil.");
+            element.style.display = 'none';
+            loading(false);
+        });
+
+    })
+    .catch(e => {
+        loading(false);
+        alert("Gagal mengambil data profil untuk laporan: " + e);
     });
   }
 
-  function getBulanIndo(m) {
-      var b = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-      return b[m];
+  function formatTglStr(dateStr) {
+      if(!dateStr) return "";
+      var d = new Date(dateStr);
+      var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
   }
+
+  // --- END FUNGSI CETAK ---
 
   function toggleMenu() {
     var menu = document.getElementById('mainMenu');
@@ -671,10 +705,11 @@
       document.getElementById('dashLastDate').innerText = res.lastPresensi;
       if(res.stats) { document.getElementById('statCount').innerText = res.stats.userTotal + " / " + res.stats.globalTotal; document.getElementById('statPercent').innerText = res.stats.percent + "%"; }
       
-      // SIMPAN DATA GLOBAL UNTUK PDF
-      GLOBAL_HISTORY = res.history;
+      // Simpan data untuk report PDF
+      historyData = res.history; 
       
-      checkTodayStatus(res.history); renderHistory(res.history);
+      checkTodayStatus(res.history); 
+      renderHistory(res.history);
     } catch(e) {}
   }
 
@@ -695,10 +730,9 @@
         var coordsMatch = i.lokasi.match(/(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
         if (coordsMatch && coordsMatch.length === 3) { displayName = getNearestLocationName(parseFloat(coordsMatch[1]), parseFloat(coordsMatch[2])); } 
         else { if(displayName.includes('(')) displayName = displayName.split('(')[0].trim(); }
+        // Update lokasi di array data agar di report tampil nama lokasi, bukan koordinat saja jika belum ada nama
+        i.lokasi = displayName; 
         
-        // Update display name di object global agar di PDF juga rapi
-        i.lokasi = displayName;
-
         var html = `<div class="history-item"><div><div class="hist-date">${i.tanggal}</div><div class="hist-loc"><i class="bi bi-geo-alt-fill"></i> ${displayName}</div></div><div class="badge bg-light text-dark border">${i.jam}</div></div>`;
         c.innerHTML += html; 
     });
@@ -850,6 +884,7 @@
     
     var closest=Infinity, locObj=null;
     
+    // Cari Lokasi Terdekat & Ambil Objeknya
     DAFTAR_LOKASI.forEach(l => { 
         var d = calcDist(latUser, lngUser, l.lat, l.lng); 
         if(d < closest) { closest = d; locObj = l; } 
@@ -859,6 +894,7 @@
     
     if (locObj) {
         namaLokasiTerdekat = locObj.nama;
+        // SET WAKTU AKTIF SESUAI LOKASI TERDEKAT
         activeStartTime = locObj.start;
         activeEndTime = locObj.end;
     }
@@ -867,6 +903,7 @@
     
     var statBox = document.getElementById('statusLokasiBox'); var btnKirim = document.getElementById('btnKirim');
     
+    // Update Tampilan Pesan di Kamera
     if(isLocationValid){ 
         btnKirim.disabled=false; 
         statBox.className = "alert alert-success py-2 small mb-3"; 
